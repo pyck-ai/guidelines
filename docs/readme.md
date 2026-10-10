@@ -21,14 +21,14 @@ Badges above the heading are our own convention; backstage puts them below it.
 
 | # | Section | Content | Omit when |
 | --- | --- | --- | --- |
-| 0 | badges | Status and licence badges, **above** the `#` heading | none exist |
+| 0 | badges | Status and license badges, **above** the `#` heading | none exist |
 | 1 | `# <name>` + one sentence | What the thing does, in one sentence, before any technology is named | never |
 | 2 | `## What is <name>?` | The problem it solves and its core idea, then technology; then an "Out of the box, `<name>` includes:" bullet list with a **bold** lead per item, each linking to the doc that owns it | never |
 | 3 | `## Getting started` | See [Getting started](#getting-started) | never |
 | 4 | `## Documentation` | List or two-column table of the documents that own each subject: `- [Title](path): what it covers` | the repo has no docs beyond the README; point at the in-code docs instead |
 | 5 | `## Contributing` | Link the repo's `CONTRIBUTING.md`, or the org's [CONTRIBUTING.md](https://github.com/pyck-ai/.github/blob/main/.github/CONTRIBUTING.md) when it has none ("start here"), and `AGENTS.md` ("read this first if you are an AI coding agent") | never |
 | 6 | `## Status` | One or two lines: maturity, what is (not) published or stable | never |
-| 7 | `## License` | Licence name and link to the plain-text `LICENSE` file at the repo root. A private repository without a licence says `No license: private repository, all rights reserved.` | never |
+| 7 | `## License` | License name and link to the plain-text `LICENSE` file at the repo root. A private repository without a license says `No license: private repository, all rights reserved.` | never |
 | 8 | `## Security` | How to report a vulnerability privately: link the repo's `SECURITY.md`, or the org's [security policy](https://github.com/pyck-ai/.github/blob/main/.github/SECURITY.md) when it has none | the repo is a private personal repository, not an org one |
 
 ## Getting started
@@ -79,13 +79,11 @@ and 8. A directory README may carry local maintenance rules; follow them there.
   [agent-docs-check](https://github.com/pyck-ai/github-actions/blob/main/agent-docs-check/README.md#managed-toc-region).
 - Backticks for paths, commands, env vars and identifiers. **Bold** only for
   the phrase a reader scans for.
-- English. No em or en dashes; restructure the sentence instead (a colon,
-  comma, parentheses or two sentences).
 
 ## Maintaining
 
 Docs must never drift from the tree on disk. When a change alters what a
-README describes (layout, commands, ports, entrypoints, behaviour), fix it in
+README describes (layout, commands, ports, entrypoints, behavior), fix it in
 the same change, never as a follow-up:
 
 1. List every path, command, port, flag and env var the README names.

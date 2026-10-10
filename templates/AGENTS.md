@@ -21,6 +21,6 @@ Org-wide rules: <https://raw.githubusercontent.com/pyck-ai/guidelines/main/AGENT
 
 ## Gotchas
 
-<!-- Behaviour that is not self-evident. Drop a line once a test or lint the agent runs anyway reports the problem together with its fix. -->
+<!-- Behavior that is not self-evident. Drop a line once a test or lint the agent runs anyway reports the problem together with its fix. -->
 
-- {One line: the behaviour, then what to do instead.}
+- {One line: the behavior, then what to do instead.}

@@ -23,7 +23,7 @@ Org-wide rules for every pyck-ai repository; its own `AGENTS.md` adds local fact
   anything under `docs/` stale fixes it in the same change.
 - **Each fact lives once.** Link to its owner; never copy it.
 - **Repo convention wins** where a repository's own `AGENTS.md` says so.
-- **English** in code, docs, commits, issues and PRs.
+- **English** in code, docs, commits, issues and PRs; no em or en dashes (restructure the sentence instead).
 
 ## Guidelines, loaded on demand
 

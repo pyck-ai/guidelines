@@ -8,7 +8,6 @@
 - [Design](#design)
 - [CI automation](#ci-automation)
 - [In-code documentation](#in-code-documentation)
-- [Writing in code and docs](#writing-in-code-and-docs)
 -->
 
 ## Purpose
@@ -17,7 +16,8 @@ Judgement calls a reviewer makes. Read this during review, not while
 implementing. Anything a linter or check can catch belongs in a linter or
 check, not here.
 
-A repository may add its own `CODING_STANDARDS.md`; review reads both. How a
+A repository may add its own `CODING_STANDARDS.md` for review rules that
+apply only there; it never repeats an org rule. Review reads both. How a
 repository overrides an org default is set in the
 [org `AGENTS.md`](../AGENTS.md).
 
@@ -34,8 +34,8 @@ Reject:
 Also:
 
 - Test at a module's interface, not its internals. A refactor that keeps
-  behaviour must not break the test.
-- Tests are deterministic. No sleeps for synchronisation; poll for the
+  behavior must not break the test.
+- Tests are deterministic. No sleeps for synchronization; poll for the
   condition with a timeout.
 
 ## Design
@@ -47,12 +47,15 @@ Also:
 
 ## CI automation
 
-- Reject inline shell steps that carry real logic in a workflow. Shared
-  automation is a reusable composite action in
+- A repository exposes its checks as `task ci`, the one command its CI runs,
+  and, if it generates files, `task generate`. Further tasks are internal
+  steps of those two.
+- A workflow stays a thin consumer: it checks out, sets up tools and runs
+  `task ci` or calls actions. Reject workflow steps that carry logic of their
+  own.
+- Shared automation is a reusable composite action in
   [pyck-ai/github-actions](https://github.com/pyck-ai/github-actions), so other
   repositories adopt it with a `uses:` step instead of copying it.
-- A workflow stays a thin consumer: it calls actions and holds no logic of its
-  own.
 
 ## In-code documentation
 
@@ -63,8 +66,3 @@ Also:
 - Generated files (a `DO NOT EDIT` header) are regenerated, never
   hand-edited, and never left to drift from their source.
 - READMEs follow [readme.md](readme.md).
-
-## Writing in code and docs
-
-English. No em or en dashes in comments, docs or commit messages; restructure
-the sentence instead.
