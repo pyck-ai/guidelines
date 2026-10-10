@@ -24,3 +24,17 @@ Org-wide rules for every pyck-ai repository; its own `AGENTS.md` adds local fact
 - **Each fact lives once.** Link to its owner; never copy it.
 - **Repo convention wins** where a repository's own `AGENTS.md` says so.
 - **English** in code, docs, commits, issues and PRs.
+
+## Guidelines, loaded on demand
+
+Load the skill when the task starts. Without a skill tool, read the file at
+`https://raw.githubusercontent.com/pyck-ai/guidelines/main/<file>`.
+
+| When you | Skill | File |
+| --- | --- | --- |
+| write a commit message or name a branch | `commit` | `docs/git.md` |
+| open or edit a pull request | `pr` | `docs/pull-requests.md` |
+| create, edit or triage an issue | `issue` | `docs/issues.md` |
+| create or update a README | `readme` | `docs/readme.md` |
+| review a diff or pull request | `code-review` | `docs/code-review.md` |
+| create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |
