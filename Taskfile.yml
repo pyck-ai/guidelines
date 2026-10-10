@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  ci:
+    desc: Check that everything is in order; fails if a doc or skill names a PR template heading or issue form that pyck-ai/.github lacks (PYCK_GITHUB_DIR=<checkout> reads a local copy). CI runs this
+    cmds:
+      - sh scripts/check-templates.sh
