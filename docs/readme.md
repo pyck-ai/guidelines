@@ -26,10 +26,10 @@ Badges above the heading are our own convention; backstage puts them below it.
 | 2 | `## What is <name>?` | The problem it solves and its core idea, then technology; then an "Out of the box, `<name>` includes:" bullet list with a **bold** lead per item, each linking to the doc that owns it | never |
 | 3 | `## Getting started` | See [Getting started](#getting-started) | never |
 | 4 | `## Documentation` | List or two-column table of the documents that own each subject: `- [Title](path): what it covers` | the repo has no docs beyond the README; point at the in-code docs instead |
-| 5 | `## Contributing` | Link `CONTRIBUTING.md` ("start here") and `AGENTS.md` ("read this first if you are an AI coding agent") | neither file exists |
+| 5 | `## Contributing` | Link the repo's `CONTRIBUTING.md`, or the org's [CONTRIBUTING.md](https://github.com/pyck-ai/.github/blob/main/.github/CONTRIBUTING.md) when it has none ("start here"), and `AGENTS.md` ("read this first if you are an AI coding agent") | never |
 | 6 | `## Status` | One or two lines: maturity, what is (not) published or stable | never |
 | 7 | `## License` | Licence name and link to the plain-text `LICENSE` file at the repo root. A private repository without a licence says `No license: private repository, all rights reserved.` | never |
-| 8 | `## Security` | How to report issues privately; link `SECURITY.md` | the repo is a private personal tool |
+| 8 | `## Security` | How to report a vulnerability privately: link the repo's `SECURITY.md`, or the org's [security policy](https://github.com/pyck-ai/.github/blob/main/.github/SECURITY.md) when it has none | the repo is a private personal repository, not an org one |
 
 ## Getting started
 
@@ -70,8 +70,15 @@ and 8. A directory README may carry local maintenance rules; follow them there.
 - **Each fact lives once.** Before writing a fact, find its owner (code doc
   comment, `--help`, script header, a doc under `docs/`, a unit file). If one
   exists, link it. If you move a fact into the README, delete the other copy.
-- Relative links for anything in the repo. Backticks for paths, commands, env
-  vars and identifiers. **Bold** only for the phrase a reader scans for.
+- Relative links for anything in the repo. A file in another repository is
+  linked as `https://github.com/<owner>/<repo>/blob/<branch>/<path>`, with an
+  anchor where a section is meant, never as `raw.githubusercontent.com` (raw
+  URLs are for agent files such as `AGENTS.md` and skills).
+- A README with two or more `##` headings starts with the managed table of
+  contents, in the format of
+  [agent-docs-check](https://github.com/pyck-ai/github-actions/blob/main/agent-docs-check/README.md#managed-toc-region).
+- Backticks for paths, commands, env vars and identifiers. **Bold** only for
+  the phrase a reader scans for.
 - English. No em or en dashes; restructure the sentence instead (a colon,
   comma, parentheses or two sentences).
 
@@ -91,12 +98,11 @@ the same change, never as a follow-up:
    of every unit you touched and repair them too. See
    [code-review.md](code-review.md#in-code-documentation).
 
-Generated docs (a `DO NOT EDIT` header) are regenerated, never hand-edited.
-
 ## Lint
 
 ```sh
 markdownlint-cli2 README.md
+node <github-actions checkout>/agent-docs-check/check.mjs .   # contents, links
 ```
 
 Use the repo's own markdownlint config when it has one. Otherwise use this
@@ -110,4 +116,5 @@ config:
   MD060: false
 ```
 
-Zero issues before you finish.
+Both report zero issues before you finish. `--fix` lets agent-docs-check
+write the table of contents.
