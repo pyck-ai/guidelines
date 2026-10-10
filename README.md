@@ -1,0 +1,68 @@
+# pyck-ai/guidelines
+
+<!-- toc
+## Contents
+
+- [What is pyck-ai/guidelines?](#what-is-pyck-aiguidelines)
+- [Getting started](#getting-started)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [Status](#status)
+- [License](#license)
+- [Security](#security)
+-->
+
+The engineering guidelines of the [pyck-ai](https://github.com/pyck-ai) organization, written once for people and coding agents alike.
+
+## What is pyck-ai/guidelines?
+
+Commits, issues, pull requests, READMEs and code reviews follow the same rules in every pyck-ai repository. This repository holds those rules. The text lives in `docs/` and nowhere else. The skills and `AGENTS.md` only point into it, so a person and an agent read the same sentence.
+
+Out of the box, pyck-ai/guidelines includes:
+
+- **Guideline docs**: the rules for commits, issues, pull requests, READMEs and code review, listed under [Documentation](#documentation).
+- **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a table that routes each task to its doc.
+- **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a link to the doc, for any agent that reads Agent Skills, such as [Claude Code](https://www.anthropic.com/claude-code), [opencode](https://opencode.ai), Codex and pi.
+- **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
+- **Template check**: [`scripts/check-templates.sh`](./scripts/check-templates.sh) fails when a doc or skill names a PR template heading or issue form that does not exist in pyck-ai/.github.
+
+GitHub's own org defaults (issue forms, the PR template, the code of conduct, the security policy) stay in [pyck-ai/.github](https://github.com/pyck-ai/.github).
+
+## Getting started
+
+```sh
+git clone git@github.com:pyck-ai/guidelines.git   # anywhere you keep checkouts
+cd guidelines
+less docs/git.md                                    # read the docs, start with git
+task ci                                             # check docs and skills against pyck-ai/.github
+./setup.sh                                          # link the skills and the opencode layer into your home
+./setup.sh uninstall                                # remove exactly what setup.sh made
+```
+
+Working on this repository needs [Task](https://taskfile.dev) and, for the default network mode, `curl`. `task ci` reads the PR template and issue forms from the main branch of pyck-ai/.github; for an offline run, set `PYCK_GITHUB_DIR=<path to a pyck-ai/.github checkout>`. Run `task --list` for every other command. `./setup.sh` links `skills/*` into `~/.agents/skills` and `~/.claude/skills` and writes the opencode layer `~/.opencode/opencode.json`; add `--dry-run` to preview. A path that exists and is not ours is a conflict: it is reported, left untouched, and the exit code is 1. See the header of [`setup.sh`](setup.sh).
+
+## Documentation
+
+- [Git](./docs/git.md): commit messages and branch names.
+- [Issues](./docs/issues.md): how to write, classify and triage an issue.
+- [Pull requests](./docs/pull-requests.md): how to write and open a pull request.
+- [README](./docs/readme.md): the layout every repository README follows.
+- [Code review](./docs/code-review.md): what reviewers look for in a diff.
+- [AGENTS.md template](./templates/AGENTS.md): the start of a repository's own AGENTS.md.
+
+## Contributing
+
+- [CONTRIBUTING.md](https://github.com/pyck-ai/.github/blob/main/.github/CONTRIBUTING.md): start here.
+- [AGENTS.md](./AGENTS.md): read this first if you are an AI coding agent.
+
+## Status
+
+Private for now, intended to become public. In use across the organization. The guidelines are young and change by pull request.
+
+## License
+
+[Functional Source License 1.1, ALv2 Future License](./LICENSE) (FSL-1.1-ALv2).
+
+## Security
+
+See the [security policy](https://github.com/pyck-ai/.github/blob/main/.github/SECURITY.md) of pyck-ai/.github for how to report a vulnerability.
