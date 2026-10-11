@@ -1,6 +1,8 @@
 ---
 name: code-review
 description: Use before you review a diff or pull request, or check a change against the org review rules before you commit it; not while implementing.
+metadata:
+  harness: generic
 ---
 
 # Code review guideline
