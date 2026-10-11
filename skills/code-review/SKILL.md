@@ -5,4 +5,4 @@ description: Use before you review a diff or pull request, or check a change aga
 
 # Code review guideline
 
-The guideline is [code-review.md](code-review.md) in this directory. Read it in full and follow it. Without a local copy, read <https://raw.githubusercontent.com/pyck-ai/guidelines/main/docs/code-review.md>.
+The guideline is [code-review.md](code-review.md) in this directory. Read it in full and follow it.

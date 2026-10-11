@@ -72,8 +72,9 @@ and 8. A directory README may carry local maintenance rules; follow them there.
   exists, link it. If you move a fact into the README, delete the other copy.
 - Relative links for anything in the repo. A file in another repository is
   linked as `https://github.com/<owner>/<repo>/blob/<branch>/<path>`, with an
-  anchor where a section is meant, never as `raw.githubusercontent.com` (raw
-  URLs are for agent files such as `AGENTS.md` and skills).
+  anchor where a section is meant, never as `raw.githubusercontent.com`. Agent
+  files (`AGENTS.md`, skills) contain no URLs; they name paths under
+  `~/.pyck/<repo>/` instead.
 - A README with two or more `##` headings starts with the managed table of
   contents, in the format of
   [agent-docs-check](https://github.com/pyck-ai/github-actions/blob/main/agent-docs-check/README.md#managed-toc-region).

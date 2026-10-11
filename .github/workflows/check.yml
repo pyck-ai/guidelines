@@ -2,8 +2,9 @@ name: check
 run-name: Checks
 
 # `task ci` verifies that the docs and skills only name PR template
-# headings and issue forms that exist in pyck-ai/.github (the template check
-# reads them from its main branch over the network).
+# headings and issue forms that exist in pyck-ai/.github, and that the copies
+# of them under skills/ are current. It reads a checkout of pyck-ai/.github
+# (PYCK_GITHUB_DIR) and fetches nothing itself.
 on:
   pull_request:
   workflow_dispatch:
@@ -18,5 +19,12 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Check out pyck-ai/.github
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: pyck-ai/.github
+          path: .pyck-github
       - name: Run the checks
         run: task ci
+        env:
+          PYCK_GITHUB_DIR: .pyck-github

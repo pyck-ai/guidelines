@@ -5,7 +5,7 @@
 <!-- Max 60 lines / 4 KB. Nothing the README, the code, a test or a lint already says. No org rules, no dated or branch state, no file or directory listing. -->
 <!-- Delete every section you have nothing for. Do not add a CLAUDE.md. -->
 
-Org-wide rules: <https://raw.githubusercontent.com/pyck-ai/guidelines/main/AGENTS.md>. They apply here; this file adds only local facts.
+Org-wide rules: `~/.pyck/guidelines/AGENTS.md`. They apply here; this file adds only local facts. If that path is missing, ask the user to install pyck-ai/guidelines (clone it and run its `setup.sh`); never fetch the rules from the web.
 
 ## Commands
 

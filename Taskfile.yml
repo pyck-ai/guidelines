@@ -1,8 +1,18 @@
 version: '3'
 
+# PYCK_GITHUB_DIR is the pyck-ai/.github checkout the template check and the
+# generator read; nothing is fetched.
+env:
+  PYCK_GITHUB_DIR: '{{.PYCK_GITHUB_DIR | default "../.github"}}'
+
 tasks:
   ci:
-    desc: Check that everything is in order; fails if setup.sh misbehaves or if a doc or skill names a PR template heading or issue form that pyck-ai/.github lacks (PYCK_GITHUB_DIR=<checkout> reads a local copy). CI runs this
+    desc: Check that everything is in order; fails if setup.sh misbehaves, if a generated file under skills/ is stale, or if a doc or skill names a PR template heading or issue form that pyck-ai/.github lacks. Reads the checkout in PYCK_GITHUB_DIR (default ../.github). CI runs this
     cmds:
       - sh scripts/check-templates.sh
+      - sh scripts/generate-skills.sh --check
       - sh tests/setup-test.sh
+  generate:
+    desc: Write the generated files under skills/ with `sh scripts/generate-skills.sh`; run it after editing docs/. Reads the checkout in PYCK_GITHUB_DIR (default ../.github)
+    cmds:
+      - sh scripts/generate-skills.sh

@@ -1,1 +1,149 @@
-../../docs/pull-requests.md
+<!-- Generated from docs/pull-requests.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/pull-requests.md and run task generate. -->
+# Pull Request Guidelines
+
+<!-- toc
+## Contents
+
+- [What a PR is for](#what-a-pr-is-for)
+- [Title](#title)
+- [The PR template](#the-pr-template)
+- [Description structure](#description-structure)
+- [Summary](#summary)
+- [Size](#size)
+- [Classification](#classification)
+- [Guideline check](#guideline-check)
+-->
+
+## What a PR is for
+
+A pull request is a **mechanism for review**, nothing more; see the
+[change lifecycle](~/.pyck/guidelines/AGENTS.md#rules-for-every-change) for how it relates
+to issues and commits. Its description and discussion exist to help reviewers
+understand and evaluate the change; they are not the historical record. The
+durable rationale for *why* a change was made lives in the commit message(s)
+(see [git](~/.pyck/guidelines/docs/git.md)). A PR is **never** an SSOT: if something matters
+for the future, it belongs in a commit, not the PR description.
+
+Because the PR only serves the review, its description is just a **short
+executive summary** for reviewers. A PR may bundle several commits and close
+several issues; one PR does not mean one issue.
+
+pyck-review checks most of the rules
+below; see [Classification](#classification) and
+[Guideline check](#guideline-check).
+
+## Title
+
+Write the title like a commit subject (see
+[git: Subject line](~/.pyck/guidelines/docs/git.md#subject-line)): imperative, capitalized,
+no prefix such as `feat:`, no trailing period, at most 72 characters. It
+names the change as a whole. A PR with a single commit uses that commit's
+subject.
+
+## The PR template
+
+The PR body uses the org template. It is
+[`.github/PULL_REQUEST_TEMPLATE.md`](~/.pyck/guidelines/skills/pr/PULL_REQUEST_TEMPLATE.md)
+in the pyck-ai/.github repository, which
+GitHub injects into new PRs. Use the template as is: keep its
+two-part layout (see [Description structure](#description-structure)), replace
+the HTML comments with real content, and remove every instruction comment
+before the PR is ready. Add no other top-level headings; structure extra
+information with sub-headings under `## Additional Information`.
+
+The template's own comments are the point-of-use guidance for filling it in:
+
+- **Summary**: see [Summary](#summary).
+- **Linked issues**: in the summary part, one issue per line, using one of the
+  three trailers defined by the
+  [Footer](~/.pyck/guidelines/docs/git.md#footer) rule.
+- **Review readiness**: there are no compliance or testing checkboxes. A PR
+  stays in draft while the work is in progress; the author marks it ready for
+  review only after testing the changes (manually, where applicable) and adding
+  or updating the tests the change requires. The ready-for-review transition
+  **is** the testing attestation, and reviewers should treat it that way.
+
+To change the template, edit it in place in
+pyck-ai/.github.
+
+## Description structure
+
+The structure is always **summary + additional information**:
+
+1. The **summary** comes first and has no headings (see [Summary](#summary)).
+   Linked issues go here, one `Closes:` / `Part-of:` / `See-also:` per line.
+2. Then exactly one `## Additional Information`. Below it is free text: the
+   author may put whatever helps the review there, structured only with `###`
+   or deeper sub-headings. `N/A` if there is nothing to add.
+3. No other `#` or `##` headings anywhere in the description.
+
+## Summary
+
+The summary is a short executive summary, not a copy of the commit messages and
+not a per-commit changelog. Summarize, don't copy:
+
+- It describes everything the commits change; one sentence may cover several
+  commits.
+- It does not claim changes that no commit makes.
+- Stay on the shorter side: aim for 2 or 3 paragraphs, and add more only when
+  the PR really needs them to be understood or really makes that many changes.
+  **5 paragraphs at most.** A list counts as one paragraph; issue-link lines do
+  not count. Details reviewers might want go under `## Additional Information`.
+
+If a commit is **Irreversible** (see [Classification](#classification)), the
+summary says so: what it changes for good, and that a revert does not undo it.
+
+Exception: a PR with a **single commit** may use that commit's message 1:1 as
+its summary (GitHub pre-fills the description with it). The length limit does
+not apply to such a copy.
+
+## Size
+
+Keep a PR small enough to review in one sitting:
+
+- **Commits**: aim for 5 or fewer, and 10 at most (merge commits do not count).
+- **Diff**: keep the changed lines, the changed files and the largest single
+  file small. Generated files do not count; tests count, but less than
+  production code.
+- **Spread**: touch as few modules as you can, ideally one or two.
+- **One kind of change**: never mix a feature and a defect fix in one PR, so
+  the fix can be reviewed and released on its own.
+
+Split a larger change into several PRs and stack them: the first targets
+`main`, each next one targets the branch of the PR below it, so each review
+shows only its own layer. See GitHub's
+About stacked pull requests
+(public preview); plain PRs based on each other's branches work the same way.
+
+When a lower PR merges and its branch is deleted, GitHub retargets the PR
+above it to the lower PR's base. After a squash or rebase merge the landed
+commits get new ids, so rebase the upper branch onto the new base
+(`git rebase --onto main <lower-branch>`) before it can merge cleanly.
+
+## Classification
+
+Every commit is exactly one kind: **defect fix**, **feature** or **task**, the
+same three kinds as issues (a PR may hold several commits, so it may hold
+several kinds). Two more properties are judged per commit:
+
+- **Breaking**: the commit breaks backwards compatibility. A `BREAKING CHANGE:`
+  footer line marks it (see [git: Footer](~/.pyck/guidelines/docs/git.md#footer)).
+- **Irreversible**: a revert cannot undo it. It deletes or rewrites data,
+  removes infrastructure, or has an effect outside the system.
+
+Classification is automated, not self-reported, so the PR has no
+classification checkboxes. The kind of a commit should match the type of the
+issue it links.
+
+## Guideline check
+
+pyck-review checks these rules on
+repos that opt in through `.github/pyck-review.json5`, together with the commit
+messages against [git](~/.pyck/guidelines/docs/git.md) and the commits' kinds against
+[Classification](#classification). Text inside code blocks is ignored. Each
+finding links to the section of this guideline that defines its rule. A
+blocking finding requests changes and sets the `guidelines-not-met` label,
+unless the repo makes every review advice with
+`pullRequests.requestChanges: false`. The full list of checks, their
+thresholds and severities is in pyck-review's
+Guideline check.

@@ -5,4 +5,4 @@ description: Use before you create, rewrite or review a README.md, and whenever 
 
 # README guideline
 
-The guideline is [readme.md](readme.md) in this directory. Read it in full and follow it. Without a local copy, read <https://raw.githubusercontent.com/pyck-ai/guidelines/main/docs/readme.md>.
+The guideline is [readme.md](readme.md) in this directory. Read it in full and follow it.

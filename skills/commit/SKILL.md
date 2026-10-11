@@ -5,4 +5,4 @@ description: Use before you write, amend, reword or review a git commit message,
 
 # Commit and branch guideline
 
-The guideline is [git.md](git.md) in this directory. Read it in full and follow it. Without a local copy, read <https://raw.githubusercontent.com/pyck-ai/guidelines/main/docs/git.md>.
+The guideline is [git.md](git.md) in this directory. Read it in full and follow it.
