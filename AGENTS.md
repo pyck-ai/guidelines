@@ -18,7 +18,7 @@ Org-wide rules for every pyck-ai repository; its own `AGENTS.md` adds local fact
 - **Lifecycle.** The issue holds intent and acceptance criteria (trivial
   changes may skip it), the commit the change and why. A PR is only for
   review, never the record.
-- **README.** Every repository has a root `README.md` per the `readme` guideline.
+- **README.** Every repository has a root `README.md` per the `readmes` guideline.
 - **Docs change with code.** A change that makes a README, a doc comment or
   anything under `docs/` stale fixes it in the same change.
 - **Each fact lives once.** Link to its owner; never copy it.
@@ -32,9 +32,9 @@ Load the skill when the task starts. Without a skill tool, read
 
 | When you | Skill | File |
 | --- | --- | --- |
-| write a commit message or name a branch | `commit` | `docs/git.md` |
-| open or edit a pull request | `pr` | `docs/pull-requests.md` |
-| create, edit or triage an issue | `issue` | `docs/issues.md` |
-| create or update a README | `readme` | `docs/readme.md` |
+| write a commit message or name a branch | `commit-messages` | `docs/git.md` |
+| open or edit a pull request | `pull-requests` | `docs/pull-requests.md` |
+| create, edit or triage an issue | `github-issues` | `docs/issues.md` |
+| create or update a README | `readmes` | `docs/readme.md` |
 | review a diff or pull request | `code-review` | `docs/code-review.md` |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |

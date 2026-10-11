@@ -59,11 +59,11 @@ Choose the issue type that matches what the ticket really describes, so the form
 
 Each issue type has a GitHub issue form in the
 pyck-ai/.github repository, under
-[`.github/ISSUE_TEMPLATE/`](~/.pyck/guidelines/skills/issue/):
+[`.github/ISSUE_TEMPLATE/`](~/.pyck/guidelines/skills/github-issues/):
 
-- Defect: [`1-defect.yml`](~/.pyck/guidelines/skills/issue/1-defect.yml)
-- Feature: [`2-feature.yml`](~/.pyck/guidelines/skills/issue/2-feature.yml)
-- Task: [`3-task.yml`](~/.pyck/guidelines/skills/issue/3-task.yml)
+- Defect: [`1-defect.yml`](~/.pyck/guidelines/skills/github-issues/1-defect.yml)
+- Feature: [`2-feature.yml`](~/.pyck/guidelines/skills/github-issues/2-feature.yml)
+- Task: [`3-task.yml`](~/.pyck/guidelines/skills/github-issues/3-task.yml)
 
 The fields, their guidance, and the worked examples are defined in those forms; treat them as authoritative. To file an issue without the web form, set the type with `gh issue create --type <Type>` and give the body one `###` heading per field of the matching form, named after the field's label and in the form's order, which is how GitHub renders a submitted form. pyck-review checks that the required ones are there.
 

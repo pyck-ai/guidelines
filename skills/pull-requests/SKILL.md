@@ -1,5 +1,5 @@
 ---
-name: pr
+name: pull-requests
 description: Use before you open a pull request, write or edit its title or description, mark it ready for review, split work into stacked pull requests, or review a pull request description.
 metadata:
   harness: generic

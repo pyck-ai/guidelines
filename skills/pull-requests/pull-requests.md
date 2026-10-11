@@ -43,7 +43,7 @@ subject.
 ## The PR template
 
 The PR body uses the org template. It is
-[`.github/PULL_REQUEST_TEMPLATE.md`](~/.pyck/guidelines/skills/pr/PULL_REQUEST_TEMPLATE.md)
+[`.github/PULL_REQUEST_TEMPLATE.md`](~/.pyck/guidelines/skills/pull-requests/PULL_REQUEST_TEMPLATE.md)
 in the pyck-ai/.github repository, which
 GitHub injects into new PRs. Use the template as is: keep its
 two-part layout (see [Description structure](#description-structure)), replace
