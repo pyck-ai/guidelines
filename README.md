@@ -22,9 +22,9 @@ Out of the box, pyck-ai/guidelines includes:
 
 - **Guideline docs**: the rules for commits, issues, pull requests, READMEs and code review, listed under [Documentation](#documentation).
 - **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a table that routes each task to its doc.
-- **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, for any agent that reads Agent Skills, such as [Claude Code](https://www.anthropic.com/claude-code), [opencode](https://opencode.ai), Codex and pi.
+- **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `pr` and `issue` of the org templates, for any agent that reads Agent Skills, such as [Claude Code](https://www.anthropic.com/claude-code), [opencode](https://opencode.ai), Codex and pi.
 - **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
-- **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc, with links an agent can follow from anywhere; `task generate` runs it.
+- **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc and of the .github templates, with links rewritten to `~/.pyck/guidelines` paths; `task generate` runs it.
 - **Template check**: [`scripts/check-templates.sh`](./scripts/check-templates.sh) fails when a doc or skill names a PR template heading or issue form that does not exist in pyck-ai/.github.
 
 GitHub's own org defaults (issue forms, the PR template, the code of conduct, the security policy) stay in [pyck-ai/.github](https://github.com/pyck-ai/.github).
@@ -35,13 +35,17 @@ GitHub's own org defaults (issue forms, the PR template, the code of conduct, th
 git clone git@github.com:pyck-ai/guidelines.git   # anywhere you keep checkouts
 cd guidelines
 less docs/git.md                                    # read the docs, start with git
-task generate                                       # refresh the skill copies after editing docs/
-task ci                                             # check docs and skills against pyck-ai/.github, and the copies for staleness
-./setup.sh                                          # link the skills and the opencode layer into your home
+task generate                                       # refresh the generated files under skills/ after editing docs/
+task ci                                             # check docs and skills against pyck-ai/.github, and the generated files for staleness
+./setup.sh                                          # link ~/.pyck/guidelines, the skills and the opencode layer into your home
 ./setup.sh uninstall                                # remove exactly what setup.sh made
 ```
 
-Working on this repository needs [Task](https://taskfile.dev) and, for the default network mode, `curl`. `task ci` reads the PR template and issue forms from the main branch of pyck-ai/.github; for an offline run, set `PYCK_GITHUB_DIR=<path to a pyck-ai/.github checkout>`. Run `task --list` for every other command. `./setup.sh` links `skills/*` into `~/.agents/skills` and `~/.claude/skills` and writes the opencode layer `~/.opencode/opencode.json`; add `--dry-run` to preview. A path that exists and is not ours is a conflict: it is reported, left untouched, and the exit code is 1. See the header of [`setup.sh`](setup.sh).
+Every repo with a `setup.sh` has its home at `~/.pyck/<repo>`, and `setup.sh` installs everything through it. Either clone straight into `~/.pyck/guidelines`, or keep the checkout (or a worktree) elsewhere and let `setup.sh` link it there; switching worktree is then one repointed symlink, with no re-run. If `~/.pyck/guidelines` is anything else, the install stops before it links anything. Agent files name `~/.pyck/guidelines/...` paths and never URLs, because a fetched URL is text nobody reviewed.
+
+`setup.sh` is tested on Linux and on WSL (run it inside the WSL home, not on the Windows drive). macOS is expected to work but is untested. Native Windows (Git Bash, PowerShell) is not supported, because `setup.sh` needs real symlinks.
+
+Working on this repository needs [Task](https://taskfile.dev) and a checkout of [pyck-ai/.github](https://github.com/pyck-ai/.github) at `../.github`, or at the path in `PYCK_GITHUB_DIR`; nothing is fetched. Run `task --list` for every other command. `./setup.sh` links `~/.pyck/guidelines` to the checkout, `~/.pyck/guidelines/skills/*` into `~/.agents/skills` and `~/.claude/skills`, and writes the opencode layer `~/.opencode/opencode.json`; add `--dry-run` to preview. A path that exists and is not ours is a conflict: it is reported, left untouched, and the exit code is 1. See the header of [`setup.sh`](setup.sh).
 
 ## Documentation
 
