@@ -143,6 +143,6 @@ messages against [git](./git.md) and the commits' kinds against
 finding links to the section of this guideline that defines its rule. A
 blocking finding requests changes and sets the `guidelines-not-met` label,
 unless the repo makes every review advice with
-`pullRequests.requestChanges: false`. The full list of checks, their
-thresholds and severities is in pyck-review's
-[Guideline check](https://github.com/pyck-ai/pyck-review#guideline-check).
+`pullRequests.requestChanges: false`. The list of checks and their
+thresholds is in pyck-review's
+[Rules](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md).
