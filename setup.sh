@@ -9,9 +9,16 @@
 #   skills/*/   linked (as ~/.pyck/guidelines/skills/*) into ~/.agents/skills/
 #               (opencode, Codex, pi) and ~/.claude/skills/ (Claude Code)
 #   AGENTS.md   loaded by opencode as ~/.pyck/guidelines/AGENTS.md through the
-#               generated layer ~/.opencode/opencode.json, which also asks
-#               before agents edit this checkout, ~/.pyck/guidelines or the
-#               skill links
+#               generated layer ~/.config/opencode/config.json (under
+#               $XDG_CONFIG_HOME when set), which also asks before agents edit
+#               this checkout, ~/.pyck/guidelines or the skill links. It is
+#               config.json because opencode loads that file from any working
+#               directory (a ~/.opencode directory only loads for sessions
+#               under $HOME) and never writes it while the user has an
+#               opencode.json or opencode.jsonc. When neither exists, install
+#               seeds an opencode.json once, so that opencode's own settings go
+#               there and not into the generated layer. Install also removes
+#               the old ~/.opencode/opencode.json layer.
 #
 #   ./setup.sh [install] [--dry-run]    link and write, safe to re-run (default)
 #   ./setup.sh uninstall [--dry-run]    remove only our links and our layer
@@ -358,7 +365,16 @@ common_finish() {
 }
 # --- end of setup.sh common block --------------------------------------------
 
-LAYER=$HOME/.opencode/opencode.json
+CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/opencode
+LAYER=$CONFIG_DIR/config.json
+# opencode merges config.json before opencode.json and opencode.jsonc, and
+# writes its own settings to the first of opencode.jsonc, opencode.json and
+# config.json that exists (it creates opencode.jsonc if none does).
+USER_CONFIGS="$CONFIG_DIR/opencode.json $CONFIG_DIR/opencode.jsonc"
+# The layer used to live in ~/.opencode/opencode.json, which opencode loads only
+# for sessions started under $HOME.
+OLD_DIR=$HOME/.opencode
+OLD_LAYER=$OLD_DIR/opencode.json
 SKILL_DIRS="$HOME/.agents/skills $HOME/.claude/skills"
 
 json_esc() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'; }
@@ -430,6 +446,78 @@ $_ask
 EOT
 }
 
+# seed_text DST TEXT: write TEXT to DST with mode 0600 unless DST exists (user
+# data, like seed_once).
+seed_text() {
+	if [ -e "$1" ] || [ -L "$1" ]; then
+		ok kept "$(tilde "$1") (user data, never overwritten)"
+	else
+		run mkdir -p "$(dirname "$1")"
+		if [ "$DRY" -eq 0 ]; then printf '%s\n' "$2" >"$1"; fi
+		run chmod 600 "$1"
+		changed seeded "$(tilde "$1")"
+	fi
+}
+
+# seed_user_config: make sure opencode.json or opencode.jsonc exists, because
+# opencode would otherwise write its settings into the generated config.json
+# and drop our marker.
+seed_user_config() {
+	for _c in $USER_CONFIGS; do
+		if [ -e "$_c" ] || [ -L "$_c" ]; then return 0; fi
+	done
+	seed_text "$CONFIG_DIR/opencode.json" '{ "$schema": "https://opencode.ai/config.json" }'
+}
+
+# warn_instructions: an "instructions" list in the user's config replaces the
+# one in config.json (arrays are replaced, not concatenated). Heuristic: a line
+# that starts with whitespace and then "instructions"; it may hit a nested key.
+warn_instructions() {
+	for _c in $USER_CONFIGS; do
+		[ -f "$_c" ] || continue
+		if grep -E -q '^[[:space:]]+"instructions"' "$_c"; then
+			say note "$(tilde "$_c") sets \"instructions\", which replaces the org rules: add $(tilde "$HOME_LINK/AGENTS.md") to it"
+		fi
+	done
+}
+
+# drop_old_layer: remove the old ~/.opencode/opencode.json if it is ours.
+# OLD_DROPPED=1 when it is (or, on a dry run, would be) gone.
+OLD_DROPPED=0
+drop_old_layer() {
+	if [ -f "$OLD_LAYER" ] && [ ! -L "$OLD_LAYER" ] && is_marked "$OLD_LAYER"; then
+		run rm -f "$OLD_LAYER"
+		changed removed "$(tilde "$OLD_LAYER")"
+		OLD_DROPPED=1
+	fi
+}
+
+# drop_old_dir: remove ~/.opencode if it holds nothing but what opencode
+# installs by itself: node_modules, package.json, package-lock.json, bun.lock
+# and .gitignore (its plugin install). opencode recreates those in every
+# .opencode directory it sees, so they would keep the directory alive for good.
+# Anything else in there is the user's: the directory stays.
+drop_old_dir() {
+	[ -d "$OLD_DIR" ] && [ ! -L "$OLD_DIR" ] || return 0
+	_foreign=''
+	for _p in "$OLD_DIR"/* "$OLD_DIR"/.[!.]*; do
+		[ -e "$_p" ] || [ -L "$_p" ] || continue
+		case ${_p##*/} in
+		node_modules | package.json | package-lock.json | bun.lock | .gitignore) ;;
+		*)
+			if [ "$OLD_DROPPED" -eq 1 ] && [ "$_p" = "$OLD_LAYER" ]; then continue; fi
+			_foreign="$_foreign ${_p##*/}"
+			;;
+		esac
+	done
+	if [ -n "$_foreign" ]; then
+		ok kept "$(tilde "$OLD_DIR") (also holds:$_foreign)"
+	else
+		run rm -rf "$OLD_DIR"
+		changed removed "$(tilde "$OLD_DIR")"
+	fi
+}
+
 common_init "$@"
 for _d in $SKILL_DIRS; do manage "$_d"; done
 if [ "$MODE" = install ]; then
@@ -441,8 +529,13 @@ if [ "$MODE" = install ]; then
 		done
 	done
 	write_marked "$LAYER" "$(layer_content)"
+	drop_old_layer
+	drop_old_dir
+	seed_user_config
+	warn_instructions
 else
 	remove_marked "$LAYER"
+	drop_old_layer
 fi
 prune
 common_finish
