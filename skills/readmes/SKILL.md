@@ -1,6 +1,6 @@
 ---
 name: readmes
-description: Use before you create, rewrite or review a README.md, and whenever a change adds, moves, renames or removes a path, command, port, flag or environment variable that a README names.
+description: Use before creating, rewriting or reviewing a README.md, and whenever a change adds, moves, renames or removes a path, command, port, flag or environment variable that a README names. Applies the org rules for README.md files.
 metadata:
   harness: generic
 ---
