@@ -1,0 +1,53 @@
+# Migrating from pyck-ai/.github
+
+<!-- toc
+## Contents
+
+- [What moved](#what-moved)
+- [What changes for you](#what-changes-for-you)
+- [Agents](#agents)
+- [Coming next](#coming-next)
+-->
+
+This page is removed on 2026-12-31.
+
+## What moved
+
+The engineering rules left [pyck-ai/.github](https://github.com/pyck-ai/.github) for this repository. The old pages in pyck-ai/.github are stubs that link here until the same date. Section headings are unchanged, so old anchors still work.
+
+| Old (pyck-ai/.github) | New |
+| --- | --- |
+| `docs/git-standards.md` | [docs/git.md](https://github.com/pyck-ai/guidelines/blob/main/docs/git.md) |
+| `docs/github-pr-standards.md` | [docs/pull-requests.md](https://github.com/pyck-ai/guidelines/blob/main/docs/pull-requests.md) |
+| `docs/github-issue-standards.md` | [docs/issues.md](https://github.com/pyck-ai/guidelines/blob/main/docs/issues.md) |
+| `docs/agent-protocols.md` | the [README](https://github.com/pyck-ai/guidelines#getting-started) (Getting started, `setup.sh`) and the org rules in [AGENTS.md](https://github.com/pyck-ai/guidelines/blob/main/AGENTS.md) |
+| `.opencode/opencode.example.json` | gone: `setup.sh` writes the opencode layer to `~/.config/opencode/config.json` |
+| `docs/contributing.md`, `docs/community-health.md` | the [README of pyck-ai/.github](https://github.com/pyck-ai/.github#readme), which describes what GitHub applies org-wide |
+| `docs/renovate.md` | the [README of pyck-ai/renovate](https://github.com/pyck-ai/renovate#readme) |
+
+New here, with no old counterpart: [docs/code-review.md](./code-review.md), [docs/readme.md](./readme.md), [templates/AGENTS.md](../templates/AGENTS.md) and the skills under [`skills/`](../skills).
+
+The PR template and the issue forms stay in pyck-ai/.github, and GitHub applies them as before. The PR template drops its URLs and names every classification judgement.
+
+## What changes for you
+
+pyck-review findings link these docs. Its rules and thresholds: [pyck-review docs/rules.md](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md). What you will notice:
+
+- Hard-to-review pull requests are flagged by size, commit count and spread (`pr-size`, `pr-commit-count`, `pr-spread`).
+- A breaking change needs a `BREAKING CHANGE:` footer. In repositories that use conventional commits, a `!` before the colon (`feat!:`) also counts as declared.
+- A commit subject over 50 characters is a follow-up and never blocks; over 72 still blocks.
+- Branch names are lowercase words and digits joined by hyphens (no dots, no underscores).
+- AI answers below 60% confidence are dropped, and can be listed on request.
+- Generated files are read from `.gitattributes` (`linguist-generated`) and do not count toward size.
+
+## Agents
+
+Org rules come from a local checkout at `~/.pyck/guidelines`, never from the web. Clone this repository there, or clone it anywhere and run `./setup.sh` to link it; see [Getting started](../README.md#getting-started).
+
+- **opencode**: `./setup.sh` links the skills and writes the opencode layer that loads `AGENTS.md`.
+- **pi**: reads the generic skills that `./setup.sh` links into `~/.agents/skills`.
+- **Claude Code**: add the line `@~/.pyck/guidelines/AGENTS.md` to `~/.claude/CLAUDE.md`, which may import a home path with `@~/...` (see the [Claude Code memory docs](https://code.claude.com/docs/en/memory)). Claude Code v2.1.277 and later reads a repository's own `AGENTS.md` itself. The skills are not installed for Claude Code.
+
+## Coming next
+
+Org-wide labels follow in their own issue: flags are bare labels, enums are namespaced (`type/feature`, `size/M`), and pyck-review sets and checks them.

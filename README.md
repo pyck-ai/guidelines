@@ -55,6 +55,7 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 - [README](./docs/readme.md): the layout every repository README follows.
 - [Code review](./docs/code-review.md): what reviewers look for in a diff.
 - [AGENTS.md template](./templates/AGENTS.md): the start of a repository's own AGENTS.md.
+- [Migrating from pyck-ai/.github](./docs/migration-from-dotgithub.md): where the old standards pages went and what changes for you; temporary, removed on 2026-12-31.
 
 ## Contributing
 
