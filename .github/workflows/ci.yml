@@ -1,5 +1,4 @@
-name: check
-run-name: Checks
+name: ci
 
 # `task ci` verifies that the docs and skills only name PR template
 # headings and issue forms that exist in pyck-ai/.github, and that the copies
@@ -7,12 +6,14 @@ run-name: Checks
 # (PYCK_GITHUB_DIR) and fetches nothing itself.
 on:
   pull_request:
+  push:
+    branches: [main, 'release/**']
   workflow_dispatch:
 
 permissions: {}
 
 jobs:
-  check:
+  ci:
     runs-on: self-hosted-kata
     permissions:
       contents: read # checkout
@@ -28,3 +29,12 @@ jobs:
         run: task ci
         env:
           PYCK_GITHUB_DIR: .pyck-github
+  ci-success:
+    needs: [ci]
+    if: always()
+    runs-on: self-hosted-kata
+    permissions: {}
+    steps:
+      - uses: pyck-ai/github-actions/gate@04c6f5cd724c6c65a2c2a613f4a97111bbf6347f # main 2026-10-15
+        with:
+          needs: ${{ toJSON(needs) }}
