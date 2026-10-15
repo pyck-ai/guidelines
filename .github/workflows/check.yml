@@ -13,7 +13,7 @@ permissions: {}
 
 jobs:
   check:
-    runs-on: self-hosted
+    runs-on: self-hosted-kata
     permissions:
       contents: read # checkout
     steps:
