@@ -37,4 +37,5 @@ Load the skill when the task starts. Without a skill tool, read
 | create, edit or triage an issue | `github-issues` | `docs/issues.md` |
 | create or update a README | `readmes` | `docs/readme.md` |
 | review a diff or pull request | `code-review` | `docs/code-review.md` |
+| add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check | - | `docs/ci.md` |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |
