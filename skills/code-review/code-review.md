@@ -53,7 +53,14 @@ Also:
   steps of those two.
 - A workflow stays a thin consumer: it checks out, sets up tools and runs
   `task ci` or calls actions. Reject workflow steps that carry logic of their
-  own.
+  own. An action may add GitHub-side extras (run summary, annotations,
+  handing artifacts between jobs) but makes no decisions. Everything CI does
+  must also run locally, so moving to another CI system only means rewriting
+  the wrappers.
+- One tool, one job. The repository's Taskfile owns how to build; a release
+  tool only releases what the build already produced and never builds. A
+  build pushes images by digest and never applies a tag; the release step
+  applies tags.
 - Shared automation is a reusable composite action in
   pyck-ai/github-actions, so other
   repositories adopt it with a `uses:` step instead of copying it.
