@@ -110,14 +110,24 @@ Keep a PR small enough to review in one sitting:
 
 Split a larger change into several PRs and stack them: the first targets
 `main`, each next one targets the branch of the PR below it, so each review
-shows only its own layer. See GitHub's
-[About stacked pull requests](https://docs.github.com/en/pull-requests/get-started/about-stacked-prs)
-(public preview); plain PRs based on each other's branches work the same way.
+shows only its own layer.
 
-When a lower PR merges and its branch is deleted, GitHub retargets the PR
-above it to the lower PR's base. After a squash or rebase merge the landed
-commits get new ids, so rebase the upper branch onto the new base
-(`git rebase --onto main <lower-branch>`) before it can merge cleanly.
+A stack means a native GitHub stack (see
+[About stacked pull requests](https://docs.github.com/en/pull-requests/get-started/about-stacked-prs)),
+not just PRs whose bases point at each other's branches: reviewers use
+GitHub's stack view, and chained bases do not show up there. Whenever one PR
+is based on another PR's branch, register the stack right away with the
+[`gh stack`](https://gh.io/stacks) extension:
+
+- new stack: `gh stack init`, then `gh stack submit`
+- existing PRs: `gh stack link <bottom> ... <top>` (PR numbers, URLs or
+  branch names, bottom first)
+
+All branches of a stack live in the same repository; forks are not supported.
+Merge bottom up, for example with `gh stack merge`. Branch protection of the
+bottom PR's base applies to every layer, and admin bypass is not supported
+for stack merges. While a PR is in a stack its base cannot be changed;
+restructure with `gh stack unstack` first.
 
 ## Classification
 
