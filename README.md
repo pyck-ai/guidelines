@@ -37,9 +37,17 @@ cd guidelines
 less docs/git.md                                    # read the docs, start with git
 task generate                                       # refresh the generated files under skills/ after editing docs/
 task ci                                             # check docs and skills against pyck-ai/.github, the generated files for staleness, and the setup.sh tests
-./setup.sh                                          # link ~/.pyck/guidelines, the skills and the opencode layer into your home
+./setup.sh                                          # link ~/.pyck/guidelines and the skills into your home
 ./setup.sh uninstall                                # remove exactly what setup.sh made
 ```
+
+`setup.sh` links files and configures no harness, so tell your harness to load the org rules. For opencode, add this to your `opencode.json` (opencode expands the leading `~/`):
+
+```json
+{ "instructions": ["~/.pyck/guidelines/AGENTS.md"] }
+```
+
+Earlier versions of `setup.sh` generated `~/.config/opencode/config.json` for this; `./setup.sh` and `./setup.sh uninstall` remove that file when it is still the generated one. If you want opencode to ask before agents edit the guidelines, set those `permission` rules in your own config.
 
 Every repo with a `setup.sh` has its home at `~/.pyck/<repo>`, and `setup.sh` installs everything through it; clone there or let `setup.sh` link the checkout. Agent files name `~/.pyck/guidelines/...` paths and never URLs, because a fetched URL is text nobody reviewed.
 

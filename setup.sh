@@ -15,25 +15,22 @@
 #               conflict and is not linked. Claude Code is not a target; install
 #               and uninstall remove our old links from ~/.claude/skills.
 #               Foreign entries and the dirs themselves stay.
-#   AGENTS.md   loaded by opencode as ~/.pyck/guidelines/AGENTS.md through the
-#               generated layer ~/.config/opencode/config.json (under
-#               $XDG_CONFIG_HOME when set), which also asks before agents edit
-#               this checkout, ~/.pyck/guidelines or the skill links. It is
-#               config.json because opencode loads that file from any working
-#               directory (a ~/.opencode directory only loads for sessions
-#               under $HOME) and never writes it while the user has an
-#               opencode.json or opencode.jsonc. When neither exists, install
-#               seeds an opencode.json once, so that opencode's own settings go
-#               there and not into the generated layer. Install also removes
-#               the old ~/.opencode/opencode.json layer.
+#   AGENTS.md   not wired in: setup.sh does not configure any harness. The
+#               harness config must load ~/.pyck/guidelines/AGENTS.md itself
+#               (README, "Getting started", has the opencode line). Install and
+#               uninstall remove the files earlier versions generated, when they
+#               are still ours: ~/.config/opencode/config.json (under
+#               $XDG_CONFIG_HOME when set) and ~/.opencode/opencode.json. Install
+#               also removes ~/.opencode when nothing but opencode's own files
+#               is left in it.
 #
 #   ./setup.sh [install] [--dry-run]    link and write, safe to re-run (default)
-#   ./setup.sh uninstall [--dry-run]    remove only our links and our layer
+#   ./setup.sh uninstall [--dry-run]    remove only our links and our old layers
 #
 # Conflict rule: a path that exists and is not ours is skipped, reported as
 # "conflict" and never touched; the exit code is then 1. "Ours" is a symlink
 # into this checkout (or through ~/.pyck/guidelines while that is this
-# checkout), or a layer file whose first line is MARKER. A ~/.pyck/guidelines
+# checkout), or a generated file whose first line is MARKER. A ~/.pyck/guidelines
 # that is something else stops the install before it links anything. Uninstall
 # removes the ~/.pyck/guidelines link last and keeps ~/.pyck itself, which
 # other repositories use.
@@ -433,13 +430,11 @@ common_finish() {
 # --- end of setup.sh common block --------------------------------------------
 
 CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/opencode
-LAYER=$CONFIG_DIR/config.json
-# opencode merges config.json before opencode.json and opencode.jsonc, and
-# writes its own settings to the first of opencode.jsonc, opencode.json and
-# config.json that exists (it creates opencode.jsonc if none does).
-USER_CONFIGS="$CONFIG_DIR/opencode.json $CONFIG_DIR/opencode.jsonc"
-# The layer used to live in ~/.opencode/opencode.json, which opencode loads only
-# for sessions started under $HOME.
+# setup.sh no longer writes any harness config. Two files it generated before
+# are removed when they are still ours (first line is a marker, not a link):
+# the layer ~/.config/opencode/config.json and, before that,
+# ~/.opencode/opencode.json (opencode loads that only for sessions under $HOME).
+OLD_CONFIG=$CONFIG_DIR/config.json
 OLD_DIR=$HOME/.opencode
 OLD_LAYER=$OLD_DIR/opencode.json
 # link_skills (common block) sorts skills by their metadata.harness tag.
@@ -449,119 +444,24 @@ SKILLS_OPENCODE=$CONFIG_DIR/skills
 # that prune removes our links there. The dir itself is never removed.
 OLD_SKILL_DIRS=$HOME/.claude/skills
 
-json_esc() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'; }
-
-# ask_patterns PATH: the opencode permission.edit patterns that match PATH.
-# opencode matches edits against the path relative to the session's worktree,
-# anchored, and "*" also crosses "/". For PATH = /c1/.../cn emit
-#   *../ci/.../cn/*   for i = 1..n    (file outside the worktree)
-#   ci/.../cn/*       for i = 1..n-1  (worktree is an ancestor of PATH; two
-#                                      components at least, so a bare
-#                                      ".github/*" never hits a project's dirs)
-ask_patterns() {
-	_ap=$(printf '%s' "$1" | sed -e 's|//*|/|g' -e 's|^/||' -e 's|/$||')
-	while [ -n "$_ap" ]; do
-		printf '%s\n' "*../$_ap/*"
-		case $_ap in
-		*/*) printf '%s\n' "$_ap/*" ;;
-		*) break ;;
-		esac
-		_ap=${_ap#*/}
-	done
-}
-
-# ask_entries: stdin patterns, deduplicated, as JSON "pattern": "ask" lines.
-ask_entries() {
-	awk '!seen[$0]++' | while IFS= read -r _pat; do
-		printf '      "%s": "ask",\n' "$(json_esc "$_pat")"
-	done | sed '$ s/,$//'
-}
-
-# ask_skill_links: ask_patterns for every skill link install makes, in the dir
-# its metadata.harness names. A skill without a valid harness gets no link.
-ask_skill_links() {
-	for _s in "$REPO"/skills/*/; do
-		[ -f "${_s}SKILL.md" ] || continue
-		_s=${_s%/}
-		_d=$(skill_dest "$(skill_harness "$_s")") || continue
-		ask_patterns "$_d/${_s##*/}"
-	done
-}
-
-# layer_content: the marker line, then the JSON layer.
-layer_content() {
-	_r=$(json_esc "$REPO")
-	_h=$(json_esc "$HOME_LINK")
-	# one "allow" key per directory: the checkout may be ~/.pyck/guidelines
-	_allow="\"$_r/*\": \"allow\""
-	if [ "$_h" != "$_r" ]; then _allow="$_allow,
-      \"$_h/*\": \"allow\""; fi
-	_ask=$({
-		ask_patterns "$REPO"
-		ask_patterns "$HOME_LINK"
-		ask_skill_links
-	} | ask_entries)
-	cat <<EOT
-$MARKER
-{
-  "\$schema": "https://opencode.ai/config.json",
-  "instructions": ["$_h/AGENTS.md"],
-  "permission": {
-    "external_directory": {
-      $_allow
-    },
-    "edit": {
-$_ask
-    }
-  }
-}
-EOT
-}
-
-# seed_text DST TEXT: write TEXT to DST with mode 0600 unless DST exists (user
-# data, like seed_once).
-seed_text() {
-	if [ -e "$1" ] || [ -L "$1" ]; then
-		ok kept "$(tilde "$1") (user data, never overwritten)"
-	else
-		run mkdir -p "$(dirname "$1")"
-		if [ "$DRY" -eq 0 ]; then printf '%s\n' "$2" >"$1"; fi
-		run chmod 600 "$1"
-		changed seeded "$(tilde "$1")"
+# drop_generated FILE: remove FILE if it is a generated file of ours (a regular
+# file, not a link, whose first line is a marker); status 1 when it is not.
+# Anything else at that path, including a user's own file, is left alone.
+drop_generated() {
+	if [ -f "$1" ] && [ ! -L "$1" ] && is_marked "$1"; then
+		run rm -f "$1"
+		changed removed "$(tilde "$1")"
+		return 0
 	fi
+	return 1
 }
 
-# seed_user_config: make sure opencode.json or opencode.jsonc exists, because
-# opencode would otherwise write its settings into the generated config.json
-# and drop our marker.
-seed_user_config() {
-	for _c in $USER_CONFIGS; do
-		if [ -e "$_c" ] || [ -L "$_c" ]; then return 0; fi
-	done
-	seed_text "$CONFIG_DIR/opencode.json" '{ "$schema": "https://opencode.ai/config.json" }'
-}
-
-# warn_instructions: an "instructions" list in the user's config replaces the
-# one in config.json (arrays are replaced, not concatenated). Heuristic: a line
-# that starts with whitespace and then "instructions"; it may hit a nested key.
-warn_instructions() {
-	for _c in $USER_CONFIGS; do
-		[ -f "$_c" ] || continue
-		if grep -E -q '^[[:space:]]+"instructions"' "$_c"; then
-			say note "$(tilde "$_c") sets \"instructions\", which replaces the org rules: add $(tilde "$HOME_LINK/AGENTS.md") to it"
-		fi
-	done
-}
-
-# drop_old_layer: remove the old ~/.opencode/opencode.json if it is ours.
-# OLD_DROPPED=1 when it is (or, on a dry run, would be) gone.
+# drop_old_layers: remove the generated files of earlier versions.
+# OLD_DROPPED=1 when ~/.opencode/opencode.json is (or, on a dry run, would be) gone.
 OLD_DROPPED=0
-drop_old_layer() {
-	if [ -f "$OLD_LAYER" ] && [ ! -L "$OLD_LAYER" ] && is_marked "$OLD_LAYER"; then
-		run rm -f "$OLD_LAYER"
-		changed removed "$(tilde "$OLD_LAYER")"
-		OLD_DROPPED=1
-	fi
+drop_old_layers() {
+	drop_generated "$OLD_CONFIG" || true
+	if drop_generated "$OLD_LAYER"; then OLD_DROPPED=1; fi
 }
 
 # drop_old_dir: remove ~/.opencode if it holds nothing but what opencode
@@ -593,15 +493,7 @@ drop_old_dir() {
 common_init "$@"
 manage "$OLD_SKILL_DIRS"
 link_skills skills
-if [ "$MODE" = install ]; then
-	write_marked "$LAYER" "$(layer_content)"
-	drop_old_layer
-	drop_old_dir
-	seed_user_config
-	warn_instructions
-else
-	remove_marked "$LAYER"
-	drop_old_layer
-fi
+drop_old_layers
+if [ "$MODE" = install ]; then drop_old_dir; fi
 prune
 common_finish
