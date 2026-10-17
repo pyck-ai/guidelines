@@ -21,7 +21,7 @@ The engineering rules left [pyck-ai/.github](https://github.com/pyck-ai/.github)
 | `docs/github-pr-standards.md` | [docs/pull-requests.md](https://github.com/pyck-ai/guidelines/blob/main/docs/pull-requests.md) |
 | `docs/github-issue-standards.md` | [docs/issues.md](https://github.com/pyck-ai/guidelines/blob/main/docs/issues.md) |
 | `docs/agent-protocols.md` | the [README](https://github.com/pyck-ai/guidelines#getting-started) (Getting started, `setup.sh`) and the org rules in [AGENTS.md](https://github.com/pyck-ai/guidelines/blob/main/AGENTS.md) |
-| `.opencode/opencode.example.json` | gone: `setup.sh` writes the opencode layer to `~/.config/opencode/config.json` |
+| `.opencode/opencode.example.json` | gone: `setup.sh` configures no harness; add `"instructions": ["~/.pyck/guidelines/AGENTS.md"]` to your `opencode.json` (see [Getting started](https://github.com/pyck-ai/guidelines#getting-started)) |
 | `docs/contributing.md`, `docs/community-health.md` | the [README of pyck-ai/.github](https://github.com/pyck-ai/.github#readme), which describes what GitHub applies org-wide |
 | `docs/renovate.md` | the [README of pyck-ai/renovate](https://github.com/pyck-ai/renovate#readme) |
 
@@ -44,7 +44,7 @@ pyck-review findings link these docs. Its rules and thresholds: [pyck-review doc
 
 Org rules come from a local checkout at `~/.pyck/guidelines`, never from the web. Clone this repository there, or clone it anywhere and run `./setup.sh` to link it; see [Getting started](../README.md#getting-started).
 
-- **opencode**: `./setup.sh` links the skills and writes the opencode layer that loads `AGENTS.md`.
+- **opencode**: `./setup.sh` links the skills; your `opencode.json` loads `AGENTS.md` (see [Getting started](../README.md#getting-started)). `./setup.sh` removes the `~/.config/opencode/config.json` that earlier versions generated.
 - **pi**: reads the generic skills that `./setup.sh` links into `~/.agents/skills`.
 - **Claude Code**: add the line `@~/.pyck/guidelines/AGENTS.md` to `~/.claude/CLAUDE.md`, which may import a home path with `@~/...` (see the [Claude Code memory docs](https://code.claude.com/docs/en/memory)). Claude Code v2.1.277 and later reads a repository's own `AGENTS.md` itself. The skills are not installed for Claude Code.
 

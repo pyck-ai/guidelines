@@ -6,7 +6,7 @@ set -u
 
 REPO=$(cd -P "$(dirname "$0")/.." && pwd -P)
 ROOT=${TMPDIR:-/tmp}/guidelines-setup-test.$$
-LAYER=.config/opencode/config.json
+CFG=.config/opencode/config.json
 NEWDIR=.agents/skills
 # Where our links used to be placed; setup.sh removes them and keeps the dirs.
 # OLD1 is opencode's skills dir: it still gets links, but only for skills tagged
@@ -65,8 +65,6 @@ is_link_to() { [ -L "$1" ] && [ "$(readlink "$1")" = "$2" ]; }
 first_line_is() { [ "$(head -n 1 "$1")" = "$2" ]; }
 is_real_dir() { [ -d "$1" ] && [ ! -L "$1" ]; }
 same_text() { [ "$(cat "$1")" = "$2" ]; }
-# json_ok FILE: FILE minus its first line is valid JSON.
-json_ok() { tail -n +2 "$1" | python3 -c 'import json,sys; json.loads(sys.stdin.read())'; }
 
 # links_to BASE [SKIP]: every skill is linked into ~/.agents/skills as
 # BASE/skills/<n>, except SKIP (a path).
@@ -98,6 +96,13 @@ plant_links() {
 		done
 	done
 }
+# plant_cfg [FILE]: a config.json that an older setup.sh generated (default
+# ~/.config/opencode/config.json).
+plant_cfg() {
+	_f=${1:-$H/$CFG}
+	mkdir -p "$(dirname "$_f")"
+	printf '%s\n{}\n' "$MARKER" >"$_f"
+}
 no_links() {
 	for _s in $SKILLS; do
 		absent "$H/$NEWDIR/$_s" || return 1
@@ -122,8 +127,6 @@ done
 # shellcheck disable=SC2086
 set -- $SKILLS
 S1=$1
-HAVE_PY=1
-command -v python3 >/dev/null 2>&1 || HAVE_PY=0
 
 mkdir -p "$ROOT" || exit 1
 trap 'rm -rf "$ROOT"' EXIT
@@ -131,18 +134,19 @@ trap 'rm -rf "$ROOT"' EXIT
 echo "== dry run"
 new_home
 plant_links "$REPO" "$OLD1" "$OLD2"
+plant_cfg
 before=$(snapshot)
 setup --dry-run
 after=$(snapshot)
 check "exit 0" rc_is 0
 check "changes nothing on disk" [ "$before" = "$after" ]
 check "says it is a dry run" says "Dry run: install"
-# home link, N new links, layer, seeded opencode.json, N old links in each
-# old dir
-check "reports what it would change" says "dry run, install: $((N * 3 + 3)) changed"
+# home link, N new links, the old config.json, N old links in each old dir
+check "reports what it would change" says "dry run, install: $((N * 3 + 2)) changed"
 check "reports the new links" says "linked    ~/$NEWDIR/$S1 -> ~/.pyck/guidelines/skills/$S1"
 check "reports the old config links removed" says "removed   ~/$OLD1/$S1"
 check "reports the old .claude links removed" says "removed   ~/$OLD2/$S1"
+check "reports the old config.json removed" says "removed   ~/$CFG"
 check "reports no conflict" says " 0 conflicts"
 check "removes no directory" not says_line "removed   ~/.claude/skills"
 
@@ -153,26 +157,11 @@ check "exit 0" rc_is 0
 check "every skill is linked into ~/.agents/skills" links_ok
 check "no ~/.claude is created" absent "$H/.claude"
 check "no opencode skills dir is created" absent "$H/$OLD1"
-check "layer is written" says "wrote     ~/$LAYER"
-check "layer starts with the marker" first_line_is "$H/$LAYER" "$MARKER"
-if [ "$HAVE_PY" -eq 1 ]; then
-	check "layer is valid JSON" json_ok "$H/$LAYER"
-else
-	printf 'SKIP layer is valid JSON (python3 missing)\n'
-fi
-check "layer does not load AGENTS.md from the checkout path" not grep -F -q "\"$REPO/AGENTS.md\"" "$H/$LAYER"
-check "layer loads AGENTS.md through ~/.pyck/guidelines" grep -F -q "\"$H/.pyck/guidelines/AGENTS.md\"" "$H/$LAYER"
-check "layer allows the checkout and ~/.pyck/guidelines" grep -F -q "\"$REPO/*\": \"allow\"" "$H/$LAYER"
-check "layer allows ~/.pyck/guidelines" grep -F -q "\"$H/.pyck/guidelines/*\": \"allow\"" "$H/$LAYER"
-check "layer guards the checkout" grep -F -q "\"*../${REPO#/}/*\": \"ask\"" "$H/$LAYER"
-check "layer guards ~/.pyck/guidelines" grep -F -q "\"*../${H#/}/.pyck/guidelines/*\": \"ask\"" "$H/$LAYER"
+check "no config.json is written" absent "$H/$CFG"
+check "no opencode.json is seeded" absent "$H/$USERCFG"
+check "no opencode config dir is created" absent "$H/.config"
 check "the .pyck/guidelines path links to the checkout" is_link_to "$H/.pyck/guidelines" "$REPO"
 check "reported as linked" says "linked    ~/.pyck/guidelines -> $REPO"
-check "layer guards the skill links" grep -F -q "\".agents/skills/$S1/*\": \"ask\"" "$H/$LAYER"
-check "layer guards the skill links from outside the worktree" grep -F -q "\"*../${H#/}/.agents/skills/$S1/*\": \"ask\"" "$H/$LAYER"
-check "layer does not name opencode's skills dir" not grep -F -q "opencode/skills" "$H/$LAYER"
-check "layer does not name ~/.claude" not grep -F -q ".claude" "$H/$LAYER"
-
 echo "== second install"
 setup
 check "exit 0" rc_is 0
@@ -187,7 +176,6 @@ check "exit 0" rc_is 0
 check "our links are gone" no_links
 check "dir ~/.agents/skills stays" is_real_dir "$H/$NEWDIR"
 check "dir ~/.agents stays" is_real_dir "$H/.agents"
-check "our layer is gone" absent "$H/$LAYER"
 check "our ~/.pyck/guidelines link is gone" absent "$H/.pyck/guidelines"
 check "the .pyck directory itself stays" is_real_dir "$H/.pyck"
 check "foreign link stays" is_link_to "$H/$NEWDIR/foreign" "$ROOT/elsewhere"
@@ -207,7 +195,7 @@ check "folder is untouched" same_text "$H/.pyck/guidelines/file" mine
 check "folder is still a real directory" is_real_dir "$H/.pyck/guidelines"
 check "explains the fix" says "uninstall"
 check "nothing else is installed" no_links
-check "no layer is written" absent "$H/$LAYER"
+check "no config.json is written" absent "$H/$CFG"
 setup uninstall
 check "uninstall: exit 0" rc_is 0
 check "uninstall: reported as kept" says "kept      ~/.pyck/guidelines"
@@ -222,7 +210,7 @@ check "exit 1" rc_is 1
 check "reported as conflict" says "conflict  ~/.pyck/guidelines links to"
 check "foreign link is untouched" is_link_to "$H/.pyck/guidelines" "$ROOT/elsewhere"
 check "nothing else is installed" no_links
-check "no layer is written" absent "$H/$LAYER"
+check "no config.json is written" absent "$H/$CFG"
 setup uninstall
 check "uninstall: exit 0" rc_is 0
 check "uninstall: foreign link stays" is_link_to "$H/.pyck/guidelines" "$ROOT/elsewhere"
@@ -237,7 +225,6 @@ setup
 check "exit 0" rc_is 0
 check "reported as ok" says "ok        ~/.pyck/guidelines"
 check "link is unchanged" is_link_to "$H/.pyck/guidelines" "$REPO"
-check "layer names ~/.pyck/guidelines/AGENTS.md" grep -F -q "\"$H/.pyck/guidelines/AGENTS.md\"" "$H/$LAYER"
 
 echo "== ~/.pyck/guidelines resolves to this checkout"
 # The link text differs from $REPO but resolves to it, as a clone would.
@@ -276,7 +263,6 @@ check "exit 0" rc_is 0
 check "reported as this checkout" says "ok        ~/.pyck/guidelines (this checkout)"
 check "still a real directory" is_real_dir "$H/.pyck/guidelines"
 check "every skill links through ~/.pyck/guidelines" links_ok
-check "layer loads AGENTS.md through ~/.pyck/guidelines" grep -F -q "\"$H/.pyck/guidelines/AGENTS.md\"" "$H/$LAYER"
 setup uninstall
 check "uninstall: exit 0" rc_is 0
 check "uninstall: our links are gone" no_links
@@ -323,7 +309,6 @@ check "reported as conflict" says "conflict  ~/$NEWDIR/$S1 exists and is not a l
 check "folder is untouched" same_text "$H/$NEWDIR/$S1/file" mine
 check "folder is still a real directory" is_real_dir "$H/$NEWDIR/$S1"
 check "every other link is made" links_ok "$H/$NEWDIR/$S1"
-check "layer is still written" [ -f "$H/$LAYER" ]
 
 echo "== foreign symlink at a target"
 new_home
@@ -461,8 +446,6 @@ fixture() {
 retag() { fixture "$1" "---\\nname: $1\\nmetadata:\\n  harness: $2\\n---\\n"; }
 # link_in NAME DIR: NAME is linked through ~/.pyck/guidelines into DIR (under $H).
 link_in() { is_link_to "$H/$2/$1" "$H/.pyck/guidelines/skills/$1"; }
-# in_layer PATH: the layer has an ask entry for PATH (under $H).
-in_layer() { grep -F -q "\"*../${H#/}/$1/*\": \"ask\"" "${2:-$H/$LAYER}"; }
 
 new_home
 new_fx
@@ -478,15 +461,6 @@ check "a double-quoted generic skill is not in opencode's skills dir" absent "$H
 check "a single-quoted opencode skill lands in opencode's skills dir" link_in oq "$OCDIR"
 check "the real skills land in ~/.agents/skills" links_ok
 check "reports the opencode link" says "linked    ~/$OCDIR/oc -> ~/.pyck/guidelines/skills/oc"
-check "layer guards the opencode skill in opencode's skills dir" in_layer "$OCDIR/oc"
-check "layer guards the opencode skill when the worktree is an ancestor" grep -F -q "\"$OCDIR/oc/*\": \"ask\"" "$H/$LAYER"
-check "layer does not guard the opencode skill in ~/.agents/skills" not in_layer "$NEWDIR/oc"
-check "layer guards the generic skill in ~/.agents/skills" in_layer "$NEWDIR/gq"
-check "layer does not guard the generic skill in opencode's skills dir" not in_layer "$OCDIR/gq"
-check "layer guards a real skill in ~/.agents/skills" in_layer "$NEWDIR/$S1"
-if [ "$HAVE_PY" -eq 1 ]; then
-	check "layer is valid JSON" json_ok "$H/$LAYER"
-fi
 setup
 check "re-run: 0 changed" says " 0 changed,"
 before=$(snapshot)
@@ -512,7 +486,6 @@ check "exit 0" rc_is 0
 check "an opencode skill lands below XDG_CONFIG_HOME" link_in oc xdg/opencode/skills
 check "nothing lands in ~/.config" absent "$H/.config"
 check "the real skills land in ~/.agents/skills" links_ok
-check "layer guards the skill below XDG_CONFIG_HOME" in_layer xdg/opencode/skills/oc "$H/xdg/opencode/config.json"
 setup uninstall
 check "uninstall: exit 0" rc_is 0
 check "uninstall: the opencode link is gone" absent "$H/xdg/opencode/skills/oc"
@@ -536,10 +509,8 @@ check "reports 5 conflicts" says " 5 conflicts"
 for _n in none bad flat empty late; do
 	check "$_n is not linked into ~/.agents/skills" absent "$H/$NEWDIR/$_n"
 	check "$_n is not linked into opencode's skills dir" absent "$H/$OCDIR/$_n"
-	check "layer does not guard $_n" not grep -F -q "/$_n/*" "$H/$LAYER"
 done
 check "the valid skills are still linked" links_ok
-check "layer is still written" [ -f "$H/$LAYER" ]
 setup uninstall
 check "uninstall: exit 0" rc_is 0
 check "uninstall: the valid skills are gone" no_links
@@ -557,8 +528,6 @@ check "exit 0 after the change" rc_is 0
 check "now linked into opencode's skills dir" link_in mv "$OCDIR"
 check "the old link is pruned" absent "$H/$NEWDIR/mv"
 check "the old link is reported removed" says "removed   ~/$NEWDIR/mv"
-check "layer guards the new dir" in_layer "$OCDIR/mv"
-check "layer no longer guards the old dir" not in_layer "$NEWDIR/mv"
 retag mv generic
 setup
 check "back to generic: linked into ~/.agents/skills" link_in mv "$NEWDIR"
@@ -572,107 +541,94 @@ check "exit 1" rc_is 1
 check "the conflict is reported" says "conflict  skills/mv/SKILL.md has no metadata.harness"
 check "the stale link is pruned" absent "$H/$NEWDIR/mv"
 
-echo "== legacy layer"
-for _legacy in "$LEGACY1" "$LEGACY2"; do
+echo "== config.json written by an older setup.sh"
+for _m in "$MARKER" "$LEGACY1" "$LEGACY2"; do
 	new_home
-	mkdir -p "$H/.config/opencode"
-	printf '%s\n{}\n' "$_legacy" >"$H/$LAYER"
+	plant_cfg
+	printf '%s\n{}\n' "$_m" >"$H/$CFG"
+	before=$(snapshot)
+	setup --dry-run
+	check "dry run: exit 0 (${_m%%:*})" rc_is 0
+	check "dry run: reports it removed (${_m%%:*})" says "removed   ~/$CFG"
+	check "dry run: removes nothing (${_m%%:*})" [ "$before" = "$(snapshot)" ]
 	setup
-	check "exit 0 (${_legacy%%:*})" rc_is 0
-	check "adopted and rewritten (${_legacy%%:*})" says "updated   ~/$LAYER"
-	check "now carries the marker (${_legacy%%:*})" first_line_is "$H/$LAYER" "$MARKER"
+	check "install: exit 0 (${_m%%:*})" rc_is 0
+	check "install: reported as removed (${_m%%:*})" says "removed   ~/$CFG"
+	check "install: it is gone (${_m%%:*})" absent "$H/$CFG"
+	check "install: no opencode.json is seeded (${_m%%:*})" absent "$H/$USERCFG"
+	setup
+	check "re-run: 0 changed (${_m%%:*})" says " 0 changed,"
 done
-
-echo "== layer without a marker"
 new_home
-mkdir -p "$H/.config/opencode"
-echo '{"mine": true}' >"$H/$LAYER"
 setup
-check "install: exit 1" rc_is 1
-check "install: reported as conflict" says "conflict  ~/$LAYER exists and was not generated"
-check "install: file is untouched" same_text "$H/$LAYER" '{"mine": true}'
-check "install: links are still made" links_ok
+plant_cfg
+setup uninstall --dry-run
+check "uninstall dry run: exit 0" rc_is 0
+check "uninstall dry run: reports it removed" says "removed   ~/$CFG"
+check "uninstall dry run: removes nothing" first_line_is "$H/$CFG" "$MARKER"
 setup uninstall
 check "uninstall: exit 0" rc_is 0
-check "uninstall: reported as kept" says "kept      ~/$LAYER"
-check "uninstall: file stays" same_text "$H/$LAYER" '{"mine": true}'
+check "uninstall: reported as removed" says "removed   ~/$CFG"
+check "uninstall: it is gone" absent "$H/$CFG"
 
-echo "== seeding opencode.json"
+echo "== foreign config.json"
 new_home
+mkdir -p "$H/.config/opencode"
+echo '{"mine": true}' >"$H/$CFG"
 setup
-check "exit 0" rc_is 0
-check "opencode.json is seeded" says "seeded    ~/$USERCFG"
-check "seed is the schema only" same_text "$H/$USERCFG" '{ "$schema": "https://opencode.ai/config.json" }'
-check "seed has no marker" not first_line_is "$H/$USERCFG" "$MARKER"
-setup
-check "re-run: exit 0" rc_is 0
-check "re-run: 0 changed" says " 0 changed,"
-echo '{ "theme": "mine" }' >"$H/$USERCFG"
-setup
-check "edited seed is never overwritten" same_text "$H/$USERCFG" '{ "theme": "mine" }'
+check "install: exit 0, not a conflict" rc_is 0
+check "install: reports no conflict" says " 0 conflicts"
+check "install: file is untouched" same_text "$H/$CFG" '{"mine": true}'
+check "install: links are made" links_ok
 setup uninstall
 check "uninstall: exit 0" rc_is 0
-check "uninstall: layer is gone" absent "$H/$LAYER"
-check "uninstall: opencode.json stays" same_text "$H/$USERCFG" '{ "theme": "mine" }'
-
-echo "== no seeding when opencode.jsonc exists"
+check "uninstall: file stays" same_text "$H/$CFG" '{"mine": true}'
+echo "-- a symlink to a marked file"
 new_home
 mkdir -p "$H/.config/opencode"
-echo '{}' >"$H/.config/opencode/opencode.jsonc"
+printf '%s\n{}\n' "$MARKER" >"$ROOT/target.json"
+ln -s "$ROOT/target.json" "$H/$CFG"
 setup
-check "exit 0" rc_is 0
-check "layer is written" says "wrote     ~/$LAYER"
-check "no opencode.json is seeded" absent "$H/$USERCFG"
-check "opencode.jsonc is untouched" same_text "$H/.config/opencode/opencode.jsonc" '{}'
+check "install: exit 0" rc_is 0
+check "install: the link stays" is_link_to "$H/$CFG" "$ROOT/target.json"
+setup uninstall
+check "uninstall: the link stays" is_link_to "$H/$CFG" "$ROOT/target.json"
+check "uninstall: the target stays" first_line_is "$ROOT/target.json" "$MARKER"
 
-echo "== no seeding when opencode.json is a link"
-new_home
-mkdir -p "$H/.config/opencode"
-printf '{}\n' >"$ROOT/target.json"
-ln -s "$ROOT/target.json" "$H/$USERCFG"
-setup
-check "exit 0" rc_is 0
-check "the link is untouched" is_link_to "$H/$USERCFG" "$ROOT/target.json"
-check "no seed is reported" not says "seeded"
-check "no instructions note" not says "note"
-
-echo "== instructions note"
+echo "== an existing opencode config is never touched"
 for _f in opencode.json opencode.jsonc; do
 	new_home
 	mkdir -p "$H/.config/opencode"
 	printf '{\n  "instructions": ["x.md"]\n}\n' >"$H/.config/opencode/$_f"
 	setup
 	check "exit 0 ($_f)" rc_is 0
-	check "note names the file ($_f)" says "note      ~/.config/opencode/$_f sets \"instructions\""
-	check "note names the org AGENTS.md ($_f)" says "~/.pyck/guidelines/AGENTS.md"
-	check "the user file is untouched ($_f)" same_text "$H/.config/opencode/$_f" '{
+	check "no note ($_f)" not says "note"
+	check "the file is untouched ($_f)" same_text "$H/.config/opencode/$_f" '{
+  "instructions": ["x.md"]
+}'
+	setup uninstall
+	check "uninstall: the file stays ($_f)" same_text "$H/.config/opencode/$_f" '{
   "instructions": ["x.md"]
 }'
 done
 
-echo "== foreign config.json"
-new_home
-mkdir -p "$H/.config/opencode"
-echo '{"mine": true}' >"$H/$LAYER"
-setup
-check "install: exit 1" rc_is 1
-check "install: reported as conflict" says "conflict  ~/$LAYER exists and was not generated"
-check "install: file is untouched" same_text "$H/$LAYER" '{"mine": true}'
-
 echo "== XDG_CONFIG_HOME"
 new_home
 SETUP_ENV="XDG_CONFIG_HOME=$H/xdg"
+plant_cfg "$H/xdg/opencode/config.json"
+plant_cfg
 setup
 check "exit 0" rc_is 0
-check "layer is written below XDG_CONFIG_HOME" first_line_is "$H/xdg/opencode/config.json" "$MARKER"
+check "our config.json below XDG_CONFIG_HOME is removed" absent "$H/xdg/opencode/config.json"
+check "reported as removed" says "removed   ~/xdg/opencode/config.json"
+check "the default config dir is not looked at" first_line_is "$H/$CFG" "$MARKER"
+check "no opencode.json is seeded there" absent "$H/xdg/opencode/opencode.json"
 check "skills are linked into ~/.agents/skills" links_ok
 check "no skills dir below XDG_CONFIG_HOME" absent "$H/xdg/opencode/skills"
-check "layer guards the skill links" grep -F -q "\"*../${H#/}/.agents/skills/$S1/*\": \"ask\"" "$H/xdg/opencode/config.json"
-check "opencode.json is seeded there" [ -f "$H/xdg/opencode/opencode.json" ]
-check "nothing is written to ~/.config" absent "$H/.config"
+plant_cfg "$H/xdg/opencode/config.json"
 setup uninstall
 check "uninstall: exit 0" rc_is 0
-check "uninstall: layer is gone" absent "$H/xdg/opencode/config.json"
+check "uninstall: config.json below XDG_CONFIG_HOME is removed" absent "$H/xdg/opencode/config.json"
 check "uninstall: skill links are gone" no_links
 
 echo "== migration from ~/.opencode"
@@ -691,7 +647,7 @@ check "exit 0" rc_is 0
 check "old layer is reported removed" says "removed   ~/.opencode/opencode.json"
 check "directory is reported removed" says_line "removed   ~/.opencode"
 check "directory is gone" absent "$H/.opencode"
-check "new layer is written" first_line_is "$H/$LAYER" "$MARKER"
+check "no config.json is written" absent "$H/$CFG"
 setup
 check "re-run: 0 changed" says " 0 changed,"
 echo "-- a foreign file"
@@ -729,7 +685,7 @@ printf '%s\n{}\n' "$MARKER" >"$H/.opencode/opencode.json"
 setup uninstall
 check "exit 0" rc_is 0
 check "old layer is removed" absent "$H/.opencode/opencode.json"
-check "new layer is removed" absent "$H/$LAYER"
+check "our config.json is removed too" absent "$H/$CFG"
 
 echo
 if [ "$FAILS" -eq 0 ]; then
