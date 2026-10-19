@@ -47,17 +47,17 @@ Keep each issue narrow and well-defined.
 
 ### No meta-issues
 
-Since an issue's only job is to carry *intent*, every issue must add intent of its own. A **meta-issue** (an issue whose only purpose is to group or point at other issues without contributing its own description or acceptance criteria) is just noise. Do not create one. Before creating any "umbrella" or "tracking" issue, ask whether it carries its own substance (a distinct description, its own acceptance criteria). If not, drop it and let each issue stand on its own.
+Since an issue's only job is to carry *intent*, every issue must add intent of its own and stand on its own. A **meta-issue** (an issue whose only purpose is to group or point at other issues without contributing its own description or acceptance criteria) is just noise. Do not create one. Before creating any "umbrella" or "tracking" issue, ask whether it carries its own substance (a distinct description, its own acceptance criteria). If not, drop it.
 
-- **Each issue must stand on its own.** A handful of related fixes do not need a parent to tie them together: create them as independent issues, each with its own type and scope.
+- **Related fixes need no parent.** A handful of related fixes do not need a parent to tie them together: create them as independent issues, each with its own type and scope.
 - **Don't fragment issues to mirror PRs or commits.** One PR may close several issues, and one issue may span several commits (see the [change lifecycle](../AGENTS.md#rules-for-every-change)). Never invent an extra parent/umbrella issue just to bundle work that will ship together: the PR is the bundle, and the commits are the record. Conversely, don't split work into separate PRs just because it touches separate issues.
 
 ### Parent / sub-issue relationships
 
 Parent ↔ sub-issue links are fine, but **only** when the parent carries real intent of its own and the split serves an organizational purpose:
 
-- **The parent is the single source of truth for the intent of the grouped work.** The parent issue holds the description and defines the acceptance criteria. Sub-issues exist to break the work into chunks that can be implemented incrementally or in parallel by multiple devs, and to make that progress visible on the project board.
-- **Sub-issues are organizational proxies and carry no issue type.** They exist purely for visibility on the project board; the parent (typically a Feature) remains the source of truth that defines the acceptance criteria. Do not duplicate or fragment them across the sub-issues.
+- **The parent holds the intent of the grouped work.** The parent issue (typically a Feature) holds the description and defines the acceptance criteria. Sub-issues exist to break the work into chunks that can be implemented incrementally or in parallel by multiple devs, and to make that progress visible on the project board.
+- **Sub-issues are organizational proxies and carry no issue type.** Do not duplicate or fragment the parent's acceptance criteria across the sub-issues.
 - **If the parent adds nothing, remove it.** When the would-be parent has no intent of its own and every sub-issue can stand alone, delete the parent and keep the standalone issues.
 
 ### Classify by the actual problem

@@ -46,9 +46,12 @@ subject. Example: `Add zone filter to the pick list`.
 1. Push the branch and open the PR as a draft, with the title from
    [Title](#title).
 2. Fill the description from [the PR template](#the-pr-template).
-3. Do the testing and test changes the change requires.
+3. Do the testing (manually, where applicable) and add or update the tests
+   the change requires.
 4. Run the [pre-ready checklist](#before-you-mark-it-ready).
-5. Mark the PR ready for review.
+5. Mark the PR ready for review. This transition **is** the testing
+   attestation, and reviewers should treat it that way; there are no
+   compliance or testing checkboxes.
 
 ## The PR template
 
@@ -67,11 +70,8 @@ The template's own comments are the point-of-use guidance for filling it in:
 - **Linked issues**: in the summary part, one issue per line, using one of the
   three trailers defined by the
   [Footer](./git.md#footer) rule.
-- **Review readiness**: there are no compliance or testing checkboxes. A PR
-  stays in draft while the work is in progress; the author marks it ready for
-  review only after testing the changes (manually, where applicable) and adding
-  or updating the tests the change requires. The ready-for-review transition
-  **is** the testing attestation, and reviewers should treat it that way.
+- **Review readiness**: see [Opening a PR](#opening-a-pr). The PR stays in
+  draft while the work is in progress.
 
 To change the template, edit it in place in
 [pyck-ai/.github](https://github.com/pyck-ai/.github).
@@ -127,11 +127,16 @@ A stack means a native GitHub stack (see GitHub's page
 not just PRs whose bases point at each other's branches: reviewers use
 GitHub's stack view, and chained bases do not show up there. Whenever one PR
 is based on another PR's branch, register the stack right away with the
-[`gh stack`](https://gh.io/stacks) extension:
+[`gh stack`](https://gh.io/stacks) extension. To stack:
 
-- new stack: `gh stack init`, then `gh stack submit`
-- existing PRs: `gh stack link <bottom> ... <top>` (PR numbers, URLs or
-  branch names, bottom first)
+1. Branch off the bottom PR's branch for each layer, and keep each layer
+   reviewable on its own (see the limits above).
+2. Register the stack:
+   - new stack: `gh stack init`, then `gh stack submit`
+   - existing PRs: `gh stack link <bottom> ... <top>` (PR numbers, URLs or
+     branch names, bottom first)
+3. Test each layer.
+4. Mark each PR ready only when its own layer passes the checklist below.
 
 All branches of a stack live in the same repository; forks are not supported.
 Merge bottom up, for example with `gh stack merge`. Branch protection of the
@@ -139,23 +144,15 @@ bottom PR's base applies to every layer, and admin bypass is not supported
 for stack merges. While a PR is in a stack its base cannot be changed;
 restructure with `gh stack unstack` first.
 
-To stack: branch off the bottom PR's branch for each layer, keep each layer
-reviewable on its own (see the limits above), run `gh stack init` and
-`gh stack submit` (or `gh stack link` for existing PRs), test each layer, and
-mark each PR ready only when its own layer passes the checklist below.
-
 ## Before you mark it ready
 
 Run the checks, fix what fails, and run them again until all pass:
 
-- The title is imperative, has no prefix and no trailing period, and is at most
-  72 characters.
-- Every instruction comment of the template is removed.
-- The only `#` or `##` heading is the one `## Additional Information`.
-- Trailers are exactly `Closes:`, `Part-of:` or `See-also:`, one issue per
-  line.
-- The summary has at most 5 paragraphs and claims nothing the commits do not
-  change; an irreversible commit is called out.
+- The title follows [Title](#title).
+- Every instruction comment of the template is removed, and the description
+  follows [Description structure](#description-structure) (including the
+  trailers).
+- The summary follows [Summary](#summary).
 - The changes are tested and the tests they require are added or updated.
 
 ## Classification

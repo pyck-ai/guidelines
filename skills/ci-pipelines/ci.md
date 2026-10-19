@@ -102,7 +102,6 @@ name: ci
 on:
   pull_request:
   push:
-    branches: [main]
 jobs:
   ci:
     runs-on: self-hosted-kata
