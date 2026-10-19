@@ -5,6 +5,8 @@
 ## Contents
 
 - [Purpose](#purpose)
+- [Review procedure](#review-procedure)
+- [Reporting findings](#reporting-findings)
 - [Tests](#tests)
 - [Design](#design)
 - [CI automation](#ci-automation)
@@ -21,6 +23,28 @@ A repository may add its own `CODING_STANDARDS.md` for review rules that
 apply only there; it never repeats an org rule. Review reads both. How a
 repository overrides an org default is set in the
 [org `AGENTS.md`](~/.pyck/guidelines/AGENTS.md).
+
+## Review procedure
+
+1. Read the repository's `CODING_STANDARDS.md` if it has one.
+2. Read the whole diff, then the commit messages and the linked issue.
+3. Walk the sections below in turn: Tests, Design, CI automation, In-code
+   documentation. Skip a section the diff does not touch.
+4. Before reporting a finding, check it against the diff: the line exists in
+   the change, and the rule you cite says what you claim. Drop the finding
+   if either fails.
+5. Report what remains, as described in the next section.
+
+## Reporting findings
+
+One finding per problem, each with the place, the rule and a fix:
+
+```text
+src/stock/pick_test.go:42: Tautological test (Tests).
+Asserts `maxItems == 10` against the constant it was just set to.
+Fix: assert the behavior that uses the limit, for example that the
+11th item is rejected.
+```
 
 ## Tests
 
@@ -42,7 +66,9 @@ Also:
 ## Design
 
 - Prefer deep modules: a small interface that hides real complexity.
-- Reject pass-through layers, wrappers and options that hide nothing.
+- Reject pass-through layers, wrappers and options that hide nothing. Example:
+  a `UserService` whose every method only calls the same-named method of
+  `UserRepository`.
 - Do not add layers or patterns to simple code without a caller that needs
   them.
 
