@@ -128,22 +128,22 @@ About stacked pull requests),
 not just PRs whose bases point at each other's branches: reviewers use
 GitHub's stack view, and chained bases do not show up there. Whenever one PR
 is based on another PR's branch, register the stack right away with the
-`gh stack` extension:
+`gh stack` extension. To stack:
 
-- new stack: `gh stack init`, then `gh stack submit`
-- existing PRs: `gh stack link <bottom> ... <top>` (PR numbers, URLs or
-  branch names, bottom first)
+1. Branch off the bottom PR's branch for each layer, and keep each layer
+   reviewable on its own (see the limits above).
+2. Register the stack:
+   - new stack: `gh stack init`, then `gh stack submit`
+   - existing PRs: `gh stack link <bottom> ... <top>` (PR numbers, URLs or
+     branch names, bottom first)
+3. Test each layer.
+4. Mark each PR ready only when its own layer passes the checklist below.
 
 All branches of a stack live in the same repository; forks are not supported.
 Merge bottom up, for example with `gh stack merge`. Branch protection of the
 bottom PR's base applies to every layer, and admin bypass is not supported
 for stack merges. While a PR is in a stack its base cannot be changed;
 restructure with `gh stack unstack` first.
-
-To stack: branch off the bottom PR's branch for each layer, keep each layer
-reviewable on its own (see the limits above), run `gh stack init` and
-`gh stack submit` (or `gh stack link` for existing PRs), test each layer, and
-mark each PR ready only when its own layer passes the checklist below.
 
 ## Before you mark it ready
 
