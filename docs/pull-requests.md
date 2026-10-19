@@ -45,14 +45,14 @@ subject. Example: `Add zone filter to the pick list`.
 
 1. Push the branch and open the PR as a draft, with the title from
    [Title](#title).
-2. Fill the body from [the PR template](#the-pr-template).
+2. Fill the description from [the PR template](#the-pr-template).
 3. Do the testing and test changes the change requires.
 4. Run the [pre-ready checklist](#before-you-mark-it-ready).
 5. Mark the PR ready for review.
 
 ## The PR template
 
-The PR body uses the org template. It is
+The PR description uses the org template. It is
 [`.github/PULL_REQUEST_TEMPLATE.md`](https://github.com/pyck-ai/.github/blob/main/.github/PULL_REQUEST_TEMPLATE.md)
 in the [pyck-ai/.github](https://github.com/pyck-ai/.github) repository, which
 GitHub injects into new PRs. Use the template as is: keep its
@@ -96,7 +96,7 @@ The summary is a short executive summary of the commits. Summarize, don't copy:
 - It does not claim changes that no commit makes.
 - Stay on the shorter side: aim for 2 or 3 paragraphs, and add more only when
   the PR really needs them to be understood or really makes that many changes.
-  **5 paragraphs at most.** A list counts as one paragraph; issue-link lines do
+  **5 paragraphs at most.** A list counts as one paragraph; trailers do
   not count. Details reviewers might want go under `## Additional Information`.
 
 If a commit is **Irreversible** (see [Classification](#classification)), the

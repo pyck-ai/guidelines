@@ -29,9 +29,9 @@ three groups.
   fit too.
   - `task build` builds every target in one bake and pushes nothing;
     `task build TARGET=<bake target>` builds one.
-  - In CI the shared pipeline runs one leg (a CI job) per target, each on
+  - In CI the reusable workflow runs one leg (a CI job) per target, each on
     its own runner, each running `task build TARGET=<target>` with the push
-    settings added by the pipeline, and then publishes.
+    settings added by the workflow, and then publishes.
   - Locally there is one bake, not several: on one machine they share CPU
     and cache and are slower than one bake, which already builds in
     parallel.
@@ -143,7 +143,7 @@ jobs:
           needs: ${{ toJSON(needs) }}
 ```
 
-A build workflow calls the shared pipeline, then gates it.
+A build workflow calls the reusable workflow, then gates it.
 
 ```yaml
 jobs:
