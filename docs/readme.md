@@ -5,6 +5,7 @@
 
 - [Root README: sections, in this order](#root-readme-sections-in-this-order)
 - [Getting started](#getting-started)
+- [Skeleton](#skeleton)
 - [Entrypoint, not a manual](#entrypoint-not-a-manual)
 - [Per-directory README](#per-directory-readme)
 - [Voice and formatting](#voice-and-formatting)
@@ -40,6 +41,44 @@ Badges above the heading are our own convention; backstage puts them below it.
   other command."
 - End with pointers to the fuller docs (for example the development doc).
 - The task runner owns the commands. The README does not list them all.
+
+## Skeleton
+
+The top of a root README, with the sections in order:
+
+````markdown
+[![License](https://img.shields.io/badge/license-FSL--1.1-blue)](./LICENSE)
+
+# my-service
+
+<!-- toc
+## Contents
+
+- [What is my-service?](#what-is-my-service)
+- [Getting started](#getting-started)
+-->
+
+Routes pick orders to the right warehouse zone.
+
+## What is my-service?
+
+The problem it solves and its core idea, then the technology.
+
+Out of the box, my-service includes:
+
+- **Router**: assigns zones, see [docs/routing.md](./docs/routing.md).
+
+## Getting started
+
+```sh
+task build   # build the binary
+task test    # run the tests
+```
+
+Needs Go 1.23 and Task. Run `task --list` for every other command.
+````
+
+The sections after it (Documentation to Security) follow the table above.
 
 ## Entrypoint, not a manual
 
@@ -101,7 +140,7 @@ the same change, never as a follow-up:
 
 ```sh
 markdownlint-cli2 README.md
-node <github-actions checkout>/agent-docs-check/check.mjs .   # contents, links
+node <path of your pyck-ai/github-actions checkout>/agent-docs-check/check.mjs .   # contents, links
 ```
 
 Use the repo's own markdownlint config when it has one. Otherwise use this

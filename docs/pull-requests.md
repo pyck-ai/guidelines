@@ -5,10 +5,12 @@
 
 - [What a PR is for](#what-a-pr-is-for)
 - [Title](#title)
+- [Opening a PR](#opening-a-pr)
 - [The PR template](#the-pr-template)
 - [Description structure](#description-structure)
 - [Summary](#summary)
 - [Size](#size)
+- [Before you mark it ready](#before-you-mark-it-ready)
 - [Classification](#classification)
 - [Guideline check](#guideline-check)
 -->
@@ -37,11 +39,20 @@ Write the title like a commit subject (see
 [git: Subject line](./git.md#subject-line)): imperative, capitalized,
 no prefix such as `feat:`, no trailing period, at most 72 characters. It
 names the change as a whole. A PR with a single commit uses that commit's
-subject.
+subject. Example: `Add zone filter to the pick list`.
+
+## Opening a PR
+
+1. Push the branch and open the PR as a draft, with the title from
+   [Title](#title).
+2. Fill the description from [the PR template](#the-pr-template).
+3. Do the testing and test changes the change requires.
+4. Run the [pre-ready checklist](#before-you-mark-it-ready).
+5. Mark the PR ready for review.
 
 ## The PR template
 
-The PR body uses the org template. It is
+The PR description uses the org template. It is
 [`.github/PULL_REQUEST_TEMPLATE.md`](https://github.com/pyck-ai/.github/blob/main/.github/PULL_REQUEST_TEMPLATE.md)
 in the [pyck-ai/.github](https://github.com/pyck-ai/.github) repository, which
 GitHub injects into new PRs. Use the template as is: keep its
@@ -78,15 +89,14 @@ The structure is always **summary + additional information**:
 
 ## Summary
 
-The summary is a short executive summary, not a copy of the commit messages and
-not a per-commit changelog. Summarize, don't copy:
+The summary is a short executive summary of the commits. Summarize, don't copy:
 
 - It describes everything the commits change; one sentence may cover several
   commits.
 - It does not claim changes that no commit makes.
 - Stay on the shorter side: aim for 2 or 3 paragraphs, and add more only when
   the PR really needs them to be understood or really makes that many changes.
-  **5 paragraphs at most.** A list counts as one paragraph; issue-link lines do
+  **5 paragraphs at most.** A list counts as one paragraph; trailers do
   not count. Details reviewers might want go under `## Additional Information`.
 
 If a commit is **Irreversible** (see [Classification](#classification)), the
@@ -112,7 +122,7 @@ Split a larger change into several PRs and stack them: the first targets
 `main`, each next one targets the branch of the PR below it, so each review
 shows only its own layer.
 
-A stack means a native GitHub stack (see
+A stack means a native GitHub stack (see GitHub's page
 [About stacked pull requests](https://docs.github.com/en/pull-requests/get-started/about-stacked-prs)),
 not just PRs whose bases point at each other's branches: reviewers use
 GitHub's stack view, and chained bases do not show up there. Whenever one PR
@@ -128,6 +138,25 @@ Merge bottom up, for example with `gh stack merge`. Branch protection of the
 bottom PR's base applies to every layer, and admin bypass is not supported
 for stack merges. While a PR is in a stack its base cannot be changed;
 restructure with `gh stack unstack` first.
+
+To stack: branch off the bottom PR's branch for each layer, keep each layer
+reviewable on its own (see the limits above), run `gh stack init` and
+`gh stack submit` (or `gh stack link` for existing PRs), test each layer, and
+mark each PR ready only when its own layer passes the checklist below.
+
+## Before you mark it ready
+
+Run the checks, fix what fails, and run them again until all pass:
+
+- The title is imperative, has no prefix and no trailing period, and is at most
+  72 characters.
+- Every instruction comment of the template is removed.
+- The only `#` or `##` heading is the one `## Additional Information`.
+- Trailers are exactly `Closes:`, `Part-of:` or `See-also:`, one issue per
+  line.
+- The summary has at most 5 paragraphs and claims nothing the commits do not
+  change; an irreversible commit is called out.
+- The changes are tested and the tests they require are added or updated.
 
 ## Classification
 
@@ -154,5 +183,6 @@ finding links to the section of this guideline that defines its rule. A
 blocking finding requests changes and sets the `guidelines-not-met` label,
 unless the repo makes every review advice with
 `pullRequests.requestChanges: false`. The list of checks and their
-thresholds is in pyck-review's
-[Rules](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md).
+thresholds is in `docs/rules.md` of the
+[pyck-review](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md)
+repository.

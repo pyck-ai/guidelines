@@ -7,6 +7,7 @@
 - [Gate jobs](#gate-jobs)
 - [Filters](#filters)
 - [Required checks](#required-checks)
+- [Adding a gated workflow](#adding-a-gated-workflow)
 - [Examples](#examples)
 -->
 
@@ -23,18 +24,18 @@ three groups.
   nothing that is kept and needs no registry. Every repository has it.
   `task ci` locally runs the same as the ci workflow, so a green local run
   predicts a green pull request.
-- **`build`**: produces and publishes artifacts. Container images built from
-  `docker-bake.hcl` are the case today; the name is generic on purpose, so
-  binaries or packages fit later.
+- **`build`**: produces and publishes artifacts. It builds container images from
+  `docker-bake.hcl`; the name is generic on purpose, so binaries or packages
+  fit too.
   - `task build` builds every target in one bake and pushes nothing;
     `task build TARGET=<bake target>` builds one.
-  - In CI the shared pipeline runs one leg per target, each on its own
-    runner, each running `task build TARGET=<leg>` with the push settings
-    added by the pipeline, and then publishes.
+  - In CI the reusable workflow runs one leg (a CI job) per target, each on
+    its own runner, each running `task build TARGET=<target>` with the push
+    settings added by the workflow, and then publishes.
   - Locally there is one bake, not several: on one machine they share CPU
     and cache and are slower than one bake, which already builds in
     parallel.
-- **`deploy`**: rolls an artifact out to an environment (pyck only today).
+- **`deploy`**: rolls an artifact out to an environment (pyck repositories only).
   - It is a job in the build workflow, after `build-success`, and it waits
     for the deployment to finish. It is not a separate workflow, because
     GitHub cannot make one workflow wait for another on the same commit:
@@ -77,6 +78,19 @@ A required check that never reports blocks the pull request forever.
   require the branch to be up to date.
 - `build-success` and `deploy-success` are required by each repository's own
   ruleset, because only some repositories have them.
+
+## Adding a gated workflow
+
+1. Put the workflow in the repository's own workflow file, one per group.
+2. Add a gate job named `<group>-success` (the name is unique across the
+   repository's workflows).
+3. Give the gate `needs` for every job of its group and `if: always()`, and
+   run `pyck-ai/github-actions/gate` in it.
+4. Leave `paths` and `branches` filters off the workflow's triggers.
+5. Add the check to the ruleset (see [Required checks](#required-checks)).
+6. Open a pull request and confirm the check reports under exactly that name
+   (`gh pr checks <n>`) before relying on the ruleset: a required check whose
+   name never reports blocks the pull request.
 
 ## Examples
 
@@ -129,7 +143,7 @@ jobs:
           needs: ${{ toJSON(needs) }}
 ```
 
-A build workflow calls the shared pipeline, then gates it.
+A build workflow calls the reusable workflow, then gates it.
 
 ```yaml
 jobs:
@@ -163,7 +177,7 @@ tasks:
 ```
 
 CI appends the push settings after `--`:
-`task build TARGET=<leg> BUILDER=<builder> -- <push settings>`.
+`task build TARGET=<target> BUILDER=<builder> -- <push settings>`.
 The full contract of the `build` task (`TARGET`, `BUILDER`, `CLI_ARGS`, no
 local-only flags under `CI=true`) is in the header of
 [`build-image.yml`](https://github.com/pyck-ai/github-actions/blob/main/.github/workflows/build-image.yml).
