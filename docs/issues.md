@@ -1,14 +1,5 @@
 # Issue Guidelines
 
-<!-- toc
-## Contents
-
-- [Creating an issue](#creating-an-issue)
-- [Issue Classification & Selection](#issue-classification--selection)
-- [Issue form templates](#issue-form-templates)
-- [Determining the version for a defect](#determining-the-version-for-a-defect)
--->
-
 An issue is the **single source of truth for *intent***: why a change is wanted and the acceptance criteria that define "done" (see the [change lifecycle](../AGENTS.md#rules-for-every-change) for how issues, commits, and PRs relate).
 
 ## Creating an issue

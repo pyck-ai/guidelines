@@ -1,20 +1,5 @@
 # Pull Request Guidelines
 
-<!-- toc
-## Contents
-
-- [What a PR is for](#what-a-pr-is-for)
-- [Title](#title)
-- [Opening a PR](#opening-a-pr)
-- [The PR template](#the-pr-template)
-- [Description structure](#description-structure)
-- [Summary](#summary)
-- [Size](#size)
-- [Before you mark it ready](#before-you-mark-it-ready)
-- [Classification](#classification)
-- [Guideline check](#guideline-check)
--->
-
 ## What a PR is for
 
 A pull request is a **mechanism for review**, nothing more; see the
@@ -195,5 +180,3 @@ unless the repo makes every review advice with
 thresholds is in `docs/rules.md` of the
 [pyck-review](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md)
 repository.
-
-The summary views and the door line are adapted from mattpocock's `pr` skill (MIT), <https://github.com/mattpocock/skills>, whose Summary section comes from Dex Horthy's `show-me` skill (MIT), <https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md>.

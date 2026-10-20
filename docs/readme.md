@@ -1,18 +1,5 @@
 # README Guidelines
 
-<!-- toc
-## Contents
-
-- [Root README: sections, in this order](#root-readme-sections-in-this-order)
-- [Getting started](#getting-started)
-- [Skeleton](#skeleton)
-- [Entrypoint, not a manual](#entrypoint-not-a-manual)
-- [Per-directory README](#per-directory-readme)
-- [Voice and formatting](#voice-and-formatting)
-- [Maintaining](#maintaining)
-- [Lint](#lint)
--->
-
 Every repository MUST have a root `README.md` that follows these guidelines.
 
 Public model for the section names: [backstage/backstage README](https://github.com/backstage/backstage/blob/master/README.md).
@@ -134,7 +121,7 @@ the same change, never as a follow-up:
    owner; otherwise link the owner.
 4. Re-read the in-code docs (package doc, script docstring, header comment)
    of every unit you touched and repair them too. See
-   [code-review.md](code-review.md#in-code-documentation).
+   [code-review.md](code-review.md#docs).
 
 ## Lint
 

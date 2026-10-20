@@ -12,6 +12,7 @@ tasks:
       - sh scripts/check-templates.sh
       - sh scripts/generate-skills.sh --check
       - sh tests/setup-test.sh
+      - sh tests/generate-test.sh
   generate:
     desc: Write the generated files under skills/ with `sh scripts/generate-skills.sh`; run it after editing docs/. Reads the checkout in PYCK_GITHUB_DIR (default ../.github)
     cmds:

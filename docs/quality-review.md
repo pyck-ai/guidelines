@@ -1,16 +1,5 @@
 # Quality Review Guidelines
 
-<!-- toc
-## Contents
-
-- [Purpose](#purpose)
-- [Look for the simpler structure](#look-for-the-simpler-structure)
-- [What to flag](#what-to-flag)
-- [Priority order](#priority-order)
-- [Tone](#tone)
-- [Approval bar](#approval-bar)
--->
-
 ## Purpose
 
 Load this when you review a diff or pull request for structure and
@@ -29,7 +18,7 @@ ownership so the feature becomes a natural extension of an existing
 abstraction, turning a special case into the default flow. A refactor that
 only moves complexity around, and leaves the reader the same number of
 concepts to hold, is not an improvement. Delete before you rearrange (see
-[code-design: Subtract before you add](code-design.md#subtract-before-you-add)).
+[code-design: Smallest change](code-design.md#smallest-change)).
 
 A comment that only says "rename this" is not enough when the problem is
 structural.
@@ -40,10 +29,10 @@ Rules that [code-design.md](code-design.md) already states are not repeated
 here; cite the section. Flag, with the rule it comes from:
 
 - **Complexity a reframing would delete** (see
-  [Subtract before you add](code-design.md#subtract-before-you-add)).
+  [Smallest change](code-design.md#smallest-change)).
 - **Wrappers and thin layers** that add indirection and clarify nothing (see
-  [Minimize reader load](code-design.md#minimize-reader-load) and
-  [Deep modules](code-design.md#deep-modules)).
+  [Smallest change](code-design.md#smallest-change) and
+  [Minimize reader load](code-design.md#minimize-reader-load)).
 - **Ad-hoc branching**: a new conditional, flag or nullable mode bolted into an
   unrelated flow, or a feature check scattered over shared code. Move the
   logic behind its own abstraction or into a model (see
@@ -104,8 +93,6 @@ these holds:
   layer despite a canonical home.
 
 Each is a presumptive blocker (Act on in
-[code-review.md](code-review.md#reporting-findings)) unless the author
+[code-review.md](code-review.md#findings)) unless the author
 justifies it clearly. Anything short of that gets specific feedback that
 pushes for the cleaner decomposition.
-
-Adapted from the thermo-nuclear review skills in Cursor's [cursor/plugins](https://github.com/cursor/plugins/tree/main/thermos) (MIT).

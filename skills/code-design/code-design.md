@@ -4,11 +4,8 @@
 <!-- toc
 ## Contents
 
-- [Purpose](#purpose)
 - [Smallest change](#smallest-change)
-- [Subtract before you add](#subtract-before-you-add)
 - [Minimize reader load](#minimize-reader-load)
-- [Deep modules](#deep-modules)
 - [Make operations idempotent](#make-operations-idempotent)
 - [Guard at the boundary](#guard-at-the-boundary)
 - [Make illegal states unrepresentable](#make-illegal-states-unrepresentable)
@@ -17,21 +14,20 @@
 - [Data shape and scaffold first](#data-shape-and-scaffold-first)
 -->
 
-## Purpose
-
-Judgement calls about the shape of code, for the author and the reviewer.
-Anything a linter or check can catch belongs there, not here. Each rule opens
-with when it applies. Fixing a bug and replacing an API are in
-[changing-code.md](~/.pyck/guidelines/docs/changing-code.md); tests follow [testing.md](~/.pyck/guidelines/docs/testing.md);
-reviewing a diff follows [code-review.md](~/.pyck/guidelines/docs/code-review.md).
+Judgement calls about the shape of code. Fixing a bug and replacing an API are
+in [changing-code.md](~/.pyck/guidelines/docs/changing-code.md).
 
 ## Smallest change
 
-Applies when you are about to add code, an abstraction or a layer.
+Applies when you add code, an abstraction, a layer or a module, or extend an
+existing system.
 
 Make the smallest change that solves the problem; fewer lines beat tidy
-boilerplate. A decision made in several places moves behind one source of
-truth (`user.CanManage()` instead of each handler repeating the role check).
+boilerplate. Cut complexity before you build, and design for the usage you can
+observe: no validators, parsers or options beyond what the requirement demands.
+A file, option or reference with nothing left to say is deleted, not left as a
+stub. A decision made in several places moves behind one source of truth
+(`user.CanManage()` instead of each handler repeating the role check).
 
 Take the first option that fully works:
 
@@ -39,8 +35,13 @@ Take the first option that fully works:
    asked for, and name what you skipped.
 2. The codebase has it. Use it the way the surrounding code does.
 3. The standard library or a platform feature does it.
-4. An installed dependency does it. Never add a dependency for a few lines.
-5. Otherwise write the minimum new code.
+4. An installed dependency does it.
+5. Otherwise write the minimum new code. A new dependency must replace more
+   than a few lines.
+
+Add a wrapper, adapter or layer only for a caller that needs it, and prefer a
+small interface that hides real complexity. A `UserService` whose every method
+only calls the same-named method of `UserRepository` hides nothing: inline it.
 
 Smallest never removes validation at trust boundaries (see
 [Guard at the boundary](#guard-at-the-boundary)), error handling that prevents
@@ -50,28 +51,14 @@ A deliberate simplification with a known limit gets a comment
 `shortcut: <the limit>, <when to upgrade>`, for example
 `shortcut: one worker, move to a queue past 50 jobs a minute`. The trigger is
 required; a shortcut without one rots. How review treats a marked shortcut is
-in [code-review.md](~/.pyck/guidelines/docs/code-review.md#design).
-
-## Subtract before you add
-
-Applies when you extend an existing system.
-
-Remove complexity first, then build. Cut to the minimum before you polish it.
-Design for the usage you can observe, not for edge cases nobody has hit: no
-validators, parsers or options beyond what the requirement demands. When a
-file, option or reference has nothing left to say, delete it instead of leaving
-a stub.
+in the `code-review` skill ([code-review.md](~/.pyck/guidelines/docs/code-review.md#design)).
 
 ## Minimize reader load
 
-Applies when you add a layer, a field or any state.
+Applies when you add a field or any state, or a layer that is not already
+justified under [Smallest change](#smallest-change).
 
-Reader load is the work needed to understand the code. It has two independent
-axes: layers to trace (indirections between a question and its answer) and
-state to hold (hidden or mutable context the reader keeps in mind). Line count
-and "clean architecture" are only proxies.
 
-- Inline wrappers with one caller and adapters with no second implementation.
 - Keep state scope small: a return value over a mutation, a local over a field,
   a field over module state, module state over a global. Derive a value
   instead of keeping a copy in sync.
@@ -81,17 +68,6 @@ and "clean architecture" are only proxies.
 
 The test: a new reader can answer "where does X come from?" and "what can
 change X?" in half a minute. If not, cut layers or state.
-
-## Deep modules
-
-Applies when you add a module or review its interface.
-
-- Prefer deep modules: a small interface that hides real complexity.
-- Reject pass-through layers, wrappers and options that hide nothing. Example:
-  a `UserService` whose every method only calls the same-named method of
-  `UserRepository`.
-- Do not add layers or patterns to simple code without a caller that needs
-  them.
 
 ## Make operations idempotent
 
@@ -119,13 +95,12 @@ and whether re-running ends in the same state.
 Applies when data enters the system or you are about to add a check.
 
 Validate and handle errors where data crosses a boundary: CLI arguments,
-config, external APIs, queues, files. Inside the system, pass typed data and
-propagate errors; do not re-validate. A nil check deep in a call chain whose
-boundary already validated is noise and false comfort.
+config, external APIs, queues, files. Inside the system, pass typed data inward
+and propagate errors; a nil check deep in a call chain whose boundary already
+validated is noise.
 
-- Parse raw input into domain types once, at the edge. Expose
-  domain concepts across the boundary, not transport, storage or framework
-  types.
+- Parse raw input into domain types once, at the edge. Expose domain concepts
+  across the boundary, not transport, storage or framework types.
 - Keep business logic in pure functions; the shell around them stays thin and
   mechanical, so the logic is testable without the framework.
 
@@ -168,9 +143,9 @@ conditionals: a state machine instead of booleans and phase checks, a
 discriminated union or lookup table instead of branching spread over files, a
 reducer instead of ad hoc mutations. Organize a module around one body of
 domain knowledge, not around the steps load, validate, transform, save; the
-order of execution is not ownership. Do not force an abstraction: if the code
-is already clear, local and unlikely to grow, leave it. An abstraction that
-removes no branch, duplicated rule or invalid state is just indirection.
+order of execution is not ownership. Add an abstraction only when it removes a
+branch, a duplicated rule or an invalid state; code that is already clear,
+local and unlikely to grow stays as it is.
 
 ## Separate before serializing shared state
 
@@ -181,8 +156,8 @@ state and the results merge where they are read: `indexer-state.json` plus
 `metrics-state.json`, not one `state.json` both workers write. Only when one
 shared write target is a real invariant, serialize access structurally with a
 lock, sequential phases, a single writer or compare-and-swap. A convention or
-an instruction is not concurrency control. A needed lock is a design smell to
-check, not the default.
+an instruction is not concurrency control. Treat a needed lock as a design
+smell to check.
 
 ## Data shape and scaffold first
 
@@ -195,5 +170,3 @@ step benefits from before the feature itself: CI, lint, test infrastructure
 and shared types. Setup comes before features, and a test that pins current
 behavior comes before the change to it. Example: add the `Order` type and the CI
 job that builds it before the first handler that uses them.
-
-Several rules are adapted from the principles of poteto's pstack (MIT), . The reuse ladder, the never-cut list and the `shortcut:` comment are adapted from the `ponytail` skill of DietrichGebert/ponytail (MIT), .

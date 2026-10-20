@@ -196,5 +196,3 @@ unless the repo makes every review advice with
 thresholds is in `docs/rules.md` of the
 pyck-review
 repository.
-
-The summary views and the door line are adapted from mattpocock's `pr` skill (MIT), , whose Summary section comes from Dex Horthy's `show-me` skill (MIT), .

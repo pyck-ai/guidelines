@@ -135,7 +135,7 @@ the same change, never as a follow-up:
    owner; otherwise link the owner.
 4. Re-read the in-code docs (package doc, script docstring, header comment)
    of every unit you touched and repair them too. See
-   [code-review.md](~/.pyck/guidelines/docs/code-review.md#in-code-documentation).
+   [code-review.md](~/.pyck/guidelines/docs/code-review.md#docs).
 
 ## Lint
 

@@ -1,46 +1,18 @@
 # Code Review Guidelines
 
-<!-- toc
-## Contents
-
-- [Purpose](#purpose)
-- [Lenses](#lenses)
-- [Review procedure](#review-procedure)
-- [Severity](#severity)
-- [Certainty and fixing](#certainty-and-fixing)
-- [Reporting findings](#reporting-findings)
-- [Standards lens](#standards-lens)
-- [Spec check](#spec-check)
-- [Tests](#tests)
-- [Design](#design)
-- [CI automation](#ci-automation)
-- [Docs check](#docs-check)
-- [In-code documentation](#in-code-documentation)
-- [Commits and pull request](#commits-and-pull-request)
--->
-
-## Purpose
-
-Load this when you review a diff or a pull request, or check a change against
-the review rules before committing it; not while implementing. It holds the
-procedure every review follows and the standards lens. Anything a linter or
-check can catch belongs in a linter or check, not here.
-
-A repository may add its own `CODING_STANDARDS.md` for review rules that
-apply only there; it never repeats an org rule. Review reads both. How a
-repository overrides an org default is set in the
-[org `AGENTS.md`](../AGENTS.md).
+This doc holds the procedure every review follows and the standards lens. A
+repository's `CODING_STANDARDS.md` adds rules that apply only there; read it
+too.
 
 ## Lenses
 
-There is no cheap review and no deep review: every review is a
-maximum-effort review against every lens.
+Every review is a maximum-effort review against every lens.
 
-| Lens | Question | Doc |
+| Lens | Question | Skill |
 | --- | --- | --- |
 | Standards | Does the diff follow the org guidelines and do what the issue asked? | this doc |
-| Correctness and security | Does it break behavior, setup or safety? | [security-review.md](security-review.md) |
-| Code quality | Is there a simpler structure? | [quality-review.md](quality-review.md) |
+| Correctness and security | Does it break behavior, setup or safety? | `security-review` ([security-review.md](security-review.md)) |
+| Code quality | Is there a simpler structure? | `quality-review` ([quality-review.md](quality-review.md)) |
 
 Run the lenses one after another in one session, or give each to its own
 reviewer in parallel. Give every reviewer the same scoped diff and context,
@@ -49,27 +21,27 @@ and merge the results with this doc's procedure and report.
 ## Review procedure
 
 1. Read the repository's `CODING_STANDARDS.md` if it has one.
-2. Read the whole diff, then the commit messages and the linked issue.
-   State the change's intent in one paragraph from them. If you cannot, ask
-   the author before reviewing; a review against a guessed intent misjudges
-   the change.
-3. Apply each lens in turn. Within the standards lens, skip a section the
-   diff does not touch.
+2. Read the whole diff, then the commit messages and the linked issue. State
+   the change's intent in one paragraph from them. If you cannot, ask the
+   author before reviewing.
+3. Apply each lens in turn.
 4. Before reporting a finding, check it against the diff: the line exists in
    the change, and the rule you cite says what you claim. Drop the finding
    if either fails.
-5. Report what remains, as described in [Reporting findings](#reporting-findings).
+5. Report what remains, as described in [Findings](#findings).
 
-## Severity
+## Findings
 
-A finding's group (see below) is its severity. Put a finding in Act on only
-when you have traced it end to end and are certain it matters; a reviewer who
-calls minor things blocking is soon ignored. Never raise a group to make a
-finding louder. Within a group, list the larger impact first.
+Sort every finding into one of four groups, judged against the stated intent:
 
-## Certainty and fixing
+- **Act on:** wrong behavior, a security hole or a maintenance cost that
+  would block the merge. Only for a finding you have traced end to end.
+- **Consider:** real, but it may not be worth fixing now; say the trade-off.
+- **Noted:** valid but not actionable in this change.
+- **Dismissed:** a candidate finding you checked and dropped, with the reason.
 
-How sure you are decides whether a finding is a defect or a question:
+Place a finding in the group its impact and certainty earn. How sure you are
+decides whether it is a defect or a question:
 
 - **Quoted and traced:** you can quote the line in the diff that shows the
   problem and have followed its effect. State it as a defect (Act on or
@@ -80,22 +52,13 @@ How sure you are decides whether a finding is a defect or a question:
   loss, an outage or a compromise; then put it in Consider, labeled
   speculative.
 
-An unfinished trace is handled in
-[security-review.md](security-review.md#finishing-a-finding).
-
-A review reports; it does not edit the diff. When the author asks you to fix
-what you found, apply a fix directly only if it is mechanical and a senior
-engineer would apply it without discussion, such as a stale comment, an unused
-variable or a wrong path. Ask first when reasonable engineers could disagree:
-a design choice, anything touching security or user-visible behavior,
-removed functionality, a large fix, and restoring or keeping a weakened gate
-(see [security-review.md](security-review.md#gate-integrity)).
-
-## Reporting findings
+For an unfinished trace, load the `security-review` skill
+([security-review.md](security-review.md#finishing-a-finding)).
 
 One finding per problem, each with the place, the rule and a fix. Number the
-findings across all groups, so the author can say "fix 2 and 5". An Act on or
-Consider finding also says what happens if it is not fixed:
+findings across all groups, so the author can say "fix 2 and 5"; within a
+group, list the larger impact first. An Act on or Consider finding also says
+what happens if it is not fixed:
 
 ```text
 2. src/stock/pick_test.go:42: Tautological test (Tests).
@@ -105,24 +68,25 @@ Fix: assert the behavior that uses the limit, for example that the
 If we skip it: the limit can break and the suite stays green.
 ```
 
-Sort the findings into four groups, judged against the stated intent:
-
-- **Act on:** wrong behavior, a security hole or a maintenance cost that
-  would block the merge.
-- **Consider:** real, but it may not be worth fixing now; say the trade-off.
-- **Noted:** valid but not actionable in this change.
-- **Dismissed:** a candidate finding you checked and dropped, with the reason.
-
 Prefer a few findings you are sure of over a long list of nits. When several
 reviewers or models reviewed, say which raised each finding; one raised
 independently by two of them is the strongest.
 
+A review reports; it does not edit the diff. When the author asks you to fix
+what you found, apply a fix directly only if it is mechanical and a senior
+engineer would apply it without discussion, such as a stale comment, an unused
+variable or a wrong path. Ask first when reasonable engineers could disagree:
+a design choice, anything touching security or user-visible behavior,
+removed functionality, a large fix, and restoring or keeping a weakened gate
+(load the `security-review` skill,
+[security-review.md](security-review.md#gate-integrity)).
+
 ## Standards lens
 
-Does the diff follow the org guidelines? The sections below name the
-guideline to check each part against.
+Does the diff follow the org guidelines? Each subsection names the guideline to
+check against; skip a subsection the diff does not touch.
 
-## Spec check
+### Spec
 
 Compare the diff with the linked issue's acceptance criteria. Without an
 issue, use the intent you stated.
@@ -132,61 +96,47 @@ issue, use the intent you stated.
   refactor beyond the issue. It makes the change harder to review and belongs
   in its own change (see [code-design: Smallest change](code-design.md#smallest-change)).
 
-## Tests
+### Tests
 
-Check each test in the diff against [testing.md](testing.md).
+Load the `testing` skill ([testing.md](testing.md)) and check each test in the
+diff against it.
 
-## Design
+### Design
 
-Check the diff against [code-design.md](code-design.md), and a bug fix or an API replacement also against [changing-code.md](changing-code.md).
+Load the `code-design` skill ([code-design.md](code-design.md)) and check the
+diff against it; a bug fix or an API replacement also against
+[changing-code.md](changing-code.md).
 
 A shortcut marked as in [code-design: Smallest change](code-design.md#smallest-change)
 is a decision, not a finding, unless the expected load already crosses the
 limit its comment names.
 
-## CI automation
+### CI
 
-- A repository exposes its checks as `task ci`, the one command its CI runs,
-  and, if it generates files, `task generate`. Further tasks are internal
-  steps of those two.
-- A workflow stays a thin consumer: it checks out, sets up tools and runs
-  `task ci` or calls actions. Reject workflow steps that carry logic of their
-  own. An action may add GitHub-side extras (run summary, annotations,
-  handing artifacts between jobs) but makes no decisions. Everything CI does
-  must also run locally, so moving to another CI system only means rewriting
-  the wrappers.
-- One tool, one job. The repository's Taskfile owns how to build; a release
-  tool only releases what the build already produced and never builds. A
-  build pushes images by digest and never applies a tag; the release step
-  applies tags.
-- Shared automation is a reusable composite action in
-  [pyck-ai/github-actions](https://github.com/pyck-ai/github-actions), so other
-  repositories adopt it with a `uses:` step instead of copying it.
+For a workflow or Taskfile change, load the `ci-pipelines` skill
+([ci.md](ci.md)) and check the diff against it.
 
-## Docs check
+### Docs
 
-The org [`AGENTS.md`](../AGENTS.md) says docs change with code. Enforce it:
-list the README, doc and doc comment that the diff made stale, and report
-each as a finding with the place it must change. A change makes a doc stale
-when it renames or moves a path, command, flag, environment variable or port,
-or alters behavior the doc describes. Search the repository for the old name
-rather than relying on the files the diff touches. For a README, check as in
-[readme.md](readme.md#maintaining). A stale doc is Act on when it would send a
-reader to something that no longer exists; otherwise Consider.
+Docs change with code (the org [`AGENTS.md`](../AGENTS.md)). List every README,
+doc and doc comment that the diff made stale, and report each as a finding with
+the place it must change. A change makes a doc stale when it renames or moves a
+path, command, flag, environment variable or port, or alters behavior the doc
+describes. Search the repository for the old name rather than relying on the
+files the diff touches. A stale doc is Act on when it would send a reader to
+something that no longer exists; otherwise Consider.
 
-## In-code documentation
-
+- Check a README as in the `readmes` skill
+  ([readme.md](readme.md#maintaining)).
 - The doc comment that introduces a module, package or public API is updated
   in the same change whenever its purpose, exported API, invariants or
   documented conventions change. It is the first thing a reader sees, so a
   stale one is worse than none.
-- Generated files (a `DO NOT EDIT` header) are regenerated, never
-  hand-edited, and never left to drift from their source.
-- READMEs follow [readme.md](readme.md).
+- Regenerate generated files (a `DO NOT EDIT` header) from their source; a
+  hand edit or a drifted file is a finding.
 
-## Commits and pull request
+### Commits and pull request
 
-Check the commit messages against [git.md](git.md) and the pull request
-description against [pull-requests.md](pull-requests.md).
-
-The certainty rules and the docs check are adapted from the `review` and `document-release` skills of garrytan's gstack (MIT), <https://github.com/garrytan/gstack>. The numbered findings, the "If we skip it" line and the marked-shortcut rule are adapted from the `ponytail-review` and `ponytail-debt` skills of DietrichGebert/ponytail (MIT), <https://github.com/DietrichGebert/ponytail>.
+Check the commit messages with the `commit-messages` skill ([git.md](git.md))
+and the pull request description with the `pull-requests` skill
+([pull-requests.md](pull-requests.md)).

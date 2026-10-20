@@ -1,21 +1,5 @@
 # Security Review Guidelines
 
-<!-- toc
-## Contents
-
-- [Purpose](#purpose)
-- [Scope](#scope)
-- [Breaking existing behavior](#breaking-existing-behavior)
-- [Breaking developer setup](#breaking-developer-setup)
-- [Feature leaks](#feature-leaks)
-- [Security vulnerabilities](#security-vulnerabilities)
-- [Scale check](#scale-check)
-- [Gate integrity](#gate-integrity)
-- [Intended breakage](#intended-breakage)
-- [Finishing a finding](#finishing-a-finding)
-- [Other reviewers' comments](#other-reviewers-comments)
--->
-
 ## Purpose
 
 Load this when you review a diff or pull request for bugs, breaking changes,
@@ -105,7 +89,7 @@ silences the failure the gate was added for is a finding. A justified one
 stays in the report under Noted with the reason. One source change with its
 regenerated snapshots, or one timeout raised in several tests, is one entry.
 Restoring or keeping a gate is the author's decision (see
-[code-review.md](code-review.md#certainty-and-fixing)).
+[code-review.md](code-review.md#findings)).
 
 ## Intended breakage
 
@@ -121,7 +105,7 @@ Never report a finding whose trace is unfinished. If the code that settles the
 question is available, read it: not "the client has this gap, unless the
 backend handles it", but what the backend does. If it truly cannot be checked,
 say what is unverified and put the finding in Consider. Group and severity
-follow [code-review.md](code-review.md#severity).
+follow [code-review.md](code-review.md#findings).
 
 ## Other reviewers' comments
 
@@ -129,8 +113,4 @@ Do your own pass first. Only then read the pull request discussion, including
 bot reviewers, with `gh pr view <n> --comments` and the review comments. Check
 each finding there against the code, drop the ones that do not hold, merge the
 ones you also found, and add the valid ones you missed. Say who raised each
-(see [code-review.md](code-review.md#reporting-findings)).
-
-Adapted from the thermo-nuclear review skills in Cursor's [cursor/plugins](https://github.com/cursor/plugins/tree/main/thermos) (MIT).
-
-The gate integrity list is adapted from the `review` skill of garrytan's gstack (MIT), <https://github.com/garrytan/gstack>. The scale check is adapted from the `ponytail-review` skill of DietrichGebert/ponytail (MIT), <https://github.com/DietrichGebert/ponytail>.
+(see [code-review.md](code-review.md#findings)).

@@ -1,18 +1,6 @@
 <!-- Generated from docs/git.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/git.md and run task generate. -->
 # Git Guidelines
 
-<!-- toc
-## Contents
-
-- [Subject line](#subject-line)
-- [Body](#body)
-- [Footer](#footer)
-- [Example](#example)
-- [Branch naming](#branch-naming)
-- [Best practices](#best-practices)
-- [Before you push](#before-you-push)
--->
-
 The commit message is the **single source of truth for the change**: what shipped and why it was done this way (see the [change lifecycle](~/.pyck/guidelines/AGENTS.md#rules-for-every-change)). It must stand entirely on its own: a reader of `git log` years from now must understand the rationale without opening the linked issue or PR. Issue and PR links are conveniences, never required reading.
 
 When creating commits, follow Tim Pope's commit message guidelines. The key rules are:

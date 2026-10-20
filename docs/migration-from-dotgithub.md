@@ -1,14 +1,5 @@
 # Migrating from pyck-ai/.github
 
-<!-- toc
-## Contents
-
-- [What moved](#what-moved)
-- [What changes for you](#what-changes-for-you)
-- [Agents](#agents)
-- [Coming next](#coming-next)
--->
-
 This page is removed on 2026-12-31.
 
 ## What moved

@@ -8,6 +8,7 @@
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [Status](#status)
+- [Attribution](#attribution)
 - [License](#license)
 - [Security](#security)
 -->
@@ -75,10 +76,15 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 
 - [CONTRIBUTING.md](https://github.com/pyck-ai/.github/blob/main/.github/CONTRIBUTING.md): start here.
 - [AGENTS.md](./AGENTS.md): read this first if you are an AI coding agent.
+- Markers in `docs/*.md` let one text serve both readers, sparingly: `<!-- human -->` ... `<!-- /human -->` shows a passage only on GitHub, and `<!-- agent` ... `-->` (or inline `<!-- agent: text -->`) only in the generated skill copy; rules stay visible to both. The grammar is in the header of [`scripts/generate-skills.sh`](./scripts/generate-skills.sh).
 
 ## Status
 
 Private for now, intended to become public. In use across the organization. The guidelines are young and change by pull request.
+
+## Attribution
+
+Several rules are adapted from open source projects; [ATTRIBUTION.md](./ATTRIBUTION.md) lists, per doc, each source with its author, link and licence.
 
 ## License
 

@@ -1,15 +1,5 @@
 # Testing Guidelines
 
-<!-- toc
-## Contents
-
-- [Purpose](#purpose)
-- [Test behavior, not implementation](#test-behavior-not-implementation)
-- [Smells to reject](#smells-to-reject)
-- [Determinism](#determinism)
-- [Bug fixes](#bug-fixes)
--->
-
 ## Purpose
 
 Rules for writing, changing and reviewing tests. Anything a linter or check can
@@ -96,5 +86,3 @@ needs expensive infrastructure for a small fix. Use the closest executable
 check instead (a script, a command, a focused integration run). Report the
 evidence: the check that failed before and how, and the run that passes after.
 If you could not show the failure first, say why.
-
-Several rules are adapted from the principles of poteto's pstack (MIT), <https://github.com/cursor/plugins/tree/main/pstack>.

@@ -1,19 +1,24 @@
 # CI Guidelines
 
-<!-- toc
-## Contents
-
-- [Groups](#groups)
-- [Gate jobs](#gate-jobs)
-- [Filters](#filters)
-- [Required checks](#required-checks)
-- [Adding a gated workflow](#adding-a-gated-workflow)
-- [Examples](#examples)
--->
-
 How a pyck-ai repository organizes its CI pipeline and which checks a pull
-request must pass. The [code review rules](./code-review.md#ci-automation)
-still apply: a workflow stays a thin consumer of the Taskfile.
+request must pass.
+
+## Taskfile and workflows
+
+- A repository exposes its checks as `task ci`, the one command its CI runs,
+  and, if it generates files, `task generate`. Further tasks are internal
+  steps of those two.
+- A workflow is a thin consumer: it checks out, sets up tools and runs a task
+  or calls actions. Logic lives in the Taskfile, so everything CI does also
+  runs locally and moving to another CI system only rewrites the wrappers. An
+  action may add GitHub-side extras (run summary, annotations, handing
+  artifacts between jobs) but makes no decisions.
+- One tool, one job. The Taskfile owns how to build; a release tool only
+  releases what the build produced. A build pushes images by digest; the
+  release step applies tags.
+- Shared automation is a reusable composite action in
+  [pyck-ai/github-actions](https://github.com/pyck-ai/github-actions), adopted
+  with a `uses:` step.
 
 ## Groups
 

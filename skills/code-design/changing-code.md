@@ -1,20 +1,8 @@
 <!-- Generated from docs/changing-code.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/changing-code.md and run task generate. -->
 # Changing Code Guidelines
 
-<!-- toc
-## Contents
-
-- [Purpose](#purpose)
-- [Fix root causes](#fix-root-causes)
-- [Migrate callers, then delete the old API](#migrate-callers-then-delete-the-old-api)
--->
-
-## Purpose
-
-Judgement calls about changing code that already exists: fixing a bug and
-replacing an API. The shape of the code itself is in
-[code-design.md](~/.pyck/guidelines/docs/code-design.md); tests follow [testing.md](~/.pyck/guidelines/docs/testing.md). Each
-rule opens with when it applies.
+Judgement calls about changing code that already exists. The shape of the code
+itself is in [code-design.md](~/.pyck/guidelines/docs/code-design.md).
 
 ## Fix root causes
 
@@ -22,12 +10,12 @@ Applies when you fix a bug.
 
 The symptom is where a wrong state became visible; the root cause is the first
 place the code did something it should not, or failed to handle a state it
-should. A fix at the symptom hides the evidence, and the fault surfaces
-elsewhere.
+should.
 
 - Reproduce first, then ask "why" until the answer is a wrong decision in the
   code, not a consequence of an earlier one. Capture the reproduction as a test
-  where one is practical (see [Bug fixes](~/.pyck/guidelines/docs/testing.md#bug-fixes)).
+  where one is practical (load the `testing` skill,
+  [testing.md](~/.pyck/guidelines/docs/testing.md#bug-fixes)).
 - Ask whether the state that triggered the symptom is legitimate. If the
   system may be in that state, handle it where it broke. If it should never
   exist, a check where it broke only hides the bug; find what produced it.
@@ -61,5 +49,3 @@ when the last phase lands. Shims that keep every intermediate state working
 outlive the migration. Example: changing `Order.status` from a string to an
 enum means changing the type and every caller in the migration, not adding a
 `StatusV2` field beside it.
-
-Several rules are adapted from the principles of poteto's pstack (MIT), .
