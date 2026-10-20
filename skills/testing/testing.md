@@ -8,13 +8,15 @@
 - [Test behavior, not implementation](#test-behavior-not-implementation)
 - [Smells to reject](#smells-to-reject)
 - [Determinism](#determinism)
+- [Bug fixes](#bug-fixes)
 -->
 
 ## Purpose
 
 Rules for writing, changing and reviewing tests. Anything a linter or check can
 catch belongs in a linter or check, not here. How the code under test is shaped
-is in [code-design.md](~/.pyck/guidelines/docs/code-design.md).
+is in [code-design.md](~/.pyck/guidelines/docs/code-design.md); how to fix a bug is in
+[changing-code.md](~/.pyck/guidelines/docs/changing-code.md).
 
 ## Test behavior, not implementation
 
@@ -80,5 +82,20 @@ in two tables or a compile-time type check. The invariant is the behavior.
 
 Tests are deterministic. No sleeps for synchronization; poll for the
 condition with a timeout.
+
+## Bug fixes
+
+Applies when you fix a bug.
+
+Start with the narrowest test that would have caught it, on the path the bug
+took, asserting the intended behavior and not the current code. Run it before
+the fix and confirm it fails for the intended reason; a test that passes, or
+fails for another reason, is not yet the reproduction. Then fix the bug and
+confirm the test passes. Add no new test when the only possible one is a bad
+one: it mostly tests mocks or implementation details, depends on timing, or
+needs expensive infrastructure for a small fix. Use the closest executable
+check instead (a script, a command, a focused integration run). Report the
+evidence: the check that failed before and how, and the run that passes after.
+If you could not show the failure first, say why.
 
 Several rules are adapted from the principles of poteto's pstack (MIT), .
