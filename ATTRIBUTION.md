@@ -70,6 +70,14 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 - The review lens: the thermo-nuclear review skills (Cursor plugins `thermos`, `ddf824a`).
 
+### [docs/git.md](./docs/git.md)
+
+- The subject, body and wrapping rules follow Tim Pope's [A Note About Git Commit Messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html). No text is adapted; the rules are reworded for pyck-ai.
+
+### [docs/readme.md](./docs/readme.md)
+
+- The section names follow the [backstage/backstage README](https://github.com/backstage/backstage/blob/master/README.md). No text is adapted. Badges above the heading are pyck-ai's own convention; backstage puts them below it.
+
 ### [docs/pull-requests.md](./docs/pull-requests.md)
 
 - The commit-order and tree-comparison rules: the `make-pr-easy-to-review` skill (Cursor plugins `cursor-team-kit`, `ddf824a`).

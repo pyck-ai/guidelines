@@ -1,11 +1,10 @@
 <!-- Generated from docs/testing.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/testing.md and run task generate. -->
 # Testing Guidelines
 
-## Purpose
-
 Rules for writing, changing and reviewing tests. Anything a linter or check can catch belongs in a linter or check, not
-here. How the code under test is shaped is in [code-design.md](~/.pyck/guidelines/docs/code-design.md); how to fix a bug
-is in [changing-code.md](~/.pyck/guidelines/docs/changing-code.md).
+here. The shape of the code under test is in the `code-design` skill
+([code-design.md](~/.pyck/guidelines/docs/code-design.md)); fixing a bug is in the same skill
+([changing-code.md](~/.pyck/guidelines/docs/changing-code.md)).
 
 ## Test behavior, not implementation
 
@@ -24,7 +23,7 @@ Judge every test against two imagined edits:
 - **Change the internals.** Keep every observable result and restructure the code underneath. If the test now fails, it
   is pinned to the implementation: it needs a rewrite on every refactor and catches no bug.
 
-Keep a test that fails on the first edit and survives the second. Rewrite or delete the rest. To write one: drive the
+Keep a test that fails on the first edit and survives the second; rewrite or delete the rest. To write one: drive the
 code through its users' interface with a concrete input, derive the expected value from the requirement and not from a
 run of the code, and assert what the contract promises, no less and no more.
 
@@ -36,6 +35,8 @@ The contract decides, not the shape of the assertion:
   helper is not.
 - An empty list is exact when no record matches, and hollow when the test only needs some result.
 - Assert the error type callers branch on, not message wording no caller reads.
+- A test may pin an invariant instead of a call, such as a key that must exist in two tables or a compile-time type
+  check. The invariant is the behavior.
 
 ```go
 // Pinned to the implementation: breaks when the cache is swapped out.
@@ -48,9 +49,6 @@ assert.Equal(t, a, b)
 assert.Equal(t, 1, db.Queries())
 ```
 
-A test may pin an invariant instead of a call, such as a key that must exist in two tables or a compile-time type check.
-The invariant is the behavior.
-
 ## Smells to reject
 
 | Smell | Example |
@@ -61,16 +59,21 @@ The invariant is the behavior.
 
 ## Determinism
 
-Tests are deterministic. No sleeps for synchronization; poll for the condition with a timeout.
+Make tests deterministic. Synchronize by polling for the condition with a timeout, never by sleeping.
 
 ## Bug fixes
 
 Applies when you fix a bug.
 
-Start with the narrowest test that would have caught it, on the path the bug took, asserting the intended behavior and
-not the current code. Run it before the fix and confirm it fails for the intended reason; a test that passes, or fails
-for another reason, is not yet the reproduction. Then fix the bug and confirm the test passes. Add no new test when the
-only possible one is a bad one: it mostly tests mocks or implementation details, depends on timing, or needs expensive
-infrastructure for a small fix. Use the closest executable check instead (a script, a command, a focused integration
-run). Report the evidence: the check that failed before and how, and the run that passes after. If you could not show
-the failure first, say why.
+1. Write the narrowest test that would have caught it, on the path the bug took, asserting the intended behavior and not
+   the current code.
+2. Run it before the fix and confirm it fails for the intended reason; a test that passes, or fails for another reason,
+   is not yet the reproduction.
+3. Fix the bug and confirm the test passes.
+
+Add no new test when the only possible one is a bad one: it mostly tests mocks or implementation details, depends on
+timing, or needs expensive infrastructure for a small fix. Use the closest executable check instead (a script, a
+command, a focused integration run).
+
+Report the evidence: the check that failed before and how, and the run that passes after. If you could not show the
+failure first, say why.

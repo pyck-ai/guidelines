@@ -20,13 +20,12 @@
 
 A pull request is a **mechanism for review**, nothing more; see the [change
 lifecycle](~/.pyck/guidelines/AGENTS.md#rules-for-every-change) for how it relates to issues and commits. Its
-description and discussion exist to help reviewers understand and evaluate the change; they are not the historical
-record. The durable rationale for *why* a change was made lives in the commit message(s) (see
-[git](~/.pyck/guidelines/docs/git.md)). A PR is **never** an SSOT: if something matters for the future, it belongs in a
-commit, not the PR description.
+description and discussion help reviewers evaluate the change and are not the historical record. The durable rationale
+for *why* a change was made lives in the commit message(s) (see [git](~/.pyck/guidelines/docs/git.md)): if something
+matters for the future, it belongs in a commit, not the PR description.
 
-Because the PR only serves the review, its description is just a **short executive summary** for reviewers. A PR may
-bundle several commits and close several issues; one PR does not mean one issue.
+The description is therefore a **short executive summary** for reviewers. A PR may bundle several commits and close
+several issues.
 
 pyck-review checks most of the rules below; see [Classification](#classification) and [Guideline
 check](#guideline-check).
@@ -43,43 +42,34 @@ whole. A PR with a single commit uses that commit's subject. Example: `Add zone 
 2. Fill the description from [the PR template](#the-pr-template).
 3. Do the testing (manually, where applicable) and add or update the tests the change requires.
 4. Run the [pre-ready checklist](#before-you-mark-it-ready).
-5. Mark the PR ready for review. This transition **is** the testing attestation, and reviewers should treat it that way;
-   there are no compliance or testing checkboxes.
+5. Mark the PR ready for review. This transition **is** the testing attestation, and reviewers treat it that way; the PR
+   has no compliance or testing checkboxes.
 
 ## The PR template
 
-The PR description uses the org template. It is
+The PR description uses the org template,
 [`.github/PULL_REQUEST_TEMPLATE.md`](~/.pyck/guidelines/skills/pull-requests/PULL_REQUEST_TEMPLATE.md) in the
-pyck-ai/.github repository, which GitHub injects into new PRs. Use the template as is: keep its two-part layout (see
-[Description structure](#description-structure)), replace the HTML comments with real content, and remove every
-instruction comment before the PR is ready. Add no other top-level headings; structure extra information with
-sub-headings under `## Additional Information`.
-
-The template's own comments are the point-of-use guidance for filling it in:
-
-- **Summary**: see [Summary](#summary).
-- **Linked issues**: in the summary part, one issue per line, using one of the three trailers defined by the
-  [Footer](~/.pyck/guidelines/docs/git.md#footer) rule.
-- **Review readiness**: see [Opening a PR](#opening-a-pr). The PR stays in draft while the work is in progress.
-
-To change the template, edit it in place in pyck-ai/.github.
+pyck-ai/.github repository, which GitHub injects into new PRs. Keep its two-part layout (see [Description
+structure](#description-structure)), replace the HTML comments with real content, and remove every instruction comment
+before the PR is ready. Add no other top-level headings; structure extra information with sub-headings under
+`## Additional Information`. To change the template, edit it in place in pyck-ai/.github.
 
 ## Description structure
 
 The structure is always **summary + additional information**:
 
-1. The **summary** comes first and has no headings (see [Summary](#summary)). Linked issues go here, one `Closes:` /
-   `Part-of:` / `See-also:` per line.
-2. Then exactly one `## Additional Information`. Below it is free text: the author may put whatever helps the review
-   there, structured only with `###` or deeper sub-headings. `N/A` if there is nothing to add.
+1. The **summary** comes first and has no headings (see [Summary](#summary)). Linked issues go here, one per line, each
+   with one of the three trailers defined by the [Footer](~/.pyck/guidelines/docs/git.md#footer) rule: `Closes:`,
+   `Part-of:` or `See-also:`.
+2. Then exactly one `## Additional Information`. Below it is free text that the author structures with `###` or deeper
+   sub-headings. `N/A` if there is nothing to add.
 3. No other `#` or `##` headings anywhere in the description.
 
 ## Summary
 
 The summary is a short executive summary of the commits. Summarize, don't copy:
 
-- It describes everything the commits change; one sentence may cover several commits.
-- It does not claim changes that no commit makes.
+- It describes everything the commits change, and only that; one sentence may cover several commits.
 - Stay on the shorter side: aim for 2 or 3 paragraphs, and add more only when the PR really needs them to be understood
   or really makes that many changes. **5 paragraphs at most.** A list counts as one paragraph; trailers do not count.
   Details reviewers might want go under `## Additional Information`.
@@ -108,9 +98,8 @@ When you split work into commits, order them so each builds on the one before: s
 UI, tests. After you rewrite a PR branch's history, prove the content did not change: note `git rev-parse <old>^{tree}`
 before the rewrite and compare it with `git rev-parse HEAD^{tree}` after. Do not push if they differ unintentionally.
 
-If notes in the description cannot make a PR reviewable, split it instead. Split a larger change into several PRs and
-stack them: the first targets `main`, each next one targets the branch of the PR below it, so each review shows only its
-own layer.
+If notes in the description cannot make a PR reviewable, split it into several PRs and stack them: the first targets
+`main`, each next one targets the branch of the PR below it, so each review shows only its own layer.
 
 A stack means a native GitHub stack (see GitHub's page About stacked pull requests), not just PRs whose bases point at
 each other's branches: reviewers use GitHub's stack view, and chained bases do not show up there. Whenever one PR is
@@ -121,7 +110,7 @@ based on another PR's branch, register the stack right away with the `gh stack` 
    - new stack: `gh stack init`, then `gh stack submit`
    - existing PRs: `gh stack link <bottom> ... <top>` (PR numbers, URLs or branch names, bottom first)
 3. Test each layer.
-4. Mark each PR ready only when its own layer passes the checklist below.
+4. Mark each PR ready only when its own layer passes the [checklist](#before-you-mark-it-ready).
 
 All branches of a stack live in the same repository; forks are not supported. Merge bottom up, for example with
 `gh stack merge`. Branch protection of the bottom PR's base applies to every layer, and admin bypass is not supported
@@ -147,8 +136,8 @@ several commits, so it may hold several kinds). Two more properties are judged p
 - **Irreversible**: a revert cannot undo it. It deletes or rewrites data, removes infrastructure, or has an effect
   outside the system.
 
-Classification is automated, not self-reported, so the PR has no classification checkboxes. The kind of a commit should
-match the type of the issue it links.
+Classification is automated, so the PR has no classification checkboxes. The kind of a commit matches the type of the
+issue it links.
 
 ## Guideline check
 

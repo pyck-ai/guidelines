@@ -1,29 +1,24 @@
 <!-- Generated from docs/quality-review.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/quality-review.md and run task generate. -->
 # Quality Review Guidelines
 
-## Purpose
-
-Load this when you review a diff or pull request for structure and maintainability. It is the code quality lens of every
-review. The procedure, the severity rules and the report format are in
-[code-review.md](~/.pyck/guidelines/docs/code-review.md); the rules for the shape of code are in
-[code-design.md](~/.pyck/guidelines/docs/code-design.md). This doc adds how a reviewer applies them, and what to flag
-that they do not already say.
+The code quality lens of every review. The procedure, the grouping and the report format are in the `code-review` skill
+([code-review.md](~/.pyck/guidelines/docs/code-review.md)); the rules for the shape of code are in the `code-design`
+skill ([code-design.md](~/.pyck/guidelines/docs/code-design.md)). This doc adds how a reviewer applies them, and what to
+flag that they do not already say.
 
 ## Look for the simpler structure
 
-Do not stop at "this could be a bit cleaner". Ask whether the change can be reframed so that whole branches, helpers,
-modes or layers disappear, while behavior stays the same: using the existing architecture better, moving ownership so
-the feature becomes a natural extension of an existing abstraction, turning a special case into the default flow. A
-refactor that only moves complexity around, and leaves the reader the same number of concepts to hold, is not an
-improvement. Delete before you rearrange (see [code-design: Smallest
-change](~/.pyck/guidelines/docs/code-design.md#smallest-change)).
-
-A comment that only says "rename this" is not enough when the problem is structural.
+Look past "this could be a bit cleaner". Ask whether the change can be reframed so that whole branches, helpers, modes
+or layers disappear while behavior stays the same: using the existing architecture better, moving ownership so the
+feature becomes a natural extension of an existing abstraction, turning a special case into the default flow. A refactor
+that only moves complexity around, and leaves the reader the same number of concepts to hold, is not an improvement.
+Delete before you rearrange (see [Smallest change](~/.pyck/guidelines/docs/code-design.md#smallest-change)). For a
+structural problem, name the restructuring; "rename this" is not enough.
 
 ## What to flag
 
-Rules that [code-design.md](~/.pyck/guidelines/docs/code-design.md) already states are not repeated here; cite the
-section. Flag, with the rule it comes from:
+Each flag names the `code-design` section it comes from; cite that section in the finding rather than restating the
+rule.
 
 - **Complexity a reframing would delete** (see [Smallest
   change](~/.pyck/guidelines/docs/code-design.md#smallest-change)).
@@ -34,8 +29,8 @@ section. Flag, with the rule it comes from:
   scattered over shared code. Move the logic behind its own abstraction or into a model (see [Model the
   domain](~/.pyck/guidelines/docs/code-design.md#model-the-domain)).
 - **Magic**: generic handling that hides a simple data shape. Prefer direct, boring code.
-- **Type and boundary mess**: casts, `any` or `unknown`, optionality that is not needed, loose object shapes, or a
-  silent fallback that covers an unclear invariant (see [Guard at the
+- **Type and boundary mess**: casts, `any` or `unknown`, optionality that is not needed, loose object shapes, a silent
+  fallback that covers an unclear invariant, or a boundary leak (see [Guard at the
   boundary](~/.pyck/guidelines/docs/code-design.md#guard-at-the-boundary) and [Make illegal states
   unrepresentable](~/.pyck/guidelines/docs/code-design.md#make-illegal-states-unrepresentable)).
 - **Logic in the wrong layer**: feature logic in a shared path, internals leaking through an API, or a bespoke helper
@@ -57,13 +52,13 @@ List the findings in this order, and spend the words on the first ones:
 5. File size and decomposition.
 6. Modularity, legibility and maintainability.
 
-Prefer a few findings you are sure of over many cosmetic ones; nits do not belong next to a structural problem.
+Leave nits out when a structural problem is present.
 
 ## Tone
 
-Be direct and demanding, not rude. Do not soften a real maintainability problem into a suggestion, and say clearly when
-the change missed a large simplification. Example: "This adds another special case to an already busy flow. Can it go
-behind its own abstraction?"
+Be direct and demanding, not rude. State a real maintainability problem as one, not as a suggestion, and say clearly
+when the change missed a large simplification. Example: "This adds another special case to an already busy flow. Can it
+go behind its own abstraction?"
 
 ## Approval bar
 
@@ -75,7 +70,7 @@ Do not approve because the behavior is right. Approve only when none of these ho
 - a file pushed past 1000 lines;
 - special-case branching that tangles an existing flow, or feature checks scattered over shared code;
 - a hacky or magic abstraction, or wrapper, cast or optionality churn that hides the real design;
-- a boundary leak, or a duplicate of an existing helper, or logic in the wrong layer despite a canonical home.
+- a boundary leak, a duplicate of an existing helper, or logic in the wrong layer despite a canonical home.
 
 Each is a presumptive blocker (Act on in [code-review.md](~/.pyck/guidelines/docs/code-review.md#findings)) unless the
 author justifies it clearly. Anything short of that gets specific feedback that pushes for the cleaner decomposition.

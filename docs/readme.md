@@ -2,9 +2,6 @@
 
 Every repository MUST have a root `README.md` that follows these guidelines.
 
-Public model for the section names: [backstage/backstage README](https://github.com/backstage/backstage/blob/master/README.md).
-Badges above the heading are our own convention; backstage puts them below it.
-
 ## Root README: sections, in this order
 
 | # | Section | Content | Omit when |
@@ -27,7 +24,6 @@ Badges above the heading are our own convention; backstage puts them below it.
 - Then: "Run `task --list` (or the repo's task runner equivalent) for every
   other command."
 - End with pointers to the fuller docs (for example the development doc).
-- The task runner owns the commands. The README does not list them all.
 
 ## Skeleton
 
@@ -69,8 +65,10 @@ The sections after it (Documentation to Security) follow the table above.
 
 ## Entrypoint, not a manual
 
-A README is an entrypoint. If another file owns a subject, link it; an
-entrypoint that repeats it drifts from it. Do not put in a README:
+A README is an entrypoint. Before writing a fact, find its owner (code doc
+comment, `--help`, script header, a doc under `docs/`, a unit file). If one
+exists, link it; if you move a fact into the README, delete the other copy.
+Do not put in a README:
 
 | Do not include | Link instead |
 | --- | --- |
@@ -93,9 +91,6 @@ and 8. A directory README may carry local maintenance rules; follow them there.
 - **Dense, not marketing.** Facts, tables over prose; prefer editing a line to
   adding a section. No "powerful", "seamless", "simply".
 - Active voice, present tense, one idea per sentence, no preamble.
-- **Each fact lives once.** Before writing a fact, find its owner (code doc
-  comment, `--help`, script header, a doc under `docs/`, a unit file). If one
-  exists, link it. If you move a fact into the README, delete the other copy.
 - Relative links for anything in the repo. A file in another repository is
   linked as `https://github.com/<owner>/<repo>/blob/<branch>/<path>`, with an
   anchor where a section is meant, never as `raw.githubusercontent.com`. Agent
@@ -109,9 +104,9 @@ and 8. A directory README may carry local maintenance rules; follow them there.
 
 ## Maintaining
 
-Docs must never drift from the tree on disk. When a change alters what a
-README describes (layout, commands, ports, entrypoints, behavior), fix it in
-the same change, never as a follow-up:
+When a change alters what a README describes (layout, commands, ports,
+entrypoints, behavior), fix the README in the same change, never as a
+follow-up:
 
 1. List every path, command, port, flag and env var the README names.
 2. Check each against the tree: the path exists, the command runs (or
