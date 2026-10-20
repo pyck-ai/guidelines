@@ -8,12 +8,14 @@
 - [Lenses](#lenses)
 - [Review procedure](#review-procedure)
 - [Severity](#severity)
+- [Certainty and fixing](#certainty-and-fixing)
 - [Reporting findings](#reporting-findings)
 - [Standards lens](#standards-lens)
 - [Spec check](#spec-check)
 - [Tests](#tests)
 - [Design](#design)
 - [CI automation](#ci-automation)
+- [Docs check](#docs-check)
 - [In-code documentation](#in-code-documentation)
 - [Commits and pull request](#commits-and-pull-request)
 -->
@@ -65,6 +67,30 @@ A finding's group (see below) is its severity. Put a finding in Act on only
 when you have traced it end to end and are certain it matters; a reviewer who
 calls minor things blocking is soon ignored. Never raise a group to make a
 finding louder. Within a group, list the larger impact first.
+
+## Certainty and fixing
+
+How sure you are decides whether a finding is a defect or a question:
+
+- **Quoted and traced:** you can quote the line in the diff that shows the
+  problem and have followed its effect. State it as a defect (Act on or
+  Consider by impact).
+- **Pattern match:** it looks like a known defect but you have not shown it
+  here. Phrase it as a question to the author, in Consider.
+- **Speculation:** you can name no line. Dismiss it, unless it suggests data
+  loss, an outage or a compromise; then put it in Consider, labeled
+  speculative.
+
+An unfinished trace is handled in
+[security-review.md](~/.pyck/guidelines/docs/security-review.md#finishing-a-finding).
+
+A review reports; it does not edit the diff. When the author asks you to fix
+what you found, apply a fix directly only if it is mechanical and a senior
+engineer would apply it without discussion, such as a stale comment, an unused
+variable or a wrong path. Ask first when reasonable engineers could disagree:
+a design choice, anything touching security or user-visible behavior,
+removed functionality, a large fix, and restoring or keeping a weakened gate
+(see [security-review.md](~/.pyck/guidelines/docs/security-review.md#gate-integrity)).
 
 ## Reporting findings
 
@@ -131,6 +157,17 @@ Check the diff against [code-design.md](~/.pyck/guidelines/docs/code-design.md),
   pyck-ai/github-actions, so other
   repositories adopt it with a `uses:` step instead of copying it.
 
+## Docs check
+
+The org [`AGENTS.md`](~/.pyck/guidelines/AGENTS.md) says docs change with code. Enforce it:
+list the README, doc and doc comment that the diff made stale, and report
+each as a finding with the place it must change. A change makes a doc stale
+when it renames or moves a path, command, flag, environment variable or port,
+or alters behavior the doc describes. Search the repository for the old name
+rather than relying on the files the diff touches. For a README, check as in
+[readme.md](~/.pyck/guidelines/docs/readme.md#maintaining). A stale doc is Act on when it would send a
+reader to something that no longer exists; otherwise Consider.
+
 ## In-code documentation
 
 - The doc comment that introduces a module, package or public API is updated
@@ -145,3 +182,5 @@ Check the diff against [code-design.md](~/.pyck/guidelines/docs/code-design.md),
 
 Check the commit messages against [git.md](~/.pyck/guidelines/docs/git.md) and the pull request
 description against [pull-requests.md](~/.pyck/guidelines/docs/pull-requests.md).
+
+The certainty rules and the docs check are adapted from the `review` and `document-release` skills of garrytan's gstack (MIT), .
