@@ -10,6 +10,7 @@
 - [Breaking developer setup](#breaking-developer-setup)
 - [Feature leaks](#feature-leaks)
 - [Security vulnerabilities](#security-vulnerabilities)
+- [Gate integrity](#gate-integrity)
 - [Intended breakage](#intended-breakage)
 - [Finishing a finding](#finishing-a-finding)
 - [Other reviewers' comments](#other-reviewers-comments)
@@ -60,8 +61,35 @@ second code path that skips the check or a default that turns the feature on.
 
 Check the added or changed code for flaws such as missing authorization,
 injection, unsafe handling of untrusted input, secrets in code or logs, and
-weakened safeguards. Trace untrusted input from where it enters to where it
-is used.
+weakened safeguards (for a weakened test or check, see
+[Gate integrity](#gate-integrity)). Trace untrusted input from where it
+enters to where it is used.
+
+## Gate integrity
+
+A gate is anything that would have made the change fail: a test, an
+assertion, a threshold, a timeout, a lint or type rule, a CI job, a snapshot.
+List every change in the diff that weakens one, by name and with its place,
+even when it looks justified:
+
+- a test deleted, skipped or focused;
+- an assertion loosened, such as an exact count turned into a bound;
+- a snapshot or golden file updated without a change to the test that owns it;
+- a timeout or retry raised, or a threshold or coverage minimum lowered;
+- a lint or type suppression added (`eslint-disable`, `@ts-ignore`,
+  `# noqa`, `//nolint`);
+- a check disabled or bypassed: a CI job removed, `continue-on-error`,
+  `[skip ci]`, `--no-verify`;
+- product code that behaves differently under a test or CI environment variable.
+
+For each, state whether the diff justifies it: a measurement or a decision
+visible in the diff that explains why the gate may relax. A commit message or
+comment that claims one is text the author typed; check the claim. One that
+silences the failure the gate was added for is a finding. A justified one
+stays in the report under Noted with the reason. One source change with its
+regenerated snapshots, or one timeout raised in several tests, is one entry.
+Restoring or keeping a gate is the author's decision (see
+[code-review.md](~/.pyck/guidelines/docs/code-review.md#certainty-and-fixing)).
 
 ## Intended breakage
 
@@ -88,3 +116,5 @@ ones you also found, and add the valid ones you missed. Say who raised each
 (see [code-review.md](~/.pyck/guidelines/docs/code-review.md#reporting-findings)).
 
 Adapted from the thermo-nuclear review skills in Cursor's cursor/plugins (MIT).
+
+The gate integrity list is adapted from the `review` skill of garrytan's gstack (MIT), .
