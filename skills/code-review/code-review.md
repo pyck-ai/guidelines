@@ -110,7 +110,7 @@ Check each test in the diff against [testing.md](~/.pyck/guidelines/docs/testing
 
 ## Design
 
-Check the diff against [code-design.md](~/.pyck/guidelines/docs/code-design.md).
+Check the diff against [code-design.md](~/.pyck/guidelines/docs/code-design.md), and a bug fix or an API replacement also against [changing-code.md](~/.pyck/guidelines/docs/changing-code.md).
 
 ## CI automation
 

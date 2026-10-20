@@ -9,21 +9,21 @@
 - [Subtract before you add](#subtract-before-you-add)
 - [Minimize reader load](#minimize-reader-load)
 - [Deep modules](#deep-modules)
-- [Fix root causes](#fix-root-causes)
 - [Make operations idempotent](#make-operations-idempotent)
 - [Guard at the boundary](#guard-at-the-boundary)
 - [Make illegal states unrepresentable](#make-illegal-states-unrepresentable)
 - [Model the domain](#model-the-domain)
 - [Separate before serializing shared state](#separate-before-serializing-shared-state)
-- [Migrate callers, then delete the old API](#migrate-callers-then-delete-the-old-api)
+- [Data shape and scaffold first](#data-shape-and-scaffold-first)
 -->
 
 ## Purpose
 
 Judgement calls about the shape of code, for the author and the reviewer.
 Anything a linter or check can catch belongs there, not here. Each rule opens
-with when it applies. Tests follow [testing.md](~/.pyck/guidelines/docs/testing.md); reviewing a diff
-follows [code-review.md](~/.pyck/guidelines/docs/code-review.md).
+with when it applies. Fixing a bug and replacing an API are in
+[changing-code.md](~/.pyck/guidelines/docs/changing-code.md); tests follow [testing.md](~/.pyck/guidelines/docs/testing.md);
+reviewing a diff follows [code-review.md](~/.pyck/guidelines/docs/code-review.md).
 
 ## Smallest change
 
@@ -73,27 +73,6 @@ Applies when you add a module or review its interface.
   `UserRepository`.
 - Do not add layers or patterns to simple code without a caller that needs
   them.
-
-## Fix root causes
-
-Applies when you fix a bug.
-
-The symptom is where a wrong state became visible; the root cause is the first
-place the code did something it should not, or failed to handle a state it
-should. A fix at the symptom hides the evidence, and the fault surfaces
-elsewhere.
-
-- Reproduce first, then ask "why" until the answer is a wrong decision in the
-  code, not a consequence of an earlier one.
-- Ask whether the state that triggered the symptom is legitimate. If the
-  system may be in that state, handle it where it broke. If it should never
-  exist, a check where it broke only hides the bug; find what produced it.
-- A retry, a swallowed error, a clamped value or a discarded record is usually
-  a hidden bug.
-- Search for the same fault elsewhere and fix every instance.
-- A workaround that needs a paragraph of comment means the code is wrong. Fix
-  the code.
-- A failure only after a restart points at persisted state.
 
 ## Make operations idempotent
 
@@ -186,15 +165,16 @@ lock, sequential phases, a single writer or compare-and-swap. A convention or
 an instruction is not concurrency control. A needed lock is a design smell to
 check, not the default.
 
-## Migrate callers, then delete the old API
+## Data shape and scaffold first
 
-Applies when you replace an API, a function signature or a data shape.
+Applies when you start a feature or a repository.
 
-Move every caller to the new contract and delete the old one in the same
-wave. Keep no compatibility layer, deprecated alias or dual path behind. Update
-tests to the new contract and delete those that only protected the old
-internals. This holds when no external consumer depends on the old API and the
-project can absorb the breaking change; otherwise follow the repository's
-deprecation policy.
+Get the data shape right before writing logic. Define the core types early,
+list how the data is read and written, and pick the structure that fits the
+most common path; the code on top then becomes obvious. Build what every later
+step benefits from before the feature itself: CI, lint, test infrastructure
+and shared types. Setup comes before features, and a test that pins current
+behavior comes before the change to it. Example: add the `Order` type and the CI
+job that builds it before the first handler that uses them.
 
 Several rules are adapted from the principles of poteto's pstack (MIT), .

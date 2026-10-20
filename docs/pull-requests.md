@@ -98,9 +98,14 @@ The summary is a short executive summary of the commits. Summarize, don't copy:
   the PR really needs them to be understood or really makes that many changes.
   **5 paragraphs at most.** A list counts as one paragraph; trailers do
   not count. Details reviewers might want go under `## Additional Information`.
+- Where a view is shorter than prose, use the smallest one that makes the key
+  point clear and matches the change: a call tree, a file tree, pseudocode, a
+  Mermaid diagram or a diff-shaped sketch. One view, not several.
 
-If a commit is **Irreversible** (see [Classification](#classification)), the
-summary says so: what it changes for good, and that a revert does not undo it.
+The summary says in one line what breaks if the change goes wrong, and whether
+a revert undoes it: a **two-way door**, or a **one-way door** such as a data
+migration, a published API, a deleted resource or an **Irreversible** commit
+(see [Classification](#classification)).
 
 Exception: a PR with a **single commit** may use that commit's message 1:1 as
 its summary (GitHub pre-fills the description with it). The length limit does
@@ -190,3 +195,5 @@ unless the repo makes every review advice with
 thresholds is in `docs/rules.md` of the
 [pyck-review](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md)
 repository.
+
+The summary views and the door line are adapted from mattpocock's `pr` skill (MIT), <https://github.com/mattpocock/skills>, whose Summary section comes from Dex Horthy's `show-me` skill (MIT), <https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md>.

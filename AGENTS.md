@@ -32,7 +32,7 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | open or edit a pull request | `pull-requests` | `docs/pull-requests.md` |
 | create, edit or triage an issue | `github-issues` | `docs/issues.md` |
 | create or update a README | `readmes` | `docs/readme.md` |
-| design or change code structure (a module, type, API or abstraction, a bug fix, a migration, a retried operation, shared state) | `code-design` | `docs/code-design.md` |
+| design or change code structure (a module, type, API or abstraction, a bug fix, a migration, a retried operation, shared state) | `code-design` | `docs/code-design.md`, `docs/changing-code.md` |
 | write, change or review a test | `testing` | `docs/testing.md` |
 | review a diff or pull request (every review applies all three skills) | `code-review`, `security-review`, `quality-review` | `docs/code-review.md`, `docs/security-review.md`, `docs/quality-review.md` |
 | add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check | `ci-pipelines` | `docs/ci.md` |

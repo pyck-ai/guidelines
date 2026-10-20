@@ -109,7 +109,7 @@ Check each test in the diff against [testing.md](testing.md).
 
 ## Design
 
-Check the diff against [code-design.md](code-design.md).
+Check the diff against [code-design.md](code-design.md), and a bug fix or an API replacement also against [changing-code.md](changing-code.md).
 
 ## CI automation
 

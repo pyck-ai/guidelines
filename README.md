@@ -61,7 +61,8 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 - [Issues](./docs/issues.md): how to write, classify and triage an issue.
 - [Pull requests](./docs/pull-requests.md): how to write and open a pull request.
 - [README](./docs/readme.md): the layout every repository README follows.
-- [Code design](./docs/code-design.md): the rules for the shape of code, from smallest change to deleting old APIs.
+- [Code design](./docs/code-design.md): the rules for the shape of code, from smallest change to scaffold first.
+- [Changing code](./docs/changing-code.md): fixing root causes and deleting old APIs.
 - [Testing](./docs/testing.md): what a test asserts and which tests to reject.
 - [Code review](./docs/code-review.md): the review procedure and the standards lens.
 - [Security review](./docs/security-review.md): the correctness and security lens of a review.
