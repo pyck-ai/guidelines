@@ -32,6 +32,25 @@ Make the smallest change that solves the problem; fewer lines beat tidy
 boilerplate. A decision made in several places moves behind one source of
 truth (`user.CanManage()` instead of each handler repeating the role check).
 
+Take the first option that fully works:
+
+1. It does not need to exist. Skip features, options and flexibility nobody
+   asked for, and name what you skipped.
+2. The codebase has it. Use it the way the surrounding code does.
+3. The standard library or a platform feature does it.
+4. An installed dependency does it. Never add a dependency for a few lines.
+5. Otherwise write the minimum new code.
+
+Smallest never removes validation at trust boundaries (see
+[Guard at the boundary](#guard-at-the-boundary)), error handling that prevents
+data loss, security, accessibility or anything the request asked for.
+
+A deliberate simplification with a known limit gets a comment
+`shortcut: <the limit>, <when to upgrade>`, for example
+`shortcut: one worker, move to a queue past 50 jobs a minute`. The trigger is
+required; a shortcut without one rots. How review treats a marked shortcut is
+in [code-review.md](code-review.md#design).
+
 ## Subtract before you add
 
 Applies when you extend an existing system.
@@ -176,4 +195,4 @@ and shared types. Setup comes before features, and a test that pins current
 behavior comes before the change to it. Example: add the `Order` type and the CI
 job that builds it before the first handler that uses them.
 
-Several rules are adapted from the principles of poteto's pstack (MIT), <https://github.com/cursor/plugins/tree/main/pstack>.
+Several rules are adapted from the principles of poteto's pstack (MIT), <https://github.com/cursor/plugins/tree/main/pstack>. The reuse ladder, the never-cut list and the `shortcut:` comment are adapted from the `ponytail` skill of DietrichGebert/ponytail (MIT), <https://github.com/DietrichGebert/ponytail>.

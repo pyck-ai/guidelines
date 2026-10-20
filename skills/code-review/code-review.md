@@ -94,13 +94,16 @@ removed functionality, a large fix, and restoring or keeping a weakened gate
 
 ## Reporting findings
 
-One finding per problem, each with the place, the rule and a fix:
+One finding per problem, each with the place, the rule and a fix. Number the
+findings across all groups, so the author can say "fix 2 and 5". An Act on or
+Consider finding also says what happens if it is not fixed:
 
 ```text
-src/stock/pick_test.go:42: Tautological test (Tests).
+2. src/stock/pick_test.go:42: Tautological test (Tests).
 Asserts `maxItems == 10` against the constant it was just set to.
 Fix: assert the behavior that uses the limit, for example that the
 11th item is rejected.
+If we skip it: the limit can break and the suite stays green.
 ```
 
 Sort the findings into four groups, judged against the stated intent:
@@ -137,6 +140,10 @@ Check each test in the diff against [testing.md](~/.pyck/guidelines/docs/testing
 ## Design
 
 Check the diff against [code-design.md](~/.pyck/guidelines/docs/code-design.md), and a bug fix or an API replacement also against [changing-code.md](~/.pyck/guidelines/docs/changing-code.md).
+
+A shortcut marked as in [code-design: Smallest change](~/.pyck/guidelines/docs/code-design.md#smallest-change)
+is a decision, not a finding, unless the expected load already crosses the
+limit its comment names.
 
 ## CI automation
 
@@ -183,4 +190,4 @@ reader to something that no longer exists; otherwise Consider.
 Check the commit messages against [git.md](~/.pyck/guidelines/docs/git.md) and the pull request
 description against [pull-requests.md](~/.pyck/guidelines/docs/pull-requests.md).
 
-The certainty rules and the docs check are adapted from the `review` and `document-release` skills of garrytan's gstack (MIT), .
+The certainty rules and the docs check are adapted from the `review` and `document-release` skills of garrytan's gstack (MIT), . The numbered findings, the "If we skip it" line and the marked-shortcut rule are adapted from the `ponytail-review` and `ponytail-debt` skills of DietrichGebert/ponytail (MIT), .

@@ -9,6 +9,7 @@
 - [Breaking developer setup](#breaking-developer-setup)
 - [Feature leaks](#feature-leaks)
 - [Security vulnerabilities](#security-vulnerabilities)
+- [Scale check](#scale-check)
 - [Gate integrity](#gate-integrity)
 - [Intended breakage](#intended-breakage)
 - [Finishing a finding](#finishing-a-finding)
@@ -64,6 +65,22 @@ weakened safeguards (for a weakened test or check, see
 [Gate integrity](#gate-integrity)). Trace untrusted input from where it
 enters to where it is used.
 
+## Scale check
+
+Judge the added or changed code against the load the repository expects, found
+in its README or deploy config; say which load you assumed. Look for flaws
+that stay hidden for one user and appear with many:
+
+- a check-then-write race;
+- the same work done by every process or replica;
+- memory or a list that only grows;
+- a query per item;
+- quadratic work on large input;
+- per-process state that must be shared.
+
+For the write side, see
+[Separate before serializing shared state](code-design.md#separate-before-serializing-shared-state).
+
 ## Gate integrity
 
 A gate is anything that would have made the change fail: a test, an
@@ -116,4 +133,4 @@ ones you also found, and add the valid ones you missed. Say who raised each
 
 Adapted from the thermo-nuclear review skills in Cursor's [cursor/plugins](https://github.com/cursor/plugins/tree/main/thermos) (MIT).
 
-The gate integrity list is adapted from the `review` skill of garrytan's gstack (MIT), <https://github.com/garrytan/gstack>.
+The gate integrity list is adapted from the `review` skill of garrytan's gstack (MIT), <https://github.com/garrytan/gstack>. The scale check is adapted from the `ponytail-review` skill of DietrichGebert/ponytail (MIT), <https://github.com/DietrichGebert/ponytail>.
