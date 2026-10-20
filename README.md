@@ -63,7 +63,9 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 - [README](./docs/readme.md): the layout every repository README follows.
 - [Code design](./docs/code-design.md): the rules for the shape of code, from smallest change to deleting old APIs.
 - [Testing](./docs/testing.md): what a test asserts and which tests to reject.
-- [Code review](./docs/code-review.md): what reviewers look for in a diff.
+- [Code review](./docs/code-review.md): the review procedure and the standards lens.
+- [Security review](./docs/security-review.md): the correctness and security lens of a review.
+- [Quality review](./docs/quality-review.md): the code quality lens of a review.
 - [CI](./docs/ci.md): the pipeline groups, gate jobs and required checks.
 - [AGENTS.md template](./templates/AGENTS.md): the start of a repository's own AGENTS.md.
 - [Migrating from pyck-ai/.github](./docs/migration-from-dotgithub.md): where the old standards pages went and what changes for you; temporary, removed on 2026-12-31.
