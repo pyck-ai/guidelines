@@ -16,8 +16,8 @@
 
 Every repository MUST have a root `README.md` that follows these guidelines.
 
-Public model for the section names: backstage/backstage README.
-Badges above the heading are our own convention; backstage puts them below it.
+Public model for the section names: backstage/backstage README. Badges above the heading are our own convention;
+backstage puts them below it.
 
 ## Root README: sections, in this order
 
@@ -35,11 +35,10 @@ Badges above the heading are our own convention; backstage puts them below it.
 
 ## Getting started
 
-- One fenced `sh` block with the basic commands that work from a clean
-  checkout (install, build, run, test), each with a trailing `# comment`.
+- One fenced `sh` block with the basic commands that work from a clean checkout (install, build, run, test), each with a
+  trailing `# comment`.
 - Then one paragraph of prerequisites: versions, tools, required clone path.
-- Then: "Run `task --list` (or the repo's task runner equivalent) for every
-  other command."
+- Then: "Run `task --list` (or the repo's task runner equivalent) for every other command."
 - End with pointers to the fuller docs (for example the development doc).
 - The task runner owns the commands. The README does not list them all.
 
@@ -72,8 +71,7 @@ Out of the box, my-service includes:
 ## Getting started
 
 ```sh
-task build   # build the binary
-task test    # run the tests
+task build # build the binary task test # run the tests
 ```
 
 Needs Go 1.23 and Task. Run `task --list` for every other command.
@@ -83,8 +81,8 @@ The sections after it (Documentation to Security) follow the table above.
 
 ## Entrypoint, not a manual
 
-A README is an entrypoint. If another file owns a subject, link it; an
-entrypoint that repeats it drifts from it. Do not put in a README:
+A README is an entrypoint. If another file owns a subject, link it; an entrypoint that repeats it drifts from it. Do not
+put in a README:
 
 | Do not include | Link instead |
 | --- | --- |
@@ -97,45 +95,35 @@ entrypoint that repeats it drifts from it. Do not put in a README:
 
 ## Per-directory README
 
-Add one only where nothing else documents the directory (for example a Go
-package has its package doc comment and gets no README). Content: local
-layout, commands, ports, entrypoints. Same voice rules; skip sections 0, 5, 7
-and 8. A directory README may carry local maintenance rules; follow them there.
+Add one only where nothing else documents the directory (for example a Go package has its package doc comment and gets
+no README). Content: local layout, commands, ports, entrypoints. Same voice rules; skip sections 0, 5, 7 and 8. A
+directory README may carry local maintenance rules; follow them there.
 
 ## Voice and formatting
 
-- **Dense, not marketing.** Facts, tables over prose; prefer editing a line to
-  adding a section. No "powerful", "seamless", "simply".
+- **Dense, not marketing.** Facts, tables over prose; prefer editing a line to adding a section. No "powerful",
+  "seamless", "simply".
 - Active voice, present tense, one idea per sentence, no preamble.
-- **Each fact lives once.** Before writing a fact, find its owner (code doc
-  comment, `--help`, script header, a doc under `docs/`, a unit file). If one
-  exists, link it. If you move a fact into the README, delete the other copy.
-- Relative links for anything in the repo. A file in another repository is
-  linked as `https://github.com/<owner>/<repo>/blob/<branch>/<path>`, with an
-  anchor where a section is meant, never as `raw.githubusercontent.com`. Agent
-  files (`AGENTS.md`, skills) contain no URLs; they name paths under
+- **Each fact lives once.** Before writing a fact, find its owner (code doc comment, `--help`, script header, a doc
+  under `docs/`, a unit file). If one exists, link it. If you move a fact into the README, delete the other copy.
+- Relative links for anything in the repo. A file in another repository is linked as
+  `https://github.com/<owner>/<repo>/blob/<branch>/<path>`, with an anchor where a section is meant, never as
+  `raw.githubusercontent.com`. Agent files (`AGENTS.md`, skills) contain no URLs; they name paths under
   `~/.pyck/<repo>/` instead.
-- A README with two or more `##` headings starts with the managed table of
-  contents, in the format of
-  agent-docs-check.
-- Backticks for paths, commands, env vars and identifiers. **Bold** only for
-  the phrase a reader scans for.
+- A README with two or more `##` headings starts with the managed table of contents, in the format of agent-docs-check.
+- Backticks for paths, commands, env vars and identifiers. **Bold** only for the phrase a reader scans for.
 
 ## Maintaining
 
-Docs must never drift from the tree on disk. When a change alters what a
-README describes (layout, commands, ports, entrypoints, behavior), fix it in
-the same change, never as a follow-up:
+Docs must never drift from the tree on disk. When a change alters what a README describes (layout, commands, ports,
+entrypoints, behavior), fix it in the same change, never as a follow-up:
 
 1. List every path, command, port, flag and env var the README names.
-2. Check each against the tree: the path exists, the command runs (or
-   `--help` or `--dry-run` succeeds) from a clean checkout, the port matches
-   the config.
-3. Fix what drifted. Add what the change introduced only if the README is its
-   owner; otherwise link the owner.
-4. Re-read the in-code docs (package doc, script docstring, header comment)
-   of every unit you touched and repair them too. See
-   [code-review.md](~/.pyck/guidelines/docs/code-review.md#docs).
+2. Check each against the tree: the path exists, the command runs (or `--help` or `--dry-run` succeeds) from a clean
+   checkout, the port matches the config.
+3. Fix what drifted. Add what the change introduced only if the README is its owner; otherwise link the owner.
+4. Re-read the in-code docs (package doc, script docstring, header comment) of every unit you touched and repair them
+   too. See [code-review.md](~/.pyck/guidelines/docs/code-review.md#docs).
 
 ## Lint
 
@@ -144,9 +132,8 @@ markdownlint-cli2 README.md
 node <path of your pyck-ai/github-actions checkout>/agent-docs-check/check.mjs .   # contents, links
 ```
 
-Use the repo's own markdownlint config when it has one. Otherwise use this
-`.markdownlint-cli2.yaml`, which turns off long lines (MD013), badges above
-the first heading (MD041) and wide tables (MD060):
+Use the repo's own markdownlint config when it has one. Otherwise use this `.markdownlint-cli2.yaml`, which turns off
+long lines (MD013), badges above the first heading (MD041) and wide tables (MD060):
 
 ```yaml
 config:
@@ -155,5 +142,4 @@ config:
   MD060: false
 ```
 
-Both report zero issues before you finish. `--fix` lets agent-docs-check
-write the table of contents.
+Both report zero issues before you finish. `--fix` lets agent-docs-check write the table of contents.

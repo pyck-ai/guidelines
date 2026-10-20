@@ -47,6 +47,32 @@
 # or agent block inside another, and an inline agent comment that does not
 # close on its line.
 #
+# Line width (docs/*.md copies only): docs/ keep whatever width people write;
+# the skill copies are wrapped at 120 characters, after the markers and the
+# link rewrite and before the table of contents. Reason: Anthropic's skill
+# limits count lines (a table of contents over 100 lines), so the copies need
+# one width. The .github copies are not wrapped. The wrap is idempotent.
+#
+#   paragraph   a run of plain prose lines (also blockquote lines with the
+#               same `>` prefix); joined with single spaces and refilled
+#               greedily to at most 120 characters
+#   list item   `-`, `*`, `+`, `1.` or `1)` then spaces: a paragraph whose
+#               continuation lines are indented to the item's text column; a
+#               nested item starts a new paragraph at its own indent
+#   blockquote  the `> ` prefix is kept on every wrapped line
+#   kept as is  fenced code (``` or ~~~, any indent), tables (lines starting
+#               with `|`), headings, rules, HTML comment lines and blocks
+#               (the table of contents included), front matter, indented code
+#               (4+ spaces outside a list), blank lines
+#   hard break  a line ending in two spaces or a backslash ends its paragraph
+#               and keeps its ending
+#   unbreakable an `inline code` span and a link target `](...)` are never
+#               broken; a word longer than 120 sits alone on its line
+#   token       a line never starts with a word that would change meaning
+#               (#, -, *, +, a number and `.` or `)`, >, |, a fence, = or
+#               -- runs): the break goes one word earlier, and if that is
+#               impossible one word later
+#
 # Table of contents: docs/*.md carry none; a <!-- toc block outside a fence in
 # a doc is a failure. The generator writes it into the skill copy, right after
 # the H1: a <!-- toc ... --> block listing the `## ` headings (outside fences,
@@ -372,6 +398,196 @@ markers() {
 	'
 }
 
+# wrap WIDTH: stdin is a doc, stdout the doc with its prose paragraphs refilled
+# to at most WIDTH characters (see the header for the grammar). Idempotent.
+wrap() {
+	WRAP_WIDTH=$1 awk '
+	BEGIN {
+		W = ENVIRON["WRAP_WIDTH"] + 0
+		infence = 0
+		incomment = 0
+		infm = 0
+		inlist = 0
+		para = 0
+	}
+
+	# update the open code span (open = its backtick run length) and link
+	# target (intgt) state by the characters of the word t
+	function scan(t,    i, L, c, run) {
+		L = length(t)
+		i = 1
+		while (i <= L) {
+			c = substr(t, i, 1)
+			if (c == "`") {
+				run = 1
+				while (substr(t, i + run, 1) == "`") run++
+				if (open == 0) open = run
+				else if (open == run) open = 0
+				i += run
+				continue
+			}
+			if (!open) {
+				if (intgt) {
+					if (c == ")") intgt = 0
+				} else if (c == "]" && substr(t, i + 1, 1) == "(") {
+					intgt = 1
+					i++
+				}
+			}
+			i++
+		}
+	}
+
+	# a word that would change meaning at the start of a line
+	function danger(a) {
+		return (a ~ /^(#+|[-*+]|[0-9]+[.)]|=+|-+)$/ || a ~ /^(>|\||```|~~~)/)
+	}
+
+	function spaces(n,    s) {
+		s = ""
+		while (n-- > 0) s = s " "
+		return s
+	}
+
+	# split text into atoms: words, except that a code span or a link target
+	# is one atom, however many spaces it holds
+	function atomize(text,    n, w, i, t, cur, have, k, m, parts) {
+		na = 0
+		open = 0
+		intgt = 0
+		cur = ""
+		have = 0
+		n = split(text, w, / /)
+		for (i = 1; i <= n; i++) {
+			t = w[i]
+			if (!open && !intgt && t == "") continue
+			if (have) cur = cur " " t
+			else { cur = t; have = 1 }
+			scan(t)
+			if (!open && !intgt) {
+				atoms[++na] = cur
+				have = 0
+				cur = ""
+			}
+		}
+		if (have) {
+			# an unclosed code span or link target is plain text
+			m = split(cur, parts, " ")
+			for (k = 1; k <= m; k++) if (parts[k] != "") atoms[++na] = parts[k]
+		}
+	}
+
+	# print the open paragraph, greedily filled to W
+	# (tail is the two spaces of a hard break, kept after the last word)
+	function flush(tail,    ls, e, len, pre, i, line) {
+		if (!para) return
+		para = 0
+		atomize(ptext)
+		atoms[na] = atoms[na] tail
+		pre = pfirst
+		ls = 1
+		while (ls <= na) {
+			e = ls
+			len = length(pre) + length(atoms[ls])
+			while (e < na && len + 1 + length(atoms[e + 1]) <= W) {
+				e++
+				len += 1 + length(atoms[e])
+			}
+			if (e < na) {
+				# a break before atoms[e+1] must not start the line with a
+				# markdown token: break one word earlier, or keep it here
+				while (e > ls && danger(atoms[e + 1])) e--
+				while (e < na && danger(atoms[e + 1])) e++
+			}
+			line = pre atoms[ls]
+			for (i = ls + 1; i <= e; i++) line = line " " atoms[i]
+			print line
+			ls = e + 1
+			pre = pcont
+		}
+	}
+
+	function begin(first, cont, text) {
+		para = 1
+		pq = q
+		pfirst = first
+		pcont = cont
+		ptext = text
+	}
+
+	{
+		line = $0
+		if (NR == 1 && line == "---") { infm = 1; print line; next }
+		if (infm) { if (line == "---") infm = 0; print line; next }
+		if (incomment) { if (index(line, "-->") > 0) incomment = 0; print line; next }
+
+		# a blockquote prefix, kept on every wrapped line
+		q = ""
+		r = line
+		if (match(line, /^ ? ? ?(> ?)+/)) {
+			q = substr(line, 1, RLENGTH)
+			r = substr(line, RLENGTH + 1)
+		}
+		t = r
+		sub(/^ +/, "", t)
+		ind = length(r) - length(t)
+		sub(/ +$/, "", t)
+		lead = (ind > 0 ? substr(r, 1, ind) : "")
+
+		if (infence) {
+			if (substr(t, 1, 3) == fence) infence = 0
+			print line
+			next
+		}
+		if (t == "") { flush(); print line; next }
+		# indented code: 4 spaces outside a list, not a continuation
+		if (!para && !inlist && q == "" && ind >= 4) { print line; next }
+		f = substr(t, 1, 3)
+		if (f == "```" || f == "~~~") {
+			flush()
+			if (ind == 0) inlist = 0
+			infence = 1
+			fence = f
+			print line
+			next
+		}
+		if (t ~ /^<!--/) {
+			flush()
+			if (ind == 0) inlist = 0
+			if (index(t, "-->") == 0) incomment = 1
+			print line
+			next
+		}
+		# headings, rules, setext underlines and table rows
+		if ((ind <= 3 && (t ~ /^#+( |$)/ || t ~ /^(=+|-+|\*\*\*+|___+)$/)) || t ~ /^\|/) {
+			flush()
+			if (ind == 0) inlist = 0
+			print line
+			next
+		}
+		# a hard break: two trailing spaces (kept as psuffix) or a backslash
+		# (part of the last word); it ends the paragraph
+		hard = (line ~ /(  |\\)$/)
+		psuffix = (line ~ /  $/ ? "  " : "")
+		if (match(r, /^ *([-*+]|[0-9]+[.)]) +[^ ]/)) {
+			flush()
+			inlist = 1
+			len = RLENGTH - 1
+			begin(q substr(r, 1, len), q spaces(len), substr(r, len + 1))
+			sub(/ +$/, "", ptext)
+		} else if (para && q == pq) {
+			ptext = ptext " " t
+		} else {
+			flush()
+			if (ind == 0) inlist = 0
+			begin(q lead, q lead, t)
+		}
+		if (hard) flush(psuffix)
+	}
+	END { flush() }
+	'
+}
+
 # toc MINLINES: stdin is a rewritten doc, stdout the doc with a table of
 # contents after its first line, unless the doc has MINLINES lines or fewer
 # (the DO NOT EDIT line, written by the caller, is not counted here). The
@@ -418,10 +634,11 @@ gen() {
 	# shellcheck disable=SC2094 # the name is only a label for messages
 	markers "docs/$1.md" <"docs/$1.md" >"$TMP/doc-$1.md" || exit 1
 	filter rewrite "doc $1" <"$TMP/doc-$1.md" >"$TMP/rw-$1.md" || exit 1
+	wrap 120 <"$TMP/rw-$1.md" >"$TMP/wr-$1.md" || exit 1
 	{
 		printf '<!-- Generated from docs/%s.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/%s.md and run task generate. -->\n' "$1" "$1"
 		# the DO NOT EDIT line counts toward the 100 lines
-		toc 99 <"$TMP/rw-$1.md"
+		toc 99 <"$TMP/wr-$1.md"
 	} >"$2"
 }
 

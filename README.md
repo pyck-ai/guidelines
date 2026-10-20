@@ -25,7 +25,7 @@ Out of the box, pyck-ai/guidelines includes:
 - **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a table that routes each task to its doc.
 - **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `pull-requests` and `github-issues` of the org templates, for [opencode](https://opencode.ai) and pi. Claude Code is not a supported target.
 - **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
-- **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc and of the .github templates, with links rewritten to `~/.pyck/guidelines` paths; `task generate` runs it.
+- **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc and of the .github templates, with links rewritten to `~/.pyck/guidelines` paths and the prose wrapped at 120 characters (`docs/` keep any width); `task generate` runs it.
 - **Template check**: [`scripts/check-templates.sh`](./scripts/check-templates.sh) fails when a doc or skill names a PR template heading or issue form that does not exist in pyck-ai/.github.
 
 GitHub's own org defaults (issue forms, the PR template, the code of conduct, the security policy) stay in [pyck-ai/.github](https://github.com/pyck-ai/.github).

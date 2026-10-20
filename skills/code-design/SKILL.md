@@ -7,4 +7,5 @@ metadata:
 
 # Code design guideline
 
-The guideline is [code-design.md](code-design.md) in this directory; for a bug fix or an API replacement it is [changing-code.md](changing-code.md) as well. Read them in full and follow them.
+The guideline is [code-design.md](code-design.md) in this directory; for a bug fix or an API replacement it is
+[changing-code.md](changing-code.md) as well. Read them in full and follow them.

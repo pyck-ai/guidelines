@@ -110,8 +110,8 @@ gen --check
 check "--check passes on the fresh copy" rc_is 0
 
 echo "== table of contents"
-# filler N: N lines of prose.
-filler() { awk -v n="$1" 'BEGIN { for (i = 1; i <= n; i++) print "line " i; }'; }
+# filler N: N list items, one line each (prose lines would be joined by the wrap).
+filler() { awk -v n="$1" 'BEGIN { for (i = 1; i <= n; i++) print "- line " i; }'; }
 # a doc over 100 lines gets a toc after the H1, with GitHub anchors; a heading
 # in a human block and in a fence is not listed
 doc "# T
@@ -213,6 +213,213 @@ bad "toc block in a doc" '# T
 -->
 
 ## A' "$DOC: line 3: <!-- toc block in a doc; remove it; the generator writes the table of contents"
+
+echo "== wrap at 120"
+# rep C N: N times the character C.
+rep() { awk -v c="$1" -v n="$2" 'BEGIN { for (i = 0; i < n; i++) printf "%s", c; }'; }
+# words N: "w1 w2 ... wN", a paragraph of N short words.
+words() { awk -v n="$1" 'BEGIN { for (i = 1; i <= n; i++) printf "%sw%d", (i > 1 ? " " : ""), i; }'; }
+# longest_ok: no line of the copy is over 120 characters, fences, tables and the
+# DO NOT EDIT line aside.
+longest_ok() { awk 'NR == 1 { next } /^ *(```|~~~)/ { f = !f; next } f || /^\|/ { next } length($0) > 120 { bad = 1 } END { exit bad }' "$W/$COPY"; }
+no_toc() { ! says_copy '<!-- toc'; }
+
+# a long paragraph is refilled to at most 120 characters, joined from its lines
+doc "# T
+
+$(words 40)
+$(words 40)
+second line of the same paragraph"
+gen
+check "paragraph: exit 0" rc_is 0
+check "paragraph: no line over 120" longest_ok
+check "paragraph: lines are joined and refilled" copy_is "# T
+
+w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30 w31 w32
+w33 w34 w35 w36 w37 w38 w39 w40 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24
+w25 w26 w27 w28 w29 w30 w31 w32 w33 w34 w35 w36 w37 w38 w39 w40 second line of the same paragraph"
+gen --check
+check "paragraph: --check passes" rc_is 0
+
+# short lines are joined into one; a blank line separates paragraphs
+doc "# T
+
+one
+two
+
+three"
+gen
+check "short lines are joined" copy_is "# T
+
+one two
+
+three"
+
+# a word over 120 characters stays whole on its own line
+LONG=$(rep x 130)
+doc "# T
+
+before $LONG after"
+gen
+check "unbreakable word: on its own line" copy_is "# T
+
+before
+$LONG
+after"
+
+# a list item and a nested item keep their indents; continuation lines align to
+# the item's text column
+doc "# T
+
+- $(words 30)
+  - nested $(words 30)
+1. $(words 30)
+10. ten $(words 30)
+
+* $(words 3)"
+gen
+check "list: no line over 120" longest_ok
+check "list: item and nested item keep their indents" copy_is "# T
+
+- w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30
+  - nested w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29
+    w30
+1. w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30
+10. ten w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30
+
+* w1 w2 w3"
+
+# a list item joins its continuation lines; a nested item starts a paragraph
+doc "# T
+
+- first
+  second
+  - nested
+    more
+- next"
+gen
+check "list: continuation lines are joined" copy_is "# T
+
+- first second
+  - nested more
+- next"
+
+# a blockquote keeps its prefix on every wrapped line
+doc "# T
+
+> $(words 40)
+> end"
+gen
+check "blockquote: prefix on every line" copy_is "# T
+
+> w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30 w31 w32
+> w33 w34 w35 w36 w37 w38 w39 w40 end"
+
+# fenced code, a table, a heading, an HTML comment, indented code and a hard
+# break pass through unchanged
+FENCE_LINE="$(words 60)"
+SAME="# T
+
+\`\`\`text
+$FENCE_LINE
+\`\`\`
+
+  ~~~
+  $FENCE_LINE
+  ~~~
+
+| a | $(words 60) |
+| --- | --- |
+
+## $(words 60)
+
+<!-- $(words 60) -->
+
+    $FENCE_LINE
+
+hard  
+break w1 w2 w3\\
+next"
+doc "$SAME"
+gen
+check "pass through: fences, table, heading, comment, indented code, hard break" copy_is "$SAME"
+
+# the table of contents is written after the wrap, so a long heading is listed whole
+H=$(rep h 130)
+doc "# T
+
+## $H
+
+$(filler 100)"
+gen
+check "toc entry: not wrapped" says_copy "- [$H](#$H)"
+
+# a token is never moved to a line start: the break goes one word earlier
+A=$(rep a 50)
+B=$(rep b 68)
+for tok in '-' '+' '*' '1.' '#' '>' '|'; do
+	doc "# T
+
+$A $B $tok tail"
+	gen
+	check "token '$tok': not at a line start" copy_is "# T
+
+$A
+$B $tok tail"
+done
+
+# an inline code span and a link target are not broken
+C=$(rep c 110)
+doc "# T
+
+$C \`a b c d e f\` after"
+gen
+check "code span: not broken" copy_is "# T
+
+$C
+\`a b c d e f\` after"
+D=$(rep d 100)
+E=$(rep e 40)
+doc "# T
+
+$D [some text](./a/$E.md)"
+gen
+check "link: target kept whole on one line" says_copy "](~/.pyck/guidelines/docs/a/$E.md)"
+check "link: no line over 120" longest_ok
+
+# wrapping twice gives the same output
+doc "# T
+
+$(words 40)
+
+- $(words 40)
+  - $(words 40)
+
+> $(words 40)
+
+[link text $(words 30)](./git.md) \`code span\` $(words 30)"
+gen
+cp "$W/$COPY" "$ROOT/first.md"
+tail -n +2 "$ROOT/first.md" >"$W/$DOC"
+gen
+check "wrap twice: same output" cmp -s "$ROOT/first.md" "$W/$COPY"
+
+# the 100-line limit counts wrapped lines: 40 one-line paragraphs make a doc of
+# 84 lines but a copy of over 100; 40 paragraphs of five short lines make a doc
+# of 200 lines but a copy of under 100
+P=$(words 60)
+doc "# T
+
+$(for _i in $(seq 40); do printf '%s\n\n' "$P"; done)
+## A"
+gen
+check "toc counts wrapped lines: a doc under 100 lines gets a toc" says_copy '<!-- toc'
+doc "# T
+
+$(for _i in $(seq 40); do printf 'a\nb\nc\nd\ne\n\n'; done)
+## A"
+gen
+check "toc counts wrapped lines: a doc over 100 lines gets none" no_toc
 
 echo "== malformed"
 bad "human without close" '<!-- human -->
