@@ -5,24 +5,45 @@
 ## Contents
 
 - [Purpose](#purpose)
+- [Lenses](#lenses)
 - [Review procedure](#review-procedure)
+- [Severity](#severity)
 - [Reporting findings](#reporting-findings)
+- [Standards lens](#standards-lens)
+- [Spec check](#spec-check)
 - [Tests](#tests)
 - [Design](#design)
 - [CI automation](#ci-automation)
 - [In-code documentation](#in-code-documentation)
+- [Commits and pull request](#commits-and-pull-request)
 -->
 
 ## Purpose
 
-Judgement calls a reviewer makes. Read this during review, not while
-implementing. Anything a linter or check can catch belongs in a linter or
-check, not here.
+Load this when you review a diff or a pull request, or check a change against
+the review rules before committing it; not while implementing. It holds the
+procedure every review follows and the standards lens. Anything a linter or
+check can catch belongs in a linter or check, not here.
 
 A repository may add its own `CODING_STANDARDS.md` for review rules that
 apply only there; it never repeats an org rule. Review reads both. How a
 repository overrides an org default is set in the
 [org `AGENTS.md`](~/.pyck/guidelines/AGENTS.md).
+
+## Lenses
+
+There is no cheap review and no deep review: every review is a
+maximum-effort review against every lens.
+
+| Lens | Question | Doc |
+| --- | --- | --- |
+| Standards | Does the diff follow the org guidelines and do what the issue asked? | this doc |
+| Correctness and security | Does it break behavior, setup or safety? | [security-review.md](~/.pyck/guidelines/docs/security-review.md) |
+| Code quality | Is there a simpler structure? | [quality-review.md](~/.pyck/guidelines/docs/quality-review.md) |
+
+Run the lenses one after another in one session, or give each to its own
+reviewer in parallel. Give every reviewer the same scoped diff and context,
+and merge the results with this doc's procedure and report.
 
 ## Review procedure
 
@@ -31,12 +52,19 @@ repository overrides an org default is set in the
    State the change's intent in one paragraph from them. If you cannot, ask
    the author before reviewing; a review against a guessed intent misjudges
    the change.
-3. Walk the sections below in turn: Tests, Design, CI automation, In-code
-   documentation. Skip a section the diff does not touch.
+3. Apply each lens in turn. Within the standards lens, skip a section the
+   diff does not touch.
 4. Before reporting a finding, check it against the diff: the line exists in
    the change, and the rule you cite says what you claim. Drop the finding
    if either fails.
-5. Report what remains, as described in the next section.
+5. Report what remains, as described in [Reporting findings](#reporting-findings).
+
+## Severity
+
+A finding's group (see below) is its severity. Put a finding in Act on only
+when you have traced it end to end and are certain it matters; a reviewer who
+calls minor things blocking is soon ignored. Never raise a group to make a
+finding louder. Within a group, list the larger impact first.
 
 ## Reporting findings
 
@@ -57,8 +85,24 @@ Sort the findings into four groups, judged against the stated intent:
 - **Noted:** valid but not actionable in this change.
 - **Dismissed:** a candidate finding you checked and dropped, with the reason.
 
-When several reviewers or models reviewed, say which raised each finding; one
-raised independently by two of them is the strongest.
+Prefer a few findings you are sure of over a long list of nits. When several
+reviewers or models reviewed, say which raised each finding; one raised
+independently by two of them is the strongest.
+
+## Standards lens
+
+Does the diff follow the org guidelines? The sections below name the
+guideline to check each part against.
+
+## Spec check
+
+Compare the diff with the linked issue's acceptance criteria. Without an
+issue, use the intent you stated.
+
+- **Missing:** a criterion the diff does not meet.
+- **Extra:** a change nobody asked for, such as a feature, option or
+  refactor beyond the issue. It makes the change harder to review and belongs
+  in its own change (see [code-design: Smallest change](~/.pyck/guidelines/docs/code-design.md#smallest-change)).
 
 ## Tests
 
@@ -96,3 +140,8 @@ Check the diff against [code-design.md](~/.pyck/guidelines/docs/code-design.md).
 - Generated files (a `DO NOT EDIT` header) are regenerated, never
   hand-edited, and never left to drift from their source.
 - READMEs follow [readme.md](~/.pyck/guidelines/docs/readme.md).
+
+## Commits and pull request
+
+Check the commit messages against [git.md](~/.pyck/guidelines/docs/git.md) and the pull request
+description against [pull-requests.md](~/.pyck/guidelines/docs/pull-requests.md).

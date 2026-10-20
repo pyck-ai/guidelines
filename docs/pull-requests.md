@@ -118,6 +118,13 @@ Keep a PR small enough to review in one sitting:
 - **One kind of change**: never mix a feature and a defect fix in one PR, so
   the fix can be reviewed and released on its own.
 
+When you split work into commits, order them so each builds on the one
+before: schema or storage, core logic, wiring, UI, tests. After you rewrite
+a PR branch's history, prove the content did not change: note
+`git rev-parse <old>^{tree}` before the rewrite and compare it with
+`git rev-parse HEAD^{tree}` after. Do not push if they differ unintentionally.
+
+If notes in the description cannot make a PR reviewable, split it instead.
 Split a larger change into several PRs and stack them: the first targets
 `main`, each next one targets the branch of the PR below it, so each review
 shows only its own layer.

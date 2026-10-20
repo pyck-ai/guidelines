@@ -45,7 +45,7 @@ LC_ALL=C
 export LC_ALL
 
 # skill:doc pairs.
-MAP='commit-messages:git github-issues:issues pull-requests:pull-requests readmes:readme code-review:code-review ci-pipelines:ci code-design:code-design testing:testing'
+MAP='commit-messages:git github-issues:issues pull-requests:pull-requests readmes:readme code-review:code-review security-review:security-review quality-review:quality-review ci-pipelines:ci code-design:code-design testing:testing'
 
 # skill:path pairs, paths inside the pyck-ai/.github checkout.
 GH_FILES='pull-requests:.github/PULL_REQUEST_TEMPLATE.md
