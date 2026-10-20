@@ -7,4 +7,4 @@ metadata:
 
 # Issue guideline
 
-The guideline is [issues.md](issues.md) in this directory. Read it in full and follow it.
+The guideline is [issues.md](issues.md) in this directory. Read it in full and follow it. To rate the severity of a Defect (High, Medium, Low), also read [severity.md](severity.md) in this directory.

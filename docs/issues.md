@@ -72,6 +72,7 @@ Choose the issue type that matches what the issue really describes, so the form'
 - Do not add labels such as `bug` or `priority` unless someone asks for them: the issue type already says what kind of issue it is.
 - Triage is signaled by milestone, not a label. An issue with no milestone assigned is implicitly untriaged; assigning a milestone is the triage action itself. Do not add a `needs triage` (or similar) label to the issue forms or to individual issues.
 - Do not rewrite an existing issue's title or body unless its owner asks for exactly that. Feedback on a draft rewrite is not a go-ahead. To rework a stale issue, open a new one with the new text and let the owner close the old one with a pointer to it, so the old discussion and cross-references stay intact. Before any edit you were asked for, keep the original (`gh issue view <n> --json title,body,labels`) so it can be restored exactly.
+- Which Severity a Defect gets (High, Medium, Low) is decided by [severity.md](severity.md).
 - Severity, Effort, Start date and Target date are organization-level issue fields, not fields of a project board. `gh issue create` cannot set them; use the GraphQL mutation `setIssueFieldValue` and read them back through `issue.issueFieldValues`. Look up the field and option ids in the organization (`organization(login: "pyck-ai") { issueFields(first: 10) { nodes { ... } } }`), then set a single-select field (Severity, Effort) like this, and a date field (Start date, Target date) with `dateValue: "YYYY-MM-DD"` instead of `singleSelectOptionId`:
 
   ```sh

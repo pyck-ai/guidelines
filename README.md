@@ -59,6 +59,7 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 
 - [Git](./docs/git.md): commit messages and branch names.
 - [Issues](./docs/issues.md): how to write, classify and triage an issue.
+- [Severity](./docs/severity.md): when a defect is High, Medium or Low.
 - [Pull requests](./docs/pull-requests.md): how to write and open a pull request.
 - [README](./docs/readme.md): the layout every repository README follows.
 - [Code design](./docs/code-design.md): the rules for the shape of code, from smallest change to scaffold first.
