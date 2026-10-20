@@ -27,6 +27,9 @@ repository overrides an org default is set in the
 
 1. Read the repository's `CODING_STANDARDS.md` if it has one.
 2. Read the whole diff, then the commit messages and the linked issue.
+   State the change's intent in one paragraph from them. If you cannot, ask
+   the author before reviewing; a review against a guessed intent misjudges
+   the change.
 3. Walk the sections below in turn: Tests, Design, CI automation, In-code
    documentation. Skip a section the diff does not touch.
 4. Before reporting a finding, check it against the diff: the line exists in
@@ -45,31 +48,24 @@ Fix: assert the behavior that uses the limit, for example that the
 11th item is rejected.
 ```
 
+Sort the findings into four groups, judged against the stated intent:
+
+- **Act on:** wrong behavior, a security hole or a maintenance cost that
+  would block the merge.
+- **Consider:** real, but it may not be worth fixing now; say the trade-off.
+- **Noted:** valid but not actionable in this change.
+- **Dismissed:** a candidate finding you checked and dropped, with the reason.
+
+When several reviewers or models reviewed, say which raised each finding; one
+raised independently by two of them is the strongest.
+
 ## Tests
 
-Reject:
-
-| Smell | Example |
-| --- | --- |
-| Tautological test | Asserts a constant equals its literal value |
-| Source-layout-sensitive test | Reads source text to assert structure, unless the test documents why |
-| Test that cannot fail | Mocks away the dependency's failure modes, uses `\|\| true` or `or True`, asserts `true` |
-
-Also:
-
-- Test at a module's interface, not its internals. A refactor that keeps
-  behavior must not break the test.
-- Tests are deterministic. No sleeps for synchronization; poll for the
-  condition with a timeout.
+Check each test in the diff against [testing.md](testing.md).
 
 ## Design
 
-- Prefer deep modules: a small interface that hides real complexity.
-- Reject pass-through layers, wrappers and options that hide nothing. Example:
-  a `UserService` whose every method only calls the same-named method of
-  `UserRepository`.
-- Do not add layers or patterns to simple code without a caller that needs
-  them.
+Check the diff against [code-design.md](code-design.md).
 
 ## CI automation
 

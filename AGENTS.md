@@ -15,12 +15,9 @@ Org-wide rules for every pyck-ai repository; its own `AGENTS.md` adds local fact
 
 ## Rules for every change
 
-- **Lifecycle.** The issue holds intent and acceptance criteria (trivial
-  changes may skip it), the commit the change and why. A PR is only for
-  review, never the record.
+- **Lifecycle.** The issue holds intent and acceptance criteria (trivial changes may skip it), the commit the change and why. A PR is only for review, never the record.
 - **README.** Every repository has a root `README.md` per the `readmes` guideline.
-- **Docs change with code.** A change that makes a README, a doc comment or
-  anything under `docs/` stale fixes it in the same change.
+- **Docs change with code.** A change that makes a README, a doc comment or anything under `docs/` stale fixes it in the same change.
 - **Each fact lives once.** Link to its owner; never copy it.
 - **Repo convention wins** where a repository's own `AGENTS.md` says so.
 - **English** in code, docs, commits, issues and PRs; no em or en dashes (restructure the sentence instead).
@@ -35,6 +32,8 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | open or edit a pull request | `pull-requests` | `docs/pull-requests.md` |
 | create, edit or triage an issue | `github-issues` | `docs/issues.md` |
 | create or update a README | `readmes` | `docs/readme.md` |
+| design or change code structure (a module, type, API or abstraction, a bug fix, a migration, a retried operation, shared state) | `code-design` | `docs/code-design.md` |
+| write, change or review a test | `testing` | `docs/testing.md` |
 | review a diff or pull request | `code-review` | `docs/code-review.md` |
 | add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check | `ci-pipelines` | `docs/ci.md` |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |
