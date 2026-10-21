@@ -67,6 +67,7 @@ Choose the issue type that matches what the issue really describes, so the form'
 
 - An issue describing a **correctness problem** (something behaving incorrectly) is a **Defect**, even if it was first framed as a generic task. As a Defect, its Observed/Expected Behavior sections capture the problem cleanly.
 - Watch for a misclassified issue whose "Why?" section is really just describing observed-vs-expected behavior: that is a signal it should be a Defect rather than a Feature or Task.
+- An outage or incident is a **Defect**, even when the fix is a dependency upgrade. The Task form's "dependency updates" covers only routine bumps that fix no observed failure.
 
 ### Other rules
 
