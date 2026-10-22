@@ -88,7 +88,7 @@ a README:
 | Usage, inputs, flags or exit codes of one tool or component | that component's own `README.md` or its source |
 | Full command list | the task runner (`task --list`) |
 | Config or flag reference | `--help`, the config schema or its doc |
-| Design rationale | an ADR, a design doc or the commit message |
+| Design rationale | an [ADR](~/.pyck/guidelines/docs/adrs.md), a design doc or the commit message |
 
 ## Per-directory README
 

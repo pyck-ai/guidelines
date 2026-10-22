@@ -38,4 +38,5 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check | `ci-pipelines` | `docs/ci.md` |
 | write or review the sentences of a doc, README, RFC, ADR, issue, PR description or commit message | `technical-writing` | `docs/technical-writing.md` |
 | add or review logging, metrics, tracing or an alert | `observability` | `docs/observability.md` |
+| make or record an architecture decision, or write or supersede an ADR | `adrs` | `docs/adrs.md` |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |
