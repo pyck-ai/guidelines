@@ -99,8 +99,10 @@ Keep a PR small enough to review in one sitting:
   own.
 
 When you split work into commits, order them so each builds on the one before: schema or storage, core logic, wiring,
-UI, tests. After you rewrite a PR branch's history, prove the content did not change: note `git rev-parse <old>^{tree}`
-before the rewrite and compare it with `git rev-parse HEAD^{tree}` after. Do not push if they differ unintentionally.
+UI. Each commit carries its own tests (see [testing](~/.pyck/guidelines/docs/testing.md)), so every commit builds and
+passes on its own. After you rewrite a PR branch's history, prove the content did not change: note
+`git rev-parse <old>^{tree}` before the rewrite and compare it with `git rev-parse HEAD^{tree}` after. Do not push if
+they differ unintentionally.
 
 If notes in the description cannot make a PR reviewable, split it into several PRs and stack them: the first targets
 `main`, each next one targets the branch of the PR below it, so each review shows only its own layer.
