@@ -37,4 +37,5 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | review a diff or pull request (every review applies all three skills) | `code-review`, `security-review`, `quality-review` | `docs/code-review.md`, `docs/security-review.md`, `docs/quality-review.md` |
 | add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check | `ci-pipelines` | `docs/ci.md` |
 | write or review the sentences of a doc, README, RFC, ADR, issue, PR description or commit message | `technical-writing` | `docs/technical-writing.md` |
+| add or review logging, metrics, tracing or an alert | `observability` | `docs/observability.md` |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |

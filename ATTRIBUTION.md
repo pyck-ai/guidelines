@@ -94,6 +94,10 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 - Write the reference first: the `document-generate` skill (gstack, `6237994`).
 - Never cut a qualifier: the `documentation-and-adrs` skill (addyosmani/agent-skills, `aeac41d`).
 
+### [docs/observability.md](./docs/observability.md)
+
+- The whole doc, reworded and without code: the `observability-and-instrumentation` skill and its observability checklist (addyosmani/agent-skills, `aeac41d`).
+
 ### [docs/ci.md](./docs/ci.md)
 
 - The thresholds section: the `constraint-driven-development` skill (addyosmani/agent-skills, `aeac41d`).
