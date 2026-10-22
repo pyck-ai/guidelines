@@ -11,6 +11,7 @@
 - [Make illegal states unrepresentable](#make-illegal-states-unrepresentable)
 - [Model the domain](#model-the-domain)
 - [Separate before serializing shared state](#separate-before-serializing-shared-state)
+- [Point module dependencies one way](#point-module-dependencies-one-way)
 - [Data shape and scaffold first](#data-shape-and-scaffold-first)
 -->
 
@@ -78,6 +79,23 @@ stale by the next run, from evidence that holds wherever the crash happened. Wri
 into place. Check three things: a second run in a row, a crash at every step, and whether re-running ends in the same
 state.
 
+A call that retries an external effect (a payment, an email, a message) also needs an idempotency key, and each of these
+steps decides whether the key protects anything:
+
+- Derive the key from the intent, not the attempt. A random ID or a timestamp per attempt turns every retry into a new
+  request, and a key built from too little (user and amount) merges two legitimate requests. Use an immutable identifier
+  such as `charge:v1:<order id>`, or a key the client generates once and reuses on every retry.
+- Claim the key atomically. Check-then-act is a race: two retries both read "not seen" and both act. Insert the key
+  under a unique constraint first and let the constraint pick the winner.
+- Fail a reused key with a different payload loudly. Replaying the first response to a second request hides a client
+  bug.
+- Decide what a duplicate gets while the first attempt still runs: a conflict error, a bounded wait or a pending status.
+  Never let it through because the first attempt seems stuck.
+- Treat every call as having three outcomes: success, failure and unknown. A timeout does not say whether the effect
+  happened. Record the intent before the call, so a crash leaves evidence that a later run can resolve.
+- Keep the key longer than the longest path that can redeliver the intent, such as a dead-letter queue replayed a week
+  later.
+
 ## Guard at the boundary
 
 Applies when data enters the system or you are about to add a check.
@@ -135,6 +153,14 @@ read: `indexer-state.json` plus `metrics-state.json`, not one `state.json` both 
 write target is a real invariant, serialize access structurally with a lock, sequential phases, a single writer or
 compare-and-swap. A convention or an instruction is not concurrency control. Treat a needed lock as a design smell to
 check.
+
+## Point module dependencies one way
+
+Applies when a change spans several modules or adds a module.
+
+List each module with the modules it depends on before you build. Let every dependency point one way, with no cycles,
+and build in dependency order, so each module can be tested on what already exists. If two modules each need the other,
+they are one module.
 
 ## Data shape and scaffold first
 

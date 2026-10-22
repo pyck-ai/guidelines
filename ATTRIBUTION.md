@@ -28,6 +28,12 @@ Author: Dietrich Gebert. Project: [DietrichGebert/ponytail](https://github.com/D
 - The `ponytail-review` skill.
 - The `ponytail-debt` skill.
 
+### addyosmani/agent-skills
+
+Author: Addy Osmani. Project: [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills), commit `aeac41d`. Licence: MIT.
+
+- The `deprecation-and-migration`, `api-and-interface-design`, `code-review-and-quality`, `security-and-hardening`, `documentation-and-adrs`, `incremental-implementation`, `constraint-driven-development`, `spec-driven-development`, `observability-and-instrumentation` and `performance-optimization` skills: <https://github.com/addyosmani/agent-skills/tree/aeac41d/skills>
+
 ### mattpocock/skills
 
 Author: Matt Pocock. Project: [mattpocock/skills](https://github.com/mattpocock/skills), commit `5beb35b`. Licence: MIT.
@@ -46,25 +52,32 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 - Several rules: pstack principles (Cursor plugins, `ddf824a`).
 - The reuse ladder, the never-cut list and the `shortcut:` comment: the `ponytail` skill (ponytail, `09c434a`).
+- The idempotency key steps: the `api-and-interface-design` skill (addyosmani/agent-skills, `aeac41d`).
+- The one-way module dependencies: the `spec-driven-development` skill (addyosmani/agent-skills, `aeac41d`).
 
 ### [docs/changing-code.md](./docs/changing-code.md)
 
 - Several rules: pstack principles (Cursor plugins, `ddf824a`).
+- The additive schema phases: the `deprecation-and-migration` skill (addyosmani/agent-skills, `aeac41d`).
 
 ### [docs/testing.md](./docs/testing.md)
 
 - Several rules: pstack principles (Cursor plugins, `ddf824a`).
+- The check the tests cannot bend: the `constraint-driven-development` skill (addyosmani/agent-skills, `aeac41d`).
 
 ### [docs/code-review.md](./docs/code-review.md)
 
 - The certainty rules and the docs check: the `review` and `document-release` skills (gstack, `6237994`).
 - The numbered findings, the "If we skip it" line and the marked-shortcut rule: the `ponytail-review` and `ponytail-debt` skills (ponytail, `09c434a`).
+- The mutation check and the dependency upgrade checks: the `code-review-and-quality` skill (addyosmani/agent-skills, `aeac41d`).
 
 ### [docs/security-review.md](./docs/security-review.md)
 
 - The review lens: the thermo-nuclear review skills (Cursor plugins `thermos`, `ddf824a`).
 - The gate integrity list: the `review` skill (gstack, `6237994`).
 - The scale check: the `ponytail-review` skill (ponytail, `09c434a`).
+- The writer-of-the-value, derived-path, model-output and leaked-secret points: the `security-and-hardening` skill (addyosmani/agent-skills, `aeac41d`).
+- The cache key and metric label points: the `performance-optimization` skill and the observability checklist (addyosmani/agent-skills, `aeac41d`).
 
 ### [docs/quality-review.md](./docs/quality-review.md)
 
@@ -73,11 +86,17 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 ### [docs/git.md](./docs/git.md)
 
 - The subject, body and wrapping rules follow Tim Pope's [A Note About Git Commit Messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html). No text is adapted; the rules are reworded for pyck-ai.
+- One logical change per commit: the `incremental-implementation` skill (addyosmani/agent-skills, `aeac41d`).
 
 ### [docs/technical-writing.md](./docs/technical-writing.md)
 
 - The four layers, the rhythm rules and the two plain-word rules: the `technical-writing` skill (Cursor plugins `pstack`, `ddf824a`).
 - Write the reference first: the `document-generate` skill (gstack, `6237994`).
+- Never cut a qualifier: the `documentation-and-adrs` skill (addyosmani/agent-skills, `aeac41d`).
+
+### [docs/ci.md](./docs/ci.md)
+
+- The thresholds section: the `constraint-driven-development` skill (addyosmani/agent-skills, `aeac41d`).
 
 ### [docs/readme.md](./docs/readme.md)
 

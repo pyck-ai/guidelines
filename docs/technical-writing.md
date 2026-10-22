@@ -4,7 +4,7 @@ Rules for the sentences in docs, READMEs, RFCs, ADRs, issue bodies, PR descripti
 
 Apply the four layers in order: pick the mode, write to the reader, state one thing at a time, leave no sentence open to two readings. Two rules sit above them:
 
-- **Cut every word that does no work.** If the sentence survives without the word, the word goes.
+- **Cut every word that does no work.** If the sentence survives without the word, the word goes. A qualifier, number, unit or condition does work, so never cut one to tighten a sentence.
 - **Use the short, everyday word.** "Use", not "utilize". "Start", not "initiate".
 
 When a rule makes a sentence worse, rewrite the sentence another way or leave it alone. The codebase is the word list: write the real symbol, file, flag or command name, not a description of it.

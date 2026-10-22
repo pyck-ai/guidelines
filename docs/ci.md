@@ -44,6 +44,13 @@ Leave `paths` and `branches` filters off the triggers of a workflow with a gate.
 - `ci-success` is required by an org ruleset for every repository with the custom property `rulesets=backend`. The ruleset targets the default branch and `release/*`, takes the check from the GitHub Actions app and does not require the branch to be up to date.
 - `build-success` and `deploy-success` are required by each repository's own ruleset, because only some repositories have them.
 
+## Thresholds
+
+Applies when a check enforces a number, such as a coverage minimum, a bundle size or a warning count.
+
+- Name the command that produces the number and the reason for the threshold, in the Taskfile or next to it. A number without a command is a wish, and a threshold without a reason gets deleted by the next person it blocks.
+- When no target exists yet, record today's value in the repository and fail the check when the value gets worse. Allow a small tolerance for drift, such as 0.5%, so an unrelated file that moves the number does not fail the build. When the value improves, update the recorded one. A target of 80% on a codebase at 62% gives a build that stays red until people learn to ignore it.
+
 ## Adding a gated workflow
 
 1. Put the workflow in the repository's own workflow file, one per group.

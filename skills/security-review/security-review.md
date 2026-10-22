@@ -1,6 +1,21 @@
 <!-- Generated from docs/security-review.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/security-review.md and run task generate. -->
 # Security Review Guidelines
 
+<!-- toc
+## Contents
+
+- [Scope](#scope)
+- [Breaking existing behavior](#breaking-existing-behavior)
+- [Breaking developer setup](#breaking-developer-setup)
+- [Feature leaks](#feature-leaks)
+- [Security vulnerabilities](#security-vulnerabilities)
+- [Scale check](#scale-check)
+- [Gate integrity](#gate-integrity)
+- [Intended breakage](#intended-breakage)
+- [Finishing a finding](#finishing-a-finding)
+- [Other reviewers' comments](#other-reviewers-comments)
+-->
+
 The correctness and security lens of every review. The procedure, the grouping and the report format are in the
 `code-review` skill ([code-review.md](~/.pyck/guidelines/docs/code-review.md)); this doc adds only what this lens looks
 for.
@@ -36,7 +51,20 @@ point for a way around the gate: a second code path that skips the check, or a d
 
 Check for flaws such as missing authorization, injection, unsafe handling of untrusted input, secrets in code or logs,
 and weakened safeguards (for a weakened test or check, see [Gate integrity](#gate-integrity)). Trace untrusted input
-from where it enters to where it is used.
+from where it enters to where it is used. Look in particular for:
+
+- A value trusted because of the channel that delivered it. Trust follows who wrote the value: another process's command
+  line or environment, a filename on a shared volume and a path in a job payload are as attacker-controlled as a form
+  field.
+- A delete, move or overwrite on a path derived from such a value. Require that the resolved target (symlinks resolved)
+  sits under an allowlisted root, at least one level below it, and carries ownership evidence read before the operation.
+  On a refusal, log the target and stop; never fall back to a broader default path.
+- Output of a model or a tool used as trusted input, or a permission enforced only by a prompt. A system prompt is not a
+  security boundary; enforce permissions in code.
+- A secret that reached a remote. Treat it as compromised: rotate it first, then purge history.
+- A cache key that omits an input the response depends on, such as tenant, locale or viewer. It serves one user's data
+  to another.
+- A metric label or span attribute that carries a user id, an email or other personal data.
 
 ## Scale check
 

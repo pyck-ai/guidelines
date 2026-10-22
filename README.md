@@ -85,7 +85,7 @@ Private for now, intended to become public. In use across the organization. The 
 
 ## Attribution
 
-Several rules are adapted from open source projects; [ATTRIBUTION.md](./ATTRIBUTION.md) lists, per doc, each source with its author, link and licence.
+Several rules are adapted from open source projects; [ATTRIBUTION.md](./ATTRIBUTION.md) lists, per doc, each source with its author, link and licence. The sources include [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) by Addy Osmani (MIT, commit `aeac41d`).
 
 ## License
 

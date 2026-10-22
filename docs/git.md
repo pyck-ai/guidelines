@@ -69,6 +69,7 @@ The short description is lowercase words and digits joined by hyphens.
 ## Best practices
 
 - **No WIP commits on main**: clean up before merging
+- **One logical change per commit**: a feature, a refactor of a neighbouring function and a build-config change are three commits, so review and revert stay cheap
 - **Signed commits**: sign every commit with a GPG or SSH key registered on your GitHub account ([GitHub's docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)). The org rulesets reject unsigned commits on the default branch.
 
 ## Before you push

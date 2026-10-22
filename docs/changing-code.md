@@ -48,3 +48,31 @@ when the last phase lands. Shims that keep every intermediate state working
 outlive the migration. Example: changing `Order.status` from a string to an
 enum means changing the type and every caller in the migration, not adding a
 `StatusV2` field beside it.
+
+## Change a schema in additive phases
+
+Applies when you rename, retype or drop a column, a table or a constraint that
+deployed code reads or writes.
+
+During a rollout, old and new code run against one schema at the same time. A
+change that only one of them understands breaks the other. So never change a
+column in place: ship additive phases, each deployable and reversible on its
+own. Renaming `name` to `full_name` takes five:
+
+1. **Expand.** Add `full_name` as a nullable column. Old code ignores it.
+2. **Dual-write.** The app writes both columns on every insert and update.
+3. **Backfill.** Copy `name` into `full_name` for existing rows, in batches, so
+   no single statement locks the table.
+4. **Switch reads.** Read `full_name`, keep writing both and let it run.
+5. **Contract.** Stop writing `name`, then drop it in a separate, later deploy.
+
+- Do additive steps first and destructive steps last and alone. A drop or a
+  rename gets its own deploy, after no code references the old shape.
+- Write and run the down path before you merge. A migration you cannot reverse
+  is a deploy you cannot roll back.
+- Build a large index without blocking writes, for example
+  `CREATE INDEX CONCURRENTLY` in Postgres.
+- Each phase is a migration, so it must converge when run twice (see
+  [Make operations idempotent](code-design.md#make-operations-idempotent)).
+  Running one against a live database needs the permission that the
+  [org rules](../AGENTS.md#hard-rules) require.

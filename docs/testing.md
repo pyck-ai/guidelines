@@ -46,6 +46,10 @@ assert.Equal(t, 1, db.Queries())
 
 Make tests deterministic. Synchronize by polling for the condition with a timeout, never by sleeping.
 
+## Keep one check the tests cannot bend
+
+A bar made only of the repository's own tests is circular: the author can make it pass by changing the tests. Keep at least one check that editing the tests does not satisfy, such as a type checker, a linter or a scanner that reads an outside database.
+
 ## Bug fixes
 
 Applies when you fix a bug.
