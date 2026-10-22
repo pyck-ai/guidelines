@@ -103,7 +103,7 @@ LC_ALL=C
 export LC_ALL
 
 # skill:doc pairs; a skill may appear in several pairs to carry several docs.
-MAP='commit-messages:git github-issues:issues pull-requests:pull-requests readmes:readme code-review:code-review security-review:security-review quality-review:quality-review ci-pipelines:ci code-design:code-design code-design:changing-code testing:testing technical-writing:technical-writing observability:observability'
+MAP='commit-messages:git github-issues:issues pull-requests:pull-requests readmes:readme code-review:code-review security-review:security-review quality-review:quality-review ci-pipelines:ci code-design:code-design code-design:changing-code testing:testing technical-writing:technical-writing observability:observability adrs:adrs'
 
 # skill:path pairs, paths inside the pyck-ai/.github checkout.
 GH_FILES='pull-requests:.github/PULL_REQUEST_TEMPLATE.md

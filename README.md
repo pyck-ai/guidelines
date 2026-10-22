@@ -21,7 +21,7 @@ Commits, issues, pull requests, READMEs, code reviews and CI pipelines follow th
 
 Out of the box, pyck-ai/guidelines includes:
 
-- **Guideline docs**: the rules for commits, issues, pull requests, READMEs, technical writing, code design, testing, observability, code review and CI, listed under [Documentation](#documentation).
+- **Guideline docs**: the rules for commits, issues, pull requests, READMEs, technical writing, code design, testing, observability, architecture decisions, code review and CI, listed under [Documentation](#documentation).
 - **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a table that routes each task to its doc.
 - **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `pull-requests` and `github-issues` of the org templates, for [opencode](https://opencode.ai) and pi. Claude Code is not a supported target.
 - **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
@@ -67,6 +67,7 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 - [Testing](./docs/testing.md): what a test asserts and which tests to reject.
 - [Technical writing](./docs/technical-writing.md): the rules for the sentences of docs, issues, pull requests and commit messages.
 - [Observability](./docs/observability.md): the rules for logs, metrics, traces and alerts.
+- [ADRs](./docs/adrs.md): when to write an architecture decision record, how to name and lay it out, and how a later one supersedes it.
 - [Code review](./docs/code-review.md): the review procedure and the standards lens.
 - [Security review](./docs/security-review.md): the correctness and security lens of a review.
 - [Quality review](./docs/quality-review.md): the code quality lens of a review.

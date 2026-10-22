@@ -39,6 +39,7 @@ Author: Addy Osmani. Project: [addyosmani/agent-skills](https://github.com/addyo
 Author: Matt Pocock. Project: [mattpocock/skills](https://github.com/mattpocock/skills), commit `5beb35b`. Licence: MIT.
 
 - The `pr` skill.
+- The `domain-modeling` skill: <https://github.com/mattpocock/skills/tree/5beb35b/skills/engineering/domain-modeling>
 
 ### humanlayer/skills
 
@@ -97,6 +98,11 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 ### [docs/observability.md](./docs/observability.md)
 
 - The whole doc, reworded and without code: the `observability-and-instrumentation` skill and its observability checklist (addyosmani/agent-skills, `aeac41d`).
+
+### [docs/adrs.md](./docs/adrs.md)
+
+- When to write an ADR, the convention-first check, the rejected-alternatives section and the supersede rule: the `documentation-and-adrs` skill (addyosmani/agent-skills, `aeac41d`).
+- The three-part test for when an ADR is worth writing: the `ADR-FORMAT.md` of the `domain-modeling` skill (mattpocock/skills, `5beb35b`).
 
 ### [docs/ci.md](./docs/ci.md)
 
