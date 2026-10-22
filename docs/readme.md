@@ -90,7 +90,7 @@ and 8. A directory README may carry local maintenance rules; follow them there.
 
 - **Dense, not marketing.** Facts, tables over prose; prefer editing a line to
   adding a section. No "powerful", "seamless", "simply".
-- Active voice, present tense, one idea per sentence, no preamble.
+- Write the sentences per the `technical-writing` skill ([technical-writing.md](technical-writing.md)).
 - Relative links for anything in the repo. A file in another repository is
   linked as `https://github.com/<owner>/<repo>/blob/<branch>/<path>`, with an
   anchor where a section is meant, never as `raw.githubusercontent.com`. Agent

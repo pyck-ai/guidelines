@@ -67,12 +67,14 @@ The structure is always **summary + additional information**:
 
 ## Summary
 
-The summary is a short executive summary of the commits. Summarize, don't copy:
+The summary is a short executive summary of the commits. Write its sentences per the `technical-writing` skill
+([technical-writing.md](~/.pyck/guidelines/docs/technical-writing.md)). Summarize, don't copy:
 
 - It describes everything the commits change, and only that; one sentence may cover several commits.
 - Stay on the shorter side: aim for 2 or 3 paragraphs, and add more only when the PR really needs them to be understood
   or really makes that many changes. **5 paragraphs at most.** A list counts as one paragraph; trailers do not count.
   Details reviewers might want go under `## Additional Information`.
+- Do not paste logs, SHA lists or metric tables into the description. Link them.
 - Where a view is shorter than prose, use the smallest one that makes the key point clear and matches the change: a call
   tree, a file tree, pseudocode, a Mermaid diagram or a diff-shaped sketch. One view, not several.
 

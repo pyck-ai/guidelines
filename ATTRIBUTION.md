@@ -10,7 +10,7 @@ Links name a commit where one is known, so the text they point to does not chang
 
 Authors: poteto (pstack) and the Cursor team (cursor-team-kit, thermos). Project: [cursor/plugins](https://github.com/cursor/plugins), commit `ddf824a`. Licence: MIT.
 
-- `pstack`, the principles: <https://github.com/cursor/plugins/tree/ddf824a/pstack>
+- `pstack`, the principles and the `technical-writing` skill (author Lauren Tan): <https://github.com/cursor/plugins/tree/ddf824a/pstack>
 - `cursor-team-kit`, the `make-pr-easy-to-review` skill: <https://github.com/cursor/plugins/tree/ddf824a/cursor-team-kit>
 - `thermos`, the thermo-nuclear review skills: <https://github.com/cursor/plugins/tree/ddf824a/thermos>
 
@@ -18,7 +18,7 @@ Authors: poteto (pstack) and the Cursor team (cursor-team-kit, thermos). Project
 
 Author: Garry Tan. Project: [garrytan/gstack](https://github.com/garrytan/gstack), commit `6237994`. Licence: MIT.
 
-- The `review` and `document-release` skills.
+- The `review`, `document-release` and `document-generate` skills.
 
 ### ponytail
 
@@ -73,6 +73,11 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 ### [docs/git.md](./docs/git.md)
 
 - The subject, body and wrapping rules follow Tim Pope's [A Note About Git Commit Messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html). No text is adapted; the rules are reworded for pyck-ai.
+
+### [docs/technical-writing.md](./docs/technical-writing.md)
+
+- The four layers, the rhythm rules and the two plain-word rules: the `technical-writing` skill (Cursor plugins `pstack`, `ddf824a`).
+- Write the reference first: the `document-generate` skill (gstack, `6237994`).
 
 ### [docs/readme.md](./docs/readme.md)
 

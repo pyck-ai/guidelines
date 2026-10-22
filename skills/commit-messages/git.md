@@ -22,6 +22,8 @@ The commit message is the **single source of truth for the change**: what shippe
 - Make it **self-contained**: distill context that matters for the future from the issue into the body instead of
   pointing at it. Issue and PR links are conveniences, never required reading.
 - If the explanation needs more than two paragraphs, add a bulleted TLDR summary at the top of the body
+- Write the sentences per the `technical-writing` skill
+  ([technical-writing.md](~/.pyck/guidelines/docs/technical-writing.md))
 
 ## Footer
 
