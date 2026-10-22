@@ -24,7 +24,7 @@ Work through these steps in order:
 3. Write the body from the form of that type, see [Issue form templates](#issue-form-templates). A Defect also needs its
    [version](#determining-the-version-for-a-defect).
 4. File it with `gh issue create --type <Type>`, or through the web form.
-5. Set the organization-level fields (Severity, Effort, Start date, Target date) if they apply; see [Other
+5. Set the organization-level fields (Severity, Effort, Start date, End date) if they apply; see [Other
    rules](#other-rules).
 6. Verify: `gh issue view <n> --json issueType,title,body` shows the type and every required heading, and the fields
    read back.
@@ -89,11 +89,12 @@ organizational purpose:
   not a go-ahead. To rework a stale issue, open a new one with the new text and let the owner close the old one with a
   pointer to it, so the old discussion and cross-references stay intact. Before any edit you were asked for, keep the
   original (`gh issue view <n> --json title,body,labels`) so it can be restored exactly.
-- Severity, Effort, Start date and Target date are organization-level issue fields, not fields of a project board.
-  `gh issue create` cannot set them; use the GraphQL mutation `setIssueFieldValue` and read them back through
+- Severity, Effort, Start date and End date are organization-level issue fields, not fields of a project board. Start
+  date and End date are the days the work on an issue starts and ends, or for an incident the days its impact began and
+  ended. `gh issue create` cannot set them; use the GraphQL mutation `setIssueFieldValue` and read them back through
   `issue.issueFieldValues`. Look up the field and option ids in the organization
   (`organization(login: "pyck-ai") { issueFields(first: 10) { nodes { ... } } }`), then set a single-select field
-  (Severity, Effort) like this, and a date field (Start date, Target date) with `dateValue: "YYYY-MM-DD"` instead of
+  (Severity, Effort) like this, and a date field (Start date, End date) with `dateValue: "YYYY-MM-DD"` instead of
   `singleSelectOptionId`:
 
   ```sh
