@@ -1,9 +1,9 @@
 <!-- Generated from docs/observability.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/observability.md and run task generate. -->
 # Observability Guidelines
 
-Rules for the logs, metrics, traces and alerts of a service. They name no tool, so they hold for any backend. The org
-emits traces, metrics and logs through OpenTelemetry. What telemetry must never contain (secrets, personal data) is in
-[security-review.md](~/.pyck/guidelines/docs/security-review.md).
+Rules for the logs, metrics, traces and alerts of a service. They name no vendor, so they hold for any backend. The
+org's SDK for traces, metrics and logs is OpenTelemetry. What telemetry must never contain (secrets, personal data) is
+in [security-review.md](~/.pyck/guidelines/docs/security-review.md).
 
 ## Start from the on-call questions
 

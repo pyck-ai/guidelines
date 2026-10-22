@@ -22,7 +22,7 @@ for.
 
 ## Scope
 
-Report only flaws in code the change adds or modifies.
+Report only flaws the change introduces or exposes. The trace for a flaw may run through code the change does not touch.
 
 ## Breaking existing behavior
 

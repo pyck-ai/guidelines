@@ -42,7 +42,7 @@ This section owns the org's severity scale: any skill that rates a review findin
 Sort every finding into one of them, judged against the stated intent:
 
 - **Act on:** wrong behavior, a security hole or a maintenance cost that would block the merge. Only for a finding you
-  have traced end to end.
+  have traced end to end, or, for a structural finding, one that names the concrete restructuring.
 - **Consider:** real, but it may not be worth fixing now; say the trade-off.
 - **Noted:** valid but not actionable in this change.
 - **Dismissed:** a candidate finding you checked and dropped, with the reason.

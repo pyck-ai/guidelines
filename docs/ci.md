@@ -49,7 +49,7 @@ Leave `paths` and `branches` filters off the triggers of a workflow with a gate.
 Applies when a check enforces a number, such as a coverage minimum, a bundle size or a warning count.
 
 - Name the command that produces the number and the reason for the threshold, in the Taskfile or next to it. A number without a command is a wish, and a threshold without a reason gets deleted by the next person it blocks.
-- When no target exists yet, record today's value in the repository and fail the check when the value gets worse. Allow a small tolerance for drift, such as 0.5%, so an unrelated file that moves the number does not fail the build. When the value improves, update the recorded one. A target of 80% on a codebase at 62% gives a build that stays red until people learn to ignore it.
+- When no target exists yet, record today's value in the repository and fail the check when the value gets worse by more than a small tolerance, such as 0.5%, so an unrelated file that moves the number does not fail the build. When the value improves, the author of the change updates the recorded value in the same PR. A target of 80% on a codebase at 62% gives a build that stays red until people learn to ignore it.
 
 ## Adding a gated workflow
 
