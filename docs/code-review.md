@@ -32,7 +32,9 @@ and merge the results with this doc's procedure and report.
 
 ## Findings
 
-Sort every finding into one of four groups, judged against the stated intent:
+This section owns the org's severity scale: any skill that rates a review
+finding maps its ratings to these four groups. Sort every finding into one of
+them, judged against the stated intent:
 
 - **Act on:** wrong behavior, a security hole or a maintenance cost that
   would block the merge. Only for a finding you have traced end to end.
