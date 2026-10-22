@@ -1,6 +1,6 @@
 # Observability Guidelines
 
-Rules for the logs, metrics, traces and alerts of a service. They name no tool, so they hold for any backend. The org emits traces, metrics and logs through OpenTelemetry. What telemetry must never contain (secrets, personal data) is in [security-review.md](security-review.md).
+Rules for the logs, metrics, traces and alerts of a service. They name no vendor, so they hold for any backend. The org's SDK for traces, metrics and logs is OpenTelemetry. What telemetry must never contain (secrets, personal data) is in [security-review.md](security-review.md).
 
 ## Start from the on-call questions
 

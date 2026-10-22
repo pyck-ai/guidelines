@@ -1,6 +1,6 @@
 # README Guidelines
 
-Every repository MUST have a root `README.md` that follows these guidelines.
+Every repository has a root `README.md` that follows these guidelines (see the [org rules](../AGENTS.md#rules-for-every-change)).
 
 ## Root README: sections, in this order
 
