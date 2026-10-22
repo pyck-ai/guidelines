@@ -23,7 +23,7 @@ The commit message is the **single source of truth for the change**: what shippe
 The footer is **optional**: include it only when there is something concrete to reference or flag; never invent a reference to satisfy a template. Reference an issue only when the commit is genuinely part of it; shipping on the same branch as an issue's work does not make a commit part of that issue.
 
 - Separated from the body by a **single blank line**
-- **If** the commit relates to an issue, PR, commit, ADR, or external link, reference it on its own line with exactly one of three trailers, one issue id per line:
+- **If** the commit relates to an issue, PR, commit, ADR, or external link, reference it on its own line with exactly one of three trailers, one reference per line:
 
   | Trailer | Use when |
   | --- | --- |
@@ -31,7 +31,7 @@ The footer is **optional**: include it only when there is something concrete to 
   | `Part-of: #123` | The commit is one of several that together make up a larger change or issue, without closing it. |
   | `See-also: #123` | A plain non-closing reference, including a reference to an issue that is **already closed** (so it isn't re-closed). |
 
-  Repeat the trailer for several issues (`Closes: #1` then `Closes: #2`, never `Closes: #1, #2`), because GitHub links only an issue that has its own keyword. An issue in another repository is written `owner/repo#123`. Use only these three spellings; `Fixes`, `Fix`, `Resolves`, `Resolve`, `Implements`, `Refs`, `Ref`, `Related`, `See:` and `See also` are not allowed. See [GitHub's docs on linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+  Repeat the trailer for several issues (`Closes: #1` then `Closes: #2`, never `Closes: #1, #2`), because GitHub links only an issue that has its own keyword. An issue in another repository is written `owner/repo#123`. A reference that is not an issue always uses `See-also:`: a pull request as `#45` or `owner/repo#45`, a commit as its full SHA, an ADR by its id (`See-also: ADR-26W27-02`) and an external link as its URL. Use only these three spellings; `Fixes`, `Fix`, `Resolves`, `Resolve`, `Implements`, `Refs`, `Ref`, `Related`, `See:` and `See also` are not allowed. See [GitHub's docs on linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
 - If the change is not backwards compatible, add a `BREAKING CHANGE: <explanation>` section with a migration path
 
 ## Example
