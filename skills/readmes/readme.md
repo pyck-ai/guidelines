@@ -68,7 +68,8 @@ Out of the box, my-service includes:
 ## Getting started
 
 ```sh
-task build # build the binary task test # run the tests
+task build   # build the binary
+task test    # run the tests
 ```
 
 Needs Go 1.23 and Task. Run `task --list` for every other command.

@@ -30,6 +30,7 @@ check() {
 says() { grep -F -q -- "$1" "$OUT"; }
 rc_is() { [ "$RC" -eq "$1" ]; }
 says_copy() { grep -F -q -- "$1" "$W/$COPY"; }
+not_says_copy() { ! says_copy "$1"; }
 # copy_is EXPECTED: the generated copy minus its DO NOT EDIT line is EXPECTED.
 copy_is() { [ "$(tail -n +2 "$W/$COPY")" = "$1" ]; }
 
@@ -420,6 +421,63 @@ $(for _i in $(seq 40); do printf 'a\nb\nc\nd\ne\n\n'; done)
 ## A"
 gen
 check "toc counts wrapped lines: a doc over 100 lines gets none" no_toc
+
+echo "== nested fences"
+# A fence closes only with a run of the same character at least as long as its
+# opener and nothing after it (CommonMark): an inner ```sh block, a shorter
+# run, a run with an info string and a run of the other character do not close
+# an outer fence. Everything inside passes through: no refill, no link
+# rewrite, no marker, no heading in the toc.
+NEST="# T
+
+\`\`\`\`markdown
+# Name
+
+\`\`\`sh
+task build # build the binary
+task test # run the tests
+\`\`\`
+
+## Inner heading
+See https://example.com/x and [a](./git.md).
+<!-- human -->
+text one
+text two
+\`\`\`\` not a close
+~~~
+text three
+text four
+\`\`\`\`
+
+~~~~text
+~~~
+a
+b
+\`\`\`\`
+~~~~
+
+after one
+after two"
+doc "$NEST"
+gen
+check "nested fences: exit 0" rc_is 0
+check "nested fences: fenced lines kept, prose after refilled" copy_is "$(printf '%s\n' "$NEST" | sed '$d' | sed '$d')
+
+after one after two"
+doc "$NEST
+
+\`\`\`\`text
+\`\`\`sh
+## Inner heading
+\`\`\`
+\`\`\`\`
+
+## Real
+
+$(filler 100)"
+gen
+check "nested fences: toc lists the heading outside" says_copy '- [Real](#real)'
+check "nested fences: toc omits the heading inside" not_says_copy '- [Inner heading]'
 
 echo "== malformed"
 bad "human without close" '<!-- human -->
