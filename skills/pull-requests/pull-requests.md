@@ -12,6 +12,7 @@
 - [Summary](#summary)
 - [Size](#size)
 - [Before you mark it ready](#before-you-mark-it-ready)
+- [Definition of done](#definition-of-done)
 - [Classification](#classification)
 - [Guideline check](#guideline-check)
 -->
@@ -127,6 +128,25 @@ Run the checks, fix what fails, and run them again until all pass:
   structure](#description-structure) (including the trailers).
 - The summary follows [Summary](#summary).
 - The changes are tested and the tests they require are added or updated.
+- No condition of the [Definition of done](#definition-of-done) is known to be open.
+
+## Definition of done
+
+A change is done, and may merge, when each condition holds. Each links to the doc that owns it.
+
+- **Acceptance criteria.** Every criterion of the linked issue is met, and the PR or a commit shows the evidence for
+  each ([issues: Acceptance Criteria](~/.pyck/guidelines/docs/issues.md#acceptance-criteria)). A trivial change without
+  an issue states its intent in the commit.
+- **Tests.** The change has the tests that [testing](~/.pyck/guidelines/docs/testing.md) requires, and they pass.
+- **Docs.** Every README, doc comment and doc under `docs/` that the change made stale is fixed in the same change (see
+  the [change lifecycle](~/.pyck/guidelines/AGENTS.md#rules-for-every-change)).
+- **Review.** A review against [code-review](~/.pyck/guidelines/docs/code-review.md) is finished, and no finding in its
+  Act on group is open.
+- **CI.** Every required check is green ([ci: Required checks](~/.pyck/guidelines/docs/ci.md#required-checks)).
+- **ADR.** A decision that [adrs](~/.pyck/guidelines/docs/adrs.md#write-an-adr-for-a-hard-to-reverse-choice) says to
+  record has its ADR.
+- **Telemetry.** New instrumentation is verified as described in [observability: Verify the
+  telemetry](~/.pyck/guidelines/docs/observability.md#verify-the-telemetry).
 
 ## Classification
 
