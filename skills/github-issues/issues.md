@@ -20,7 +20,7 @@ Work through these steps in order:
 
 1. Pick the type (Defect, Feature or Task) by what the issue really describes; see [Issue Classification &
    Selection](#issue-classification--selection).
-2. Check it is not a [meta-issue](#no-meta-issues): it needs its own description and acceptance criteria.
+2. Check it is not a [meta-ticket](#no-meta-tickets): it needs its own description and acceptance criteria.
 3. Write the body from the form of that type, see [Issue form templates](#issue-form-templates). A Defect also needs its
    [version](#determining-the-version-for-a-defect).
 4. File it with `gh issue create --type <Type>`, or through the web form.
@@ -54,9 +54,9 @@ covers only routine bumps that fix no observed failure.
 - When in doubt, create a Feature or Task with a narrow scope. It is easier to split related issues out later than to
   break an oversized one back down.
 
-### No meta-issues
+### No meta-tickets
 
-An issue's only job is to carry *intent*, so every issue adds intent of its own and stands on its own. A **meta-issue**
+An issue's only job is to carry *intent*, so every issue adds intent of its own and stands on its own. A **meta-ticket**
 groups or points at other issues without its own description or acceptance criteria. Do not create one. Before creating
 an "umbrella" or "tracking" issue, check that it carries its own substance; if not, drop it.
 
