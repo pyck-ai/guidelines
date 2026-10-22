@@ -43,7 +43,7 @@ Do not approve because the behavior is right. Approve only when none of these ho
 
 - a structural regression;
 - a visible simplification that would remove most of the complexity, or incidental complexity kept although one is in plain view;
-- a file pushed past 1000 lines;
+- a file pushed past the limit in File growth above;
 - special-case branching that tangles an existing flow, or feature checks scattered over shared code;
 - a hacky or magic abstraction, or wrapper, cast or optionality churn that hides the real design;
 - a boundary leak, a duplicate of an existing helper, or logic in the wrong layer despite a canonical home.

@@ -22,7 +22,7 @@ for.
 
 ## Scope
 
-Report only flaws in code the change adds or modifies.
+Report only flaws the change introduces or exposes. The trace for a flaw may run through code the change does not touch.
 
 ## Breaking existing behavior
 
@@ -58,7 +58,9 @@ from where it enters to where it is used. Look in particular for:
   field.
 - A delete, move or overwrite on a path derived from such a value. Require that the resolved target (symlinks resolved)
   sits under an allowlisted root, at least one level below it, and carries ownership evidence read before the operation.
-  On a refusal, log the target and stop; never fall back to a broader default path.
+  The level below the root keeps the root itself safe, and the ownership evidence keeps a file that another process
+  created safe. On a refusal, log the target and stop; a fallback to a broader default path would delete something
+  nobody checked.
 - Output of a model or a tool used as trusted input, or a permission enforced only by a prompt. A system prompt is not a
   security boundary; enforce permissions in code.
 - A secret that reached a remote. Treat it as compromised: rotate it first, then purge history.

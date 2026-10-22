@@ -38,10 +38,11 @@ same scoped diff and context, and merge the results with this doc's procedure an
 
 ## Findings
 
-Sort every finding into one of four groups, judged against the stated intent:
+This section owns the org's severity scale: any skill that rates a review finding maps its ratings to these four groups.
+Sort every finding into one of them, judged against the stated intent:
 
 - **Act on:** wrong behavior, a security hole or a maintenance cost that would block the merge. Only for a finding you
-  have traced end to end.
+  have traced end to end, or, for a structural finding, one that names the concrete restructuring.
 - **Consider:** real, but it may not be worth fixing now; say the trade-off.
 - **Noted:** valid but not actionable in this change.
 - **Dismissed:** a candidate finding you checked and dropped, with the reason.
@@ -98,9 +99,9 @@ Compare the diff with the linked issue's acceptance criteria. Without an issue, 
 
 Load the `testing` skill ([testing.md](~/.pyck/guidelines/docs/testing.md)) and check each test in the diff against it.
 
-Then ask whether the tests would catch a regression, and answer by experiment. Invert one condition the change adds
-(drop a negation, swap `&&` for `||`) and run the suite. Restore the file from a copy afterwards, so the diff stays
-unchanged. A mutation that stays green is a finding that names the missing test case.
+Then ask whether the tests would catch a regression, and answer by experiment. Where the suite runs in minutes, invert
+the riskiest condition the change adds (drop a negation, swap `&&` for `||`) and run the suite. Restore the file from a
+copy afterwards, so the diff stays unchanged. A mutation that stays green is a finding that names the missing test case.
 
 ### Design
 

@@ -32,11 +32,11 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | open or edit a pull request | `pull-requests` | `docs/pull-requests.md` |
 | create, edit or triage an issue | `github-issues` | `docs/issues.md` |
 | create or update a README | `readmes` | `docs/readme.md` |
-| design or change code structure (a module, type, API or abstraction, a bug fix, a migration, a retried operation, shared state) | `code-design` | `docs/code-design.md`, `docs/changing-code.md` |
-| write, change or review a test | `testing` | `docs/testing.md` |
+| design or change code structure (a module, type, API or abstraction, a bug fix, a new dependency, a migration, a retried operation, shared state) | `code-design` | `docs/code-design.md`, `docs/changing-code.md` |
+| write, change or review a test, or fix a bug | `testing` | `docs/testing.md` |
 | review a diff or pull request (every review applies all three skills) | `code-review`, `security-review`, `quality-review` | `docs/code-review.md`, `docs/security-review.md`, `docs/quality-review.md` |
 | add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check | `ci-pipelines` | `docs/ci.md` |
 | write or review the sentences of a doc, README, RFC, ADR, issue, PR description or commit message | `technical-writing` | `docs/technical-writing.md` |
-| add or review logging, metrics, tracing or an alert | `observability` | `docs/observability.md` |
+| add or review logging, metrics, tracing, an alert, an SLO, a runbook or a dashboard | `observability` | `docs/observability.md` |
 | make or record an architecture decision, or write or supersede an ADR | `adrs` | `docs/adrs.md` |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |

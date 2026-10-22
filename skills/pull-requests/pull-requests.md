@@ -12,6 +12,7 @@
 - [Summary](#summary)
 - [Size](#size)
 - [Before you mark it ready](#before-you-mark-it-ready)
+- [Definition of done](#definition-of-done)
 - [Classification](#classification)
 - [Guideline check](#guideline-check)
 -->
@@ -32,9 +33,9 @@ check](#guideline-check).
 
 ## Title
 
-Write the title like a commit subject (see [git: Subject line](~/.pyck/guidelines/docs/git.md#subject-line)):
-imperative, capitalized, no prefix such as `feat:`, no trailing period, at most 72 characters. It names the change as a
-whole. A PR with a single commit uses that commit's subject. Example: `Add zone filter to the pick list`.
+Write the title like a commit subject (see [git: Subject line](~/.pyck/guidelines/docs/git.md#subject-line)): It names
+the change as a whole. A PR with a single commit uses that commit's subject. Example:
+`Add zone filter to the pick list`.
 
 ## Opening a PR
 
@@ -89,7 +90,8 @@ description with it). The length limit does not apply to such a copy.
 
 Keep a PR small enough to review in one sitting:
 
-- **Commits**: aim for 5 or fewer, and 10 at most (merge commits do not count).
+- **Commits**: aim for 5 or fewer, and 10 at most. A PR holds no merge commits (see [git: Best
+  practices](~/.pyck/guidelines/docs/git.md#best-practices)).
 - **Diff**: keep the changed lines, the changed files and the largest single file small. Generated files do not count;
   tests count, but less than production code.
 - **Spread**: touch as few modules as you can, ideally one or two.
@@ -97,8 +99,10 @@ Keep a PR small enough to review in one sitting:
   own.
 
 When you split work into commits, order them so each builds on the one before: schema or storage, core logic, wiring,
-UI, tests. After you rewrite a PR branch's history, prove the content did not change: note `git rev-parse <old>^{tree}`
-before the rewrite and compare it with `git rev-parse HEAD^{tree}` after. Do not push if they differ unintentionally.
+UI. Each commit carries its own tests (see [testing](~/.pyck/guidelines/docs/testing.md)), so every commit builds and
+passes on its own. After you rewrite a PR branch's history, prove the content did not change: note
+`git rev-parse <old>^{tree}` before the rewrite and compare it with `git rev-parse HEAD^{tree}` after. Do not push if
+they differ unintentionally.
 
 If notes in the description cannot make a PR reviewable, split it into several PRs and stack them: the first targets
 `main`, each next one targets the branch of the PR below it, so each review shows only its own layer.
@@ -127,11 +131,31 @@ Run the checks, fix what fails, and run them again until all pass:
   structure](#description-structure) (including the trailers).
 - The summary follows [Summary](#summary).
 - The changes are tested and the tests they require are added or updated.
+- No condition of the [Definition of done](#definition-of-done) is known to be open.
+
+## Definition of done
+
+A change is done, and may merge, when each condition holds. Each links to the doc that owns it.
+
+- **Acceptance criteria.** Every criterion of the linked issue is met, and the PR or a commit shows the evidence for
+  each ([issues: Acceptance Criteria](~/.pyck/guidelines/docs/issues.md#acceptance-criteria)). A trivial change without
+  an issue states its intent in the commit.
+- **Tests.** The change has the tests that [testing](~/.pyck/guidelines/docs/testing.md) requires, and they pass.
+- **Docs.** Every README, doc comment and doc under `docs/` that the change made stale is fixed in the same change (see
+  the [change lifecycle](~/.pyck/guidelines/AGENTS.md#rules-for-every-change)).
+- **Review.** A review against [code-review](~/.pyck/guidelines/docs/code-review.md) is finished, and no finding in its
+  Act on group is open.
+- **CI.** Every required check is green ([ci: Required checks](~/.pyck/guidelines/docs/ci.md#required-checks)).
+- **ADR.** A decision that [adrs](~/.pyck/guidelines/docs/adrs.md#write-an-adr-for-a-hard-to-reverse-choice) says to
+  record has its ADR.
+- **Telemetry.** New instrumentation is verified as described in [observability: Verify the
+  telemetry](~/.pyck/guidelines/docs/observability.md#verify-the-telemetry).
 
 ## Classification
 
 Every commit is exactly one kind: **defect fix**, **feature** or **task**, the same three kinds as issues (a PR may hold
-several commits, so it may hold several kinds). Two more properties are judged per commit:
+several commits, so it may hold several kinds, but never a feature together with a defect fix: see [Size](#size)). Two
+more properties are judged per commit:
 
 - **Breaking**: the commit breaks backwards compatibility. A `BREAKING CHANGE:` footer line marks it (see [git:
   Footer](~/.pyck/guidelines/docs/git.md#footer)).
@@ -147,5 +171,5 @@ pyck-review checks these rules on repos that opt in through `.github/pyck-review
 messages against [git](~/.pyck/guidelines/docs/git.md) and the commits' kinds against [Classification](#classification).
 Text inside code blocks is ignored. Each finding links to the section of this guideline that defines its rule. A
 blocking finding requests changes and sets the `guidelines-not-met` label, unless the repo makes every review advice
-with `pullRequests.requestChanges: false`. The list of checks and their thresholds is in `docs/rules.md` of the
-pyck-review repository.
+with `pullRequests.requestChanges: false`. The thresholds are the numbers in this guideline; the list of checks is in
+`docs/rules.md` of the pyck-review repository.
