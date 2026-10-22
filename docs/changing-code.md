@@ -11,10 +11,9 @@ The symptom is where a wrong state became visible; the root cause is the first
 place the code did something it should not, or failed to handle a state it
 should.
 
-- Reproduce first, then ask "why" until the answer is a wrong decision in the
-  code, not a consequence of an earlier one. Capture the reproduction as a test
-  where one is practical (load the `testing` skill,
-  [testing.md](testing.md#bug-fixes)).
+- Reproduce first, as a test where one is practical (load the `testing` skill,
+  [testing.md](testing.md#bug-fixes)). Then ask "why" until the answer is a
+  wrong decision in the code, not a consequence of an earlier one.
 - Ask whether the state that triggered the symptom is legitimate. If the
   system may be in that state, handle it where it broke. If it should never
   exist, a check where it broke only hides the bug; find what produced it.

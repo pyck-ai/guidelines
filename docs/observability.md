@@ -32,7 +32,7 @@ Applies when you add or change a metric or a label.
 - Measure rate, errors and duration for every endpoint and every external dependency. Measure utilization, saturation and errors for every resource that can fill up (queue, pool, host). For a queue, add its depth and its processing time.
 - Record latency as a histogram and read p50, p95 and p99. An average hides the 1% of users with a terrible time.
 - Every distinct label combination is a separate time series, so labels come from small, fixed sets: route template, status class (`5xx`, not `503`), provider name.
-- Never use an unbounded value as a label: user id, tenant id, email, raw URL, request id or error text. That detail belongs in logs and traces. Personal data in a label is also a [security finding](security-review.md).
+- Never use an unbounded value as a label: user id, tenant id, email, raw URL, request id or error text. That detail belongs in logs and traces.
 
 ## Traces
 

@@ -10,7 +10,7 @@ The description is therefore a **short executive summary** for reviewers. A PR m
 
 ## Title
 
-Write the title like a commit subject (see [git: Subject line](./git.md#subject-line)): imperative, capitalized, no prefix such as `feat:`, no trailing period, at most 72 characters. It names the change as a whole. A PR with a single commit uses that commit's subject. Example: `Add zone filter to the pick list`.
+Write the title like a commit subject (see [git: Subject line](./git.md#subject-line)): It names the change as a whole. A PR with a single commit uses that commit's subject. Example: `Add zone filter to the pick list`.
 
 ## Opening a PR
 
@@ -93,7 +93,7 @@ A change is done, and may merge, when each condition holds. Each links to the do
 
 ## Classification
 
-Every commit is exactly one kind: **defect fix**, **feature** or **task**, the same three kinds as issues (a PR may hold several commits, so it may hold several kinds). Two more properties are judged per commit:
+Every commit is exactly one kind: **defect fix**, **feature** or **task**, the same three kinds as issues (a PR may hold several commits, so it may hold several kinds, but never a feature together with a defect fix: see [Size](#size)). Two more properties are judged per commit:
 
 - **Breaking**: the commit breaks backwards compatibility. A `BREAKING CHANGE:` footer line marks it (see [git: Footer](./git.md#footer)).
 - **Irreversible**: a revert cannot undo it. It deletes or rewrites data, removes infrastructure, or has an effect outside the system.
@@ -102,4 +102,4 @@ Classification is automated, so the PR has no classification checkboxes. The kin
 
 ## Guideline check
 
-[pyck-review](https://github.com/pyck-ai/pyck-review) checks these rules on repos that opt in through `.github/pyck-review.json5`, together with the commit messages against [git](./git.md) and the commits' kinds against [Classification](#classification). Text inside code blocks is ignored. Each finding links to the section of this guideline that defines its rule. A blocking finding requests changes and sets the `guidelines-not-met` label, unless the repo makes every review advice with `pullRequests.requestChanges: false`. The list of checks and their thresholds is in `docs/rules.md` of the [pyck-review](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md) repository.
+[pyck-review](https://github.com/pyck-ai/pyck-review) checks these rules on repos that opt in through `.github/pyck-review.json5`, together with the commit messages against [git](./git.md) and the commits' kinds against [Classification](#classification). Text inside code blocks is ignored. Each finding links to the section of this guideline that defines its rule. A blocking finding requests changes and sets the `guidelines-not-met` label, unless the repo makes every review advice with `pullRequests.requestChanges: false`. The thresholds are the numbers in this guideline; the list of checks is in `docs/rules.md` of the [pyck-review](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md) repository.

@@ -59,7 +59,8 @@ branch as an issue's work does not make a commit part of that issue.
   by its id (`See-also: ADR-26W27-02`) and an external link as its URL. Use only these three spellings; `Fixes`, `Fix`,
   `Resolves`, `Resolve`, `Implements`, `Refs`, `Ref`, `Related`, `See:` and `See also` are not allowed. See GitHub's
   docs on linking a pull request to an issue.
-- If the change is not backwards compatible, add a `BREAKING CHANGE: <explanation>` section with a migration path
+- If the change is not backwards compatible, add a `BREAKING CHANGE: <explanation>` paragraph with a migration path
+  right before the trailers
 
 ## Example
 

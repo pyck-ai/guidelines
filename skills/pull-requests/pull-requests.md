@@ -33,9 +33,9 @@ check](#guideline-check).
 
 ## Title
 
-Write the title like a commit subject (see [git: Subject line](~/.pyck/guidelines/docs/git.md#subject-line)):
-imperative, capitalized, no prefix such as `feat:`, no trailing period, at most 72 characters. It names the change as a
-whole. A PR with a single commit uses that commit's subject. Example: `Add zone filter to the pick list`.
+Write the title like a commit subject (see [git: Subject line](~/.pyck/guidelines/docs/git.md#subject-line)): It names
+the change as a whole. A PR with a single commit uses that commit's subject. Example:
+`Add zone filter to the pick list`.
 
 ## Opening a PR
 
@@ -154,7 +154,8 @@ A change is done, and may merge, when each condition holds. Each links to the do
 ## Classification
 
 Every commit is exactly one kind: **defect fix**, **feature** or **task**, the same three kinds as issues (a PR may hold
-several commits, so it may hold several kinds). Two more properties are judged per commit:
+several commits, so it may hold several kinds, but never a feature together with a defect fix: see [Size](#size)). Two
+more properties are judged per commit:
 
 - **Breaking**: the commit breaks backwards compatibility. A `BREAKING CHANGE:` footer line marks it (see [git:
   Footer](~/.pyck/guidelines/docs/git.md#footer)).
@@ -170,5 +171,5 @@ pyck-review checks these rules on repos that opt in through `.github/pyck-review
 messages against [git](~/.pyck/guidelines/docs/git.md) and the commits' kinds against [Classification](#classification).
 Text inside code blocks is ignored. Each finding links to the section of this guideline that defines its rule. A
 blocking finding requests changes and sets the `guidelines-not-met` label, unless the repo makes every review advice
-with `pullRequests.requestChanges: false`. The list of checks and their thresholds is in `docs/rules.md` of the
-pyck-review repository.
+with `pullRequests.requestChanges: false`. The thresholds are the numbers in this guideline; the list of checks is in
+`docs/rules.md` of the pyck-review repository.

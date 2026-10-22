@@ -16,7 +16,7 @@ The engineering rules left [pyck-ai/.github](https://github.com/pyck-ai/.github)
 | `docs/contributing.md`, `docs/community-health.md` | the [README of pyck-ai/.github](https://github.com/pyck-ai/.github#readme), which describes what GitHub applies org-wide |
 | `docs/renovate.md` | the [README of pyck-ai/renovate](https://github.com/pyck-ai/renovate#readme) |
 
-New here, with no old counterpart: [docs/code-review.md](./code-review.md), [docs/readme.md](./readme.md), [templates/AGENTS.md](../templates/AGENTS.md) and the skills under [`skills/`](../skills).
+New here, with no old counterpart: every doc under `docs/` that is not listed above, [templates/AGENTS.md](../templates/AGENTS.md) and the skills under [`skills/`](../skills).
 
 The PR template and the issue forms stay in pyck-ai/.github, and GitHub applies them as before. The PR template drops its URLs and names every classification judgement.
 
@@ -38,7 +38,3 @@ Org rules come from a local checkout at `~/.pyck/guidelines`, never from the web
 - **opencode**: `./setup.sh` links the skills; your `opencode.json` loads `AGENTS.md` (see [Getting started](../README.md#getting-started)). `./setup.sh` removes the `~/.config/opencode/config.json` that earlier versions generated.
 - **pi**: reads the generic skills that `./setup.sh` links into `~/.agents/skills`.
 - **Claude Code** (unsupported, at your own risk): add the line `@~/.pyck/guidelines/AGENTS.md` to `~/.claude/CLAUDE.md`, which may import a home path with `@~/...` (see the [Claude Code memory docs](https://code.claude.com/docs/en/memory)). Claude Code v2.1.277 and later reads a repository's own `AGENTS.md` itself. The skills are not installed for Claude Code.
-
-## Coming next
-
-Org-wide labels follow in their own issue: flags are bare labels, enums are namespaced (`type/feature`, `size/M`), and pyck-review sets and checks them.

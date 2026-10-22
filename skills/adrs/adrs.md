@@ -38,7 +38,8 @@ Applies when you create an ADR file.
 - Keep ADRs in `docs/adr/`, one decision per file, with a `README.md` that holds an index table (ID, Title, Status). Add
   the row in the same change as the ADR.
 - Name the file `adr-{yy}w{ww}-{nn}-{slug}.md` in lowercase, and refer to it as `ADR-{YY}W{WW}-{NN}`. `yy` is the
-  two-digit year, `ww` the ISO 8601 week and `nn` a zero-padded counter that starts at `01` in each week. Example:
+  two-digit year, `ww` the ISO 8601 week and `nn` a zero-padded counter that starts at `01` in each week. Pick `nn`
+  after you rebase onto the default branch; if two ADRs share a number, the later one is renumbered. Example:
   `adr-26w27-02-pyck-go-as-base-extension.md` is `ADR-26W27-02`.
 - Title the ADR `# ADR-26W27-02: <the decision as a phrase>`.
 - Keep one copy of an ADR. Another repository links to it and does not copy it.
@@ -74,7 +75,8 @@ Applies when you write the body of an ADR.
 | 🟡 | Proposed | Open for review |
 | 🟢 | Accepted | Agreed and in force |
 | 🔴 | Rejected | Considered and not adopted; keep it, because the reasons stop the next proposal |
-| ⚪ | Deprecated | Reversed or replaced; names the ADR that replaces it |
+| ⚪ | Superseded | Replaced by a newer ADR, which it names |
+| ⚪ | Deprecated | Reversed with no replacement |
 
 ## An accepted ADR is not rewritten
 
@@ -84,7 +86,7 @@ Applies when a decision changes or an ADR turns out to be wrong.
   block that says what changed.
 - After acceptance, change only the status block and links, and fix typos. Any change of substance is a new ADR.
 - To supersede an ADR, write the new one first. Its status block says "Supersedes ADR-X" and why. Then mark the old one
-  ⚪ Deprecated and link the new one, so each points at the other. Update both index rows.
+  ⚪ Superseded and link the new one, so each points at the other. Update both index rows.
 - Never delete an ADR.
 
 ## Reference an ADR where the decision shows

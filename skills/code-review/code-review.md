@@ -99,9 +99,9 @@ Compare the diff with the linked issue's acceptance criteria. Without an issue, 
 
 Load the `testing` skill ([testing.md](~/.pyck/guidelines/docs/testing.md)) and check each test in the diff against it.
 
-Then ask whether the tests would catch a regression, and answer by experiment. Invert one condition the change adds
-(drop a negation, swap `&&` for `||`) and run the suite. Restore the file from a copy afterwards, so the diff stays
-unchanged. A mutation that stays green is a finding that names the missing test case.
+Then ask whether the tests would catch a regression, and answer by experiment. Where the suite runs in minutes, invert
+the riskiest condition the change adds (drop a negation, swap `&&` for `||`) and run the suite. Restore the file from a
+copy afterwards, so the diff stays unchanged. A mutation that stays green is a finding that names the missing test case.
 
 ### Design
 

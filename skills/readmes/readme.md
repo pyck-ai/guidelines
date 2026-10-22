@@ -95,7 +95,8 @@ a README:
 
 Add one only where nothing else documents the directory (for example a Go package has its package doc comment and gets
 no README). Content: local layout, commands, ports, entrypoints. Same voice rules; skip sections 0, 5, 7 and 8. A
-directory README may carry local maintenance rules; follow them there.
+directory README may carry local maintenance rules; follow them there. The index README of `docs/adr/` (see
+[adrs.md](~/.pyck/guidelines/docs/adrs.md)) is an exception: it holds the index table.
 
 ## Voice and formatting
 

@@ -49,8 +49,7 @@ Applies when you add or change a metric or a label.
 - Every distinct label combination is a separate time series, so labels come from small, fixed sets: route template,
   status class (`5xx`, not `503`), provider name.
 - Never use an unbounded value as a label: user id, tenant id, email, raw URL, request id or error text. That detail
-  belongs in logs and traces. Personal data in a label is also a [security
-  finding](~/.pyck/guidelines/docs/security-review.md).
+  belongs in logs and traces.
 
 ## Traces
 
