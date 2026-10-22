@@ -60,7 +60,8 @@
 #               continuation lines are indented to the item's text column; a
 #               nested item starts a new paragraph at its own indent
 #   blockquote  the `> ` prefix is kept on every wrapped line
-#   kept as is  fenced code (``` or ~~~, any indent), tables (lines starting
+#   kept as is  fenced code (``` or ~~~, any indent; closed by a run at least
+#               as long as the opener), tables (lines starting
 #               with `|`), headings, rules, HTML comment lines and blocks
 #               (the table of contents included), front matter, indented code
 #               (4+ spaces outside a list), blank lines
@@ -177,6 +178,38 @@ trap 'rm -rf "$TMP"' EXIT
 trap 'exit 1' HUP INT TERM
 mkdir "$TMP"
 
+# FENCE_AWK: awk functions that every awk program below puts in front of its
+# own, so they all track fenced code the same way (CommonMark): a fence opens
+# with a run of 3 or more backticks or tildes (up to 3 spaces indent) and closes
+# only with a run of the same character at least as long as the opener and
+# nothing but whitespace after it. So a ```sh block inside a ```` fence is text.
+# fence_opens(s) returns 1 and sets fch and flen if s opens a fence;
+# fence_closes(s) tells whether s closes the open one.
+FENCE_AWK='
+function fence_opens(s,    ind, c, n) {
+	match(s, /^ */)
+	ind = RLENGTH
+	if (ind > 3) return 0
+	c = substr(s, ind + 1, 1)
+	if (c != "`" && c != "~") return 0
+	n = 0
+	while (substr(s, ind + 1 + n, 1) == c) n++
+	if (n < 3) return 0
+	fch = c
+	flen = n
+	return 1
+}
+
+function fence_closes(s,    ind, n) {
+	match(s, /^ */)
+	ind = RLENGTH
+	if (ind > 3) return 0
+	n = 0
+	while (substr(s, ind + 1 + n, 1) == fch) n++
+	return (n >= flen && substr(s, ind + 1 + n) ~ /^[ \t]*$/)
+}
+'
+
 # filter MODE NAME: stdin is a file, stdout the file with its links rewritten
 # (MODE rewrite) or unchanged (MODE copy). Both fail on a URL left outside
 # code. NAME is used in messages.
@@ -184,7 +217,7 @@ mkdir "$TMP"
 # parts outside `inline code` are rewritten. Inline code is masked first, so a
 # link text may contain code.
 filter() {
-	FILTER_MODE=$1 FILTER_NAME=$2 awk '
+	FILTER_MODE=$1 FILTER_NAME=$2 awk "$FENCE_AWK"'
 	BEGIN {
 		mode = ENVIRON["FILTER_MODE"]
 		name = ENVIRON["FILTER_NAME"]
@@ -297,13 +330,11 @@ filter() {
 
 	{
 		s = $0
-		match(s, /^ */)
-		f = (RLENGTH <= 3) ? substr(s, RLENGTH + 1, 3) : ""
-		if (f == "```" || f == "~~~") {
-			if (!infence) { infence = 1; fence = f }
-			else if (f == fence) infence = 0
+		if (infence) {
+			if (fence_closes(s)) infence = 0
 			print s
-		} else if (infence) {
+		} else if (fence_opens(s)) {
+			infence = 1
 			print s
 		} else {
 			print line(s)
@@ -318,7 +349,7 @@ filter() {
 # the header). Fails with file and line on a malformed marker or a toc block.
 # Lines in ``` or ~~~ fences are copied as they are.
 markers() {
-	MARKERS_NAME=$1 awk '
+	MARKERS_NAME=$1 awk "$FENCE_AWK"'
 	BEGIN {
 		name = ENVIRON["MARKERS_NAME"]
 		state = ""
@@ -358,13 +389,11 @@ markers() {
 
 	{
 		s = $0
-		match(s, /^ */)
-		f = (RLENGTH <= 3) ? substr(s, RLENGTH + 1, 3) : ""
-		if (f == "```" || f == "~~~") {
-			if (!infence) { infence = 1; fence = f }
-			else if (f == fence) infence = 0
+		if (infence) {
+			if (fence_closes(s)) infence = 0
 			emit(s)
-		} else if (infence) {
+		} else if (fence_opens(s)) {
+			infence = 1
 			emit(s)
 		} else if (s ~ /^<!-- toc/) {
 			err("<!-- toc block in a doc; remove it; the generator writes the table of contents")
@@ -401,7 +430,7 @@ markers() {
 # wrap WIDTH: stdin is a doc, stdout the doc with its prose paragraphs refilled
 # to at most WIDTH characters (see the header for the grammar). Idempotent.
 wrap() {
-	WRAP_WIDTH=$1 awk '
+	WRAP_WIDTH=$1 awk "$FENCE_AWK"'
 	BEGIN {
 		W = ENVIRON["WRAP_WIDTH"] + 0
 		infence = 0
@@ -535,19 +564,17 @@ wrap() {
 		lead = (ind > 0 ? substr(r, 1, ind) : "")
 
 		if (infence) {
-			if (substr(t, 1, 3) == fence) infence = 0
+			if (fence_closes(t)) infence = 0
 			print line
 			next
 		}
 		if (t == "") { flush(); print line; next }
 		# indented code: 4 spaces outside a list, not a continuation
 		if (!para && !inlist && q == "" && ind >= 4) { print line; next }
-		f = substr(t, 1, 3)
-		if (f == "```" || f == "~~~") {
+		if (fence_opens(t)) {
 			flush()
 			if (ind == 0) inlist = 0
 			infence = 1
-			fence = f
 			print line
 			next
 		}
@@ -593,16 +620,15 @@ wrap() {
 # (the DO NOT EDIT line, written by the caller, is not counted here). The
 # entries are the `## ` headings outside ``` and ~~~ fences.
 toc() {
-	TOC_MIN=$1 awk '
+	TOC_MIN=$1 awk "$FENCE_AWK"'
 	{
 		lines[NR] = $0
 		s = $0
-		match(s, /^ */)
-		f = (RLENGTH <= 3) ? substr(s, RLENGTH + 1, 3) : ""
-		if (f == "```" || f == "~~~") {
-			if (!infence) { infence = 1; fence = f }
-			else if (f == fence) infence = 0
-		} else if (!infence && s ~ /^## /) {
+		if (infence) {
+			if (fence_closes(s)) infence = 0
+		} else if (fence_opens(s)) {
+			infence = 1
+		} else if (s ~ /^## /) {
 			heads[++nh] = substr(s, 4)
 		}
 	}
