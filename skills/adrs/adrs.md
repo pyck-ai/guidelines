@@ -3,8 +3,9 @@
 
 Rules for writing, numbering and superseding architecture decision records (ADRs). An ADR records one decision and the
 reasons for it, so that a later reader does not undo it by accident. Several org repositories already keep ADRs in
-`docs/adr/`. This doc codifies the convention in the ADR README of pyck-ai/pyck, which also describes the `task number`
-and `task pdf` tasks. The sentences follow [technical-writing.md](~/.pyck/guidelines/docs/technical-writing.md).
+`docs/adr/`. This doc owns the convention. The ADR README of pyck-ai/pyck links here and keeps only what is local to
+that repository, such as the `task number` and `task pdf` tasks. The sentences follow
+[technical-writing.md](~/.pyck/guidelines/docs/technical-writing.md).
 
 ## Write an ADR for a hard-to-reverse choice
 
@@ -90,7 +91,7 @@ Applies when a decision changes or an ADR turns out to be wrong.
 
 Applies when you implement or touch a decided area.
 
-- In a commit, cite the ADR in a trailer. [git.md](~/.pyck/guidelines/docs/git.md) lists the trailers.
+- In a commit, cite the ADR in a `See-also:` trailer ([git: Footer](~/.pyck/guidelines/docs/git.md#footer)).
 - In code, put the ADR id and a link in a comment at the non-obvious spot. The comment states the constraint, and the
   ADR keeps the reasoning.
 - In an issue that carries out the decision, link the ADR instead of restating it.

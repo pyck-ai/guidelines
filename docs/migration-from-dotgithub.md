@@ -25,7 +25,7 @@ The PR template and the issue forms stay in pyck-ai/.github, and GitHub applies 
 pyck-review findings link these docs. Its rules and thresholds: [pyck-review docs/rules.md](https://github.com/pyck-ai/pyck-review/blob/main/docs/rules.md). What you will notice:
 
 - Hard-to-review pull requests are flagged by size, commit count and spread (`pr-size`, `pr-commit-count`, `pr-spread`).
-- A breaking change needs a `BREAKING CHANGE:` footer. In repositories that use conventional commits, a `!` before the colon (`feat!:`) also counts as declared.
+- A breaking change needs a `BREAKING CHANGE:` footer.
 - A commit subject over 50 characters is a follow-up and never blocks; over 72 still blocks.
 - Branch names are lowercase words and digits joined by hyphens (no dots, no underscores).
 - AI answers below 60% confidence are dropped, and can be listed on request.
@@ -37,7 +37,7 @@ Org rules come from a local checkout at `~/.pyck/guidelines`, never from the web
 
 - **opencode**: `./setup.sh` links the skills; your `opencode.json` loads `AGENTS.md` (see [Getting started](../README.md#getting-started)). `./setup.sh` removes the `~/.config/opencode/config.json` that earlier versions generated.
 - **pi**: reads the generic skills that `./setup.sh` links into `~/.agents/skills`.
-- **Claude Code**: add the line `@~/.pyck/guidelines/AGENTS.md` to `~/.claude/CLAUDE.md`, which may import a home path with `@~/...` (see the [Claude Code memory docs](https://code.claude.com/docs/en/memory)). Claude Code v2.1.277 and later reads a repository's own `AGENTS.md` itself. The skills are not installed for Claude Code.
+- **Claude Code** (unsupported, at your own risk): add the line `@~/.pyck/guidelines/AGENTS.md` to `~/.claude/CLAUDE.md`, which may import a home path with `@~/...` (see the [Claude Code memory docs](https://code.claude.com/docs/en/memory)). Claude Code v2.1.277 and later reads a repository's own `AGENTS.md` itself. The skills are not installed for Claude Code.
 
 ## Coming next
 
