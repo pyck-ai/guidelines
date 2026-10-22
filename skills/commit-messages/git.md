@@ -1,6 +1,18 @@
 <!-- Generated from docs/git.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/git.md and run task generate. -->
 # Git Guidelines
 
+<!-- toc
+## Contents
+
+- [Subject line](#subject-line)
+- [Body](#body)
+- [Footer](#footer)
+- [Example](#example)
+- [Branch naming](#branch-naming)
+- [Best practices](#best-practices)
+- [Before you push](#before-you-push)
+-->
+
 The commit message is the **single source of truth for the change**: what shipped and why it was done this way (see the
 [change lifecycle](~/.pyck/guidelines/AGENTS.md#rules-for-every-change)). It stands entirely on its own: a reader of
 `git log` years from now understands the rationale without opening the linked issue or PR.
@@ -84,6 +96,9 @@ The short description is lowercase words and digits joined by hyphens.
 - **No WIP commits on main**: clean up before merging
 - **One logical change per commit**: a feature, a refactor of a neighbouring function and a build-config change are
   three commits, so review and revert stay cheap
+- **Merge by rebase**: a PR lands on the default branch by rebase merge, and you update a branch from the default branch
+  by rebasing it. Merge commits are forbidden, and so is squash merge. The commit is the record of the change, so each
+  commit message must reach `main` as you wrote it, and a merge commit adds a commit that records no change.
 - **Signed commits**: sign every commit with a GPG or SSH key registered on your GitHub account (GitHub's docs). The org
   rulesets reject unsigned commits on the default branch.
 

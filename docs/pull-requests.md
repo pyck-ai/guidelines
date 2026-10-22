@@ -49,7 +49,7 @@ Exception: a PR with a **single commit** may use that commit's message 1:1 as it
 
 Keep a PR small enough to review in one sitting:
 
-- **Commits**: aim for 5 or fewer, and 10 at most (merge commits do not count).
+- **Commits**: aim for 5 or fewer, and 10 at most. A PR holds no merge commits (see [git: Best practices](./git.md#best-practices)).
 - **Diff**: keep the changed lines, the changed files and the largest single file small. Generated files do not count; tests count, but less than production code.
 - **Spread**: touch as few modules as you can, ideally one or two.
 - **One kind of change**: never mix a feature and a defect fix in one PR, so the fix can be reviewed and released on its own.

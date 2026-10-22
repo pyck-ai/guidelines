@@ -90,7 +90,8 @@ description with it). The length limit does not apply to such a copy.
 
 Keep a PR small enough to review in one sitting:
 
-- **Commits**: aim for 5 or fewer, and 10 at most (merge commits do not count).
+- **Commits**: aim for 5 or fewer, and 10 at most. A PR holds no merge commits (see [git: Best
+  practices](~/.pyck/guidelines/docs/git.md#best-practices)).
 - **Diff**: keep the changed lines, the changed files and the largest single file small. Generated files do not count;
   tests count, but less than production code.
 - **Spread**: touch as few modules as you can, ideally one or two.
