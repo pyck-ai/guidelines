@@ -160,6 +160,11 @@ order of execution is not ownership. Add an abstraction only when it removes a
 branch, a duplicated rule or an invalid state; code that is already clear,
 local and unlikely to grow stays as it is.
 
+Name a new type, field, module or event with the term from the repository's
+glossary if it has one; otherwise with the term the code already uses. When a
+term is vague, or one word means two things or two words mean one, name the
+conflict and ask which is meant before it spreads into more code.
+
 ## Separate before serializing shared state
 
 Applies when concurrent actors write the same file, row, branch or object.
