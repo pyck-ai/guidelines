@@ -23,4 +23,4 @@ Org-wide rules: `~/.pyck/guidelines/AGENTS.md`. They apply here; this file adds 
 
 <!-- Behavior that is not self-evident. Drop a line once a test or lint the agent runs anyway reports the problem together with its fix. Lead each line with the action that triggers it. -->
 
-- {One line: when you {do the triggering action}, the behavior, then what to do instead.}
+- {One line: when you <triggering action>, the behavior, then what to do instead.}

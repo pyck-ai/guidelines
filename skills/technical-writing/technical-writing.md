@@ -14,11 +14,12 @@
 - [Commit messages and PR descriptions](#commit-messages-and-pr-descriptions)
 -->
 
-Rules for the sentences in docs, READMEs, RFCs, ADRs, issue bodies, PR descriptions and commit messages. The goal is
-text that a tired engineer understands on the first read. Product UI strings are not covered. Use the product's copy
-rules for those. The layout of each text type is in its own guideline: [git.md](~/.pyck/guidelines/docs/git.md),
-[issues.md](~/.pyck/guidelines/docs/issues.md), [pull-requests.md](~/.pyck/guidelines/docs/pull-requests.md) and
-[readme.md](~/.pyck/guidelines/docs/readme.md).
+Rules for the sentences in docs, READMEs, RFCs, ADRs, issue bodies, PR descriptions and commit messages. Text an agent
+reads (a skill, an agent prompt, a command, an `AGENTS.md` line) follows these rules and, where the harness has it, the
+`writing-agent-text` skill. The goal is text that a tired engineer understands on the first read. Product UI strings are
+not covered. Use the product's copy rules for those. The layout of each text type is in its own guideline:
+[git.md](~/.pyck/guidelines/docs/git.md), [issues.md](~/.pyck/guidelines/docs/issues.md),
+[pull-requests.md](~/.pyck/guidelines/docs/pull-requests.md) and [readme.md](~/.pyck/guidelines/docs/readme.md).
 
 Apply the four layers in order: pick the mode, write to the reader, state one thing at a time, leave no sentence open to
 two readings. Two rules sit above them:
@@ -26,8 +27,6 @@ two readings. Two rules sit above them:
 - **Cut every word that does no work.** If the sentence survives without the word, the word goes. A qualifier, number,
   unit or condition does work, so never cut one to tighten a sentence.
 - **Use the short, everyday word.** "Use", not "utilize". "Start", not "initiate".
-
-For skills, agent prompts, commands and `AGENTS.md` lines, also apply the `writing-agent-text` skill.
 
 When a rule makes a sentence worse, rewrite the sentence another way or leave it alone. The codebase is the word list:
 write the real symbol, file, flag or command name, not a description of it.

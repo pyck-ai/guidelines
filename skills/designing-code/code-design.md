@@ -133,9 +133,9 @@ Let the compiler reject impossible states, mixed-up primitives and unhandled cas
 
 - **Derive from the authoritative schema.** When a protobuf, OpenAPI, GraphQL or database schema owns a shape, generate
   the type from it instead of hand-writing a parallel one.
-- **Derive optionality from production callers.** A field, prop or parameter is optional only when a production caller
-  omits it. Test, story and mock code never widens a type; give the test a helper that satisfies the strict contract. A
-  value that is always passed but may be empty is required and nullable, not optional.
+- **Derive optionality from production callers.** A field, prop or parameter of a type you write is optional only when a
+  production caller omits it. Test, Storybook story and mock code never widens a type; give the test a helper that
+  satisfies the strict contract. A value that is always passed but may be empty is required and nullable, not optional.
 
 ## Model the domain
 

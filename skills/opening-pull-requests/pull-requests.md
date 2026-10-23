@@ -76,8 +76,7 @@ The summary is a short executive summary of the commits. Write its sentences per
   or really makes that many changes. **5 paragraphs at most.** A list counts as one paragraph; trailers do not count.
   Details reviewers might want go under `## Additional Information`.
 - Do not paste logs, SHA lists or metric tables into the description. Link them.
-- Where a view is shorter than prose, use the smallest one that makes the key point clear and matches the change, as in
-  [Use a view when it is shorter than
+- Where a view is shorter than prose, use one, as in [Use a view when it is shorter than
   prose](~/.pyck/guidelines/docs/technical-writing.md#use-a-view-when-it-is-shorter-than-prose).
 
 The summary says in one line what breaks if the change goes wrong, and whether a revert undoes it: a **two-way door**,

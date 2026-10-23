@@ -8,7 +8,7 @@ Links name a commit where one is known, so the text they point to does not chang
 
 ### Cursor plugins
 
-Authors: poteto (pstack) and the Cursor team (cursor-team-kit, thermos). Project: [cursor/plugins](https://github.com/cursor/plugins), commit `ddf824a`. Licence: MIT.
+Authors: poteto (pstack) and the Cursor team (cursor-team-kit, thermos, agent-compatibility). Project: [cursor/plugins](https://github.com/cursor/plugins), commit `ddf824a`. Licence: MIT.
 
 - `pstack`, the principles and the `technical-writing` skill (author Lauren Tan): <https://github.com/cursor/plugins/tree/ddf824a/pstack>
 - `cursor-team-kit`, the `make-pr-easy-to-review` skill: <https://github.com/cursor/plugins/tree/ddf824a/cursor-team-kit>
