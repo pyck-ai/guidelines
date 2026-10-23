@@ -127,7 +127,7 @@ For a workflow or Taskfile change, load the `ci-pipelines` skill
 
 ### Dependencies
 
-For a diff that upgrades a dependency, check that:
+For a diff that adds or upgrades a dependency, load the `dependencies` skill ([dependencies.md](dependencies.md)) for the author rules, such as how a behaviour-changing update counts for the release. Check that:
 
 - the author read the changelog and not only the version number, because a
   patch release can change behavior; for a major release, the migration notes;
