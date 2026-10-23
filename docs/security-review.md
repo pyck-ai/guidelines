@@ -23,7 +23,7 @@ Accept a new alternative way to run or build. Accept a new dependency through th
 
 ## Feature leaks
 
-When a feature sits behind a feature flag or an internal-only check, read every new path, route, query and UI entry point for a way around the gate: a second code path that skips the check, or a default that turns the feature on.
+When a feature sits behind a feature flag or an internal-only check, read every new path, route, query and UI entry point for a way around the gate: a second code path that skips the check, or a default that turns the feature on. A toggle that gates a behaviour change defaults off and only the release manifest switches it; check that against [releases.md](releases.md#ship-a-behaviour-change).
 
 ## Security vulnerabilities
 
@@ -35,6 +35,7 @@ Check for flaws such as missing authorization, injection, unsafe handling of unt
 - A secret that reached a remote. Treat it as compromised: rotate it first, then purge history.
 - A cache key that omits an input the response depends on, such as tenant, locale or viewer. It serves one user's data to another.
 - A metric label or span attribute that carries a user id, an email or other personal data.
+- A test fixture, seed or recorded response that holds real personal data. Fixtures use invented values.
 
 ## Scale check
 
