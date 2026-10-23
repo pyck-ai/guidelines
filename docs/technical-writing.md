@@ -63,6 +63,49 @@ One document serves one mode. Two questions pick it. Does the content inform act
 
 A text can follow every layer and still read like a machine wrote it: every sentence clipped to the same length, no view, nothing specific. Mix short sentences that land a point with longer ones that carry a fact with its condition. One thought per sentence does not mean one length per sentence. Prefer the specific over the sterile: not "schema changes can cause issues" but "renaming a column fails the build".
 
+## Use a view when it is shorter than prose
+
+Pick the smallest view that makes the key point clear, and put it next to the sentence it supports. One view, not several. Each view below is shown for the same change, a retry added to a job.
+
+- **Call tree**: who calls what.
+
+  ```text
+  runJob
+    fetchInput
+    process
+      retry   <- new
+  ```
+
+- **File tree**: where responsibilities sit, one comment per node.
+
+  ```text
+  jobs/
+  ├── runner.go   # runs a job
+  └── retry.go    # backoff, new
+  ```
+
+- **Pseudocode**: the logic without the syntax.
+
+  ```text
+  for attempt in 1..3: try process; on error wait 2^attempt seconds
+  ```
+
+- **Mermaid**: interaction or data flow between parts.
+
+  ```mermaid
+  sequenceDiagram
+      Runner->>Worker: process
+      Worker-->>Runner: error
+      Runner->>Worker: process (retry)
+  ```
+
+- **Diff**: what changes when the surrounding shape already exists. Match the diff to the topic, here a call tree.
+
+  ```diff
+   process
+  +  retry
+  ```
+
 ## Example
 
 Before:
