@@ -39,4 +39,8 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | write or review the sentences of a doc, README, RFC, ADR, issue, PR description or commit message | `technical-writing` | `docs/technical-writing.md` |
 | add or review logging, metrics, tracing, an alert, an SLO, a runbook or a dashboard | `observability` | `docs/observability.md` |
 | make or record an architecture decision, or write or supersede an ADR | `adrs` | `docs/adrs.md` |
+| tag, version, hotfix, deploy or roll back a release, ship a behaviour change behind a toggle, or stamp a build with its version | `releases` | `docs/releases.md` |
+| deprecate or remove an API, a field or a version that a consumer outside the repository uses | `deprecation` | `docs/deprecation.md` |
+| add, update or choose a dependency, or call an external provider | `dependencies` | `docs/dependencies.md` |
+| handle a prod incident or write a postmortem | `incident`, `postmortem` | `~/.pyck/incidents/README.md` (repo pyck-ai/incidents) |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |
