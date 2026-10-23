@@ -55,6 +55,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 - The reuse ladder, the never-cut list and the `shortcut:` comment: the `ponytail` skill (ponytail, `09c434a`).
 - The idempotency key steps: the `api-and-interface-design` skill (addyosmani/agent-skills, `aeac41d`).
 - The one-way module dependencies: the `spec-driven-development` skill (addyosmani/agent-skills, `aeac41d`).
+- The domain term rule: the `domain-modeling` skill (mattpocock/skills, `5beb35b`).
 
 ### [docs/changing-code.md](./docs/changing-code.md)
 
