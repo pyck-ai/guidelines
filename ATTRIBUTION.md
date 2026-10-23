@@ -105,6 +105,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 - The four layers, the rhythm rules and the two plain-word rules: the `technical-writing` skill (Cursor plugins `pstack`, `ddf824a`).
 - Write the reference first: the `document-generate` skill (gstack, `6237994`).
 - Never cut a qualifier: the `documentation-and-adrs` skill (addyosmani/agent-skills, `aeac41d`).
+- The views and their examples: the `show-me` skill (humanlayer/skills, `main`).
 
 ### [docs/observability.md](./docs/observability.md)
 

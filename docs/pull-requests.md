@@ -39,7 +39,7 @@ The summary is a short executive summary of the commits. Write its sentences per
 - It describes everything the commits change, and only that; one sentence may cover several commits.
 - Stay on the shorter side: aim for 2 or 3 paragraphs, and add more only when the PR really needs them to be understood or really makes that many changes. **5 paragraphs at most.** A list counts as one paragraph; trailers do not count. Details reviewers might want go under `## Additional Information`.
 - Do not paste logs, SHA lists or metric tables into the description. Link them.
-- Where a view is shorter than prose, use the smallest one that makes the key point clear and matches the change: a call tree, a file tree, pseudocode, a Mermaid diagram or a diff-shaped sketch. One view, not several.
+- Where a view is shorter than prose, use the smallest one that makes the key point clear and matches the change, as in [Use a view when it is shorter than prose](technical-writing.md#use-a-view-when-it-is-shorter-than-prose).
 
 The summary says in one line what breaks if the change goes wrong, and whether a revert undoes it: a **two-way door**, or a **one-way door** such as a data migration, a published API, a deleted resource or an **Irreversible** commit (see [Classification](#classification)).
 
