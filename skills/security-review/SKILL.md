@@ -1,6 +1,6 @@
 ---
 name: security-review
-description: Use when reviewing a diff or pull request for bugs, breaking changes, security holes, developer-setup breakage or feature-flag leaks; one lens of the `review` skill, which is the entry point for any review. Applies the org rules for the correctness and security lens.
+description: Use when reviewing a diff or pull request for bugs, breaking changes, security holes, developer-setup breakage or feature-flag leaks; one lens of three; for any review, start from the `review` skill where the harness has one, otherwise load all three lenses. Applies the org rules for the correctness and security lens.
 metadata:
   harness: generic
 ---
