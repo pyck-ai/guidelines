@@ -6,6 +6,7 @@ How a pyck-ai repository organizes its CI pipeline and which checks a pull reque
 
 - A repository exposes its checks as `task ci`, the one command its CI runs, and, if it generates files, `task generate`. Further tasks are internal steps of those two.
 - A workflow is a thin consumer: it checks out, sets up tools and runs a task or calls actions. Logic lives in the Taskfile, so everything CI does also runs locally. An action may add GitHub-side extras (run summary, annotations, handing artifacts between jobs) but makes no decisions.
+- The same holds for a scheduled, bot or agent workflow: each step it runs is a `task` you can run locally, so you can reproduce a bad run before you change the workflow.
 - One tool, one job. The Taskfile owns how to build; a release tool only releases what the build produced. A build pushes images by digest; the release step applies tags.
 - Put shared automation in a reusable composite action in [pyck-ai/github-actions](https://github.com/pyck-ai/github-actions), adopted with a `uses:` step.
 

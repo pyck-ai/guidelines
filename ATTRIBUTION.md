@@ -47,6 +47,9 @@ Author: Matt Pocock. Project: [mattpocock/skills](https://github.com/mattpocock/
 Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/skills), branch `main`. Licence: MIT.
 
 - The `show-me` skill: <https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md>
+- The `design-control-loop` skill: <https://github.com/humanlayer/skills/blob/main/plugins/design-control-loop/skills/design-control-loop/SKILL.md>
+- The `improve-claude-md` skill: <https://github.com/humanlayer/skills/blob/main/plugins/improve-claude-md/skills/improve-claude-md/SKILL.md>
+- The `narrow-react-prop-types` skill: <https://github.com/humanlayer/skills/blob/main/plugins/narrow-react-prop-types/skills/narrow-react-prop-types/SKILL.md>
 
 ## Docs and what they adapt
 
@@ -109,6 +112,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 ### [docs/ci.md](./docs/ci.md)
 
 - The thresholds section: the `constraint-driven-development` skill (addyosmani/agent-skills, `aeac41d`).
+- The local-run rule for bot and agent workflows: the `design-control-loop` skill (humanlayer/skills, `main`).
 
 ### [docs/readme.md](./docs/readme.md)
 
