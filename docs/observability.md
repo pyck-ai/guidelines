@@ -51,6 +51,13 @@ Applies when you add or change an alert.
 - Give every alert an owner and a runbook link. A runbook has three lines at minimum: what the alert means, the first query to run, and who to escalate to. Update the runbook when an incident shows it was wrong.
 - Justify each threshold and duration by an SLO or by past data, and write that reason next to the alert. A guessed threshold is a future false page.
 - Use two severities. A page means users are affected and someone acts now. A ticket means degradation that someone acts on this week.
+- When an alert fires on a production incident, load the `incident` skill from [pyck-ai/incidents](https://github.com/pyck-ai/incidents), which owns the triggers and the incident severities. After it is resolved, the `postmortem` skill writes it up.
+
+## Version attributes
+
+Applies when you add a service, a client or an about page.
+
+Every component exposes its identity: a backend serves `/version` and logs it at startup, a web app serves `/version.json`, and a mobile app shows it in its about panel. Put the Component Version on the telemetry as a resource attribute. An untagged build reports its `git describe` output. The fields and what they mean are in [releases.md](releases.md#build-identity). A client sends its name and Component Version on every API call, so a request can be traced to the client build that made it.
 
 ## Verify the telemetry
 

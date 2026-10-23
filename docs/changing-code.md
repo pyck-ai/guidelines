@@ -33,11 +33,13 @@ so [Change a schema in additive phases](#change-a-schema-in-additive-phases)
 covers it instead.
 
 Move every caller to the new contract and delete the old one in the same
-wave. Keep no compatibility layer, deprecated alias or dual path behind. Update
+wave. Keep no compatibility layer, deprecated alias or dual path behind. The one
+exception is a feature toggle for an externally visible behaviour change
+([releases.md](releases.md#ship-a-behaviour-change)). Update
 tests to the new contract and delete those that only protected the old
 internals. This holds when no external consumer depends on the old API and the
-project can absorb the breaking change. When one does, ask the owner before you
-change it.
+project can absorb the breaking change. When one does, follow
+[deprecation.md](./deprecation.md) and ask the owner before you change it.
 
 Design the new contract as if the requirement had been there from day one, not
 as a patch on the old design. Read everything the change touches, ask what you
@@ -73,8 +75,15 @@ own. Renaming `name` to `full_name` takes five:
 
 - Do additive steps first and destructive steps last and alone. A drop or a
   rename gets its own deploy, after no code references the old shape.
-- Write the down path and run it against a disposable database before you
-  merge. A migration you cannot reverse is a deploy you cannot roll back.
+- Before you merge, prove that the previous release's code runs against the
+  new schema (the previous image against the migrated disposable database).
+  Production rolls back by redeploying the previous release
+  ([releases.md](releases.md#deploy-and-roll-back)), so a migration that
+  breaks it is a breaking change. A down path is optional and for local
+  development only.
+- A component that is deployed only together with its consumers waits one
+  deploy before the contract phase. Anything a customer-governed consumer reads
+  waits for the next Platform Release.
 - Build a large index without blocking writes, for example
   `CREATE INDEX CONCURRENTLY` in Postgres.
 - Each phase is a migration, so it must converge when run twice (see

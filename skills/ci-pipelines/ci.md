@@ -41,7 +41,8 @@ A group is one Taskfile task, one GitHub workflow and one gate job. There are th
     `task build TARGET=<target>` with the push settings added by the workflow, and then publishes.
   - Locally run one bake, not several: several share CPU and cache and are slower than one bake, which already builds in
     parallel.
-- **`deploy`**: rolls an artifact out to an environment (pyck repositories only).
+- **`deploy`**: rolls an artifact out to `dev` (pyck repositories only). Staging and production change only through the
+  release manifest ([releases.md](~/.pyck/guidelines/docs/releases.md#deploy-and-roll-back)).
   - Make it a job in the build workflow, after `build-success`, that waits for the deployment to finish. A separate
     workflow cannot work: GitHub cannot make one workflow wait for another on the same commit, and `workflow_run` runs
     against the default branch, so its check would not show on the pull request.
@@ -69,8 +70,9 @@ blocks the pull request forever.
 ## Required checks
 
 - `ci-success` is required by an org ruleset for every repository with the custom property `rulesets=backend`. The
-  ruleset targets the default branch and `release/*`, takes the check from the GitHub Actions app and does not require
-  the branch to be up to date.
+  ruleset targets the default branch and `release/*` (the hotfix branches of
+  [releases.md](~/.pyck/guidelines/docs/releases.md#hotfix-a-released-version)), takes the check from the GitHub Actions
+  app and does not require the branch to be up to date.
 - `build-success` and `deploy-success` are required by each repository's own ruleset, because only some repositories
   have them.
 

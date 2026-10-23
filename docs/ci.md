@@ -19,7 +19,7 @@ three groups.
   - `task build` builds every target in one bake and pushes nothing; `task build TARGET=<bake target>` builds one.
   - In CI the reusable workflow runs one leg (a CI job) per target, each on its own runner, each running `task build TARGET=<target>` with the push settings added by the workflow, and then publishes.
   - Locally run one bake, not several: several share CPU and cache and are slower than one bake, which already builds in parallel.
-- **`deploy`**: rolls an artifact out to an environment (pyck repositories only).
+- **`deploy`**: rolls an artifact out to `dev` (pyck repositories only). Staging and production change only through the release manifest ([releases.md](./releases.md#deploy-and-roll-back)).
   - Make it a job in the build workflow, after `build-success`, that waits for the deployment to finish. A separate workflow cannot work: GitHub cannot make one workflow wait for another on the same commit, and `workflow_run` runs against the default branch, so its check would not show on the pull request.
   - It does not wait for `ci-success`: a lint error does not stop a branch deploy.
   - `task deploy` locally builds, pushes and starts the deployment with the developer's own credentials.
@@ -41,7 +41,7 @@ Leave `paths` and `branches` filters off the triggers of a workflow with a gate.
 
 ## Required checks
 
-- `ci-success` is required by an org ruleset for every repository with the custom property `rulesets=backend`. The ruleset targets the default branch and `release/*`, takes the check from the GitHub Actions app and does not require the branch to be up to date.
+- `ci-success` is required by an org ruleset for every repository with the custom property `rulesets=backend`. The ruleset targets the default branch and `release/*` (the hotfix branches of [releases.md](./releases.md#hotfix-a-released-version)), takes the check from the GitHub Actions app and does not require the branch to be up to date.
 - `build-success` and `deploy-success` are required by each repository's own ruleset, because only some repositories have them.
 
 ## Thresholds
