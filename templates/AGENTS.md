@@ -9,7 +9,7 @@ Org-wide rules: `~/.pyck/guidelines/AGENTS.md`. They apply here; this file adds 
 
 ## Commands
 
-<!-- Only commands an agent cannot guess from the README, Taskfile or package.json, each with when to run it. -->
+<!-- Only commands an agent cannot guess from the README, Taskfile or package.json, each with when to run it. Include the fastest scoped check for a one-file change when `task ci` takes more than a few minutes. -->
 
 - `{command}`: {when to run it and why it is not the obvious one}.
 
