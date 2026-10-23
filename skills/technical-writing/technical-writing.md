@@ -27,6 +27,8 @@ two readings. Two rules sit above them:
   unit or condition does work, so never cut one to tighten a sentence.
 - **Use the short, everyday word.** "Use", not "utilize". "Start", not "initiate".
 
+For skills, agent prompts, commands and `AGENTS.md` lines, also apply the `writing-agent-text` skill.
+
 When a rule makes a sentence worse, rewrite the sentence another way or leave it alone. The codebase is the word list:
 write the real symbol, file, flag or command name, not a description of it.
 
