@@ -73,8 +73,8 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 - [Quality review](./docs/quality-review.md): the code quality lens of a review.
 - [CI](./docs/ci.md): the pipeline groups, gate jobs and required checks.
 - [Releases](./docs/releases.md): Component Versions and Platform Releases, SemVer bumps, hotfixes, feature toggles, deploy and rollback.
-- [Deprecation](./docs/deprecation.md): how an API, a field or a version that outside consumers use is deprecated and removed.
-- [Dependencies](./docs/dependencies.md): how dependency updates and external providers are handled.
+- [Deprecation](./docs/deprecation.md): how a public API, a contract, an SDK or a client that outside consumers use is deprecated, changed and removed, and how clients identify themselves.
+- [Dependencies](./docs/dependencies.md): how a dependency is added, updated, removed and vetted, how Renovate and security advisories are handled, and how external providers are wrapped.
 - [Incidents](https://github.com/pyck-ai/incidents): the `incident` and `postmortem` skills, severities and postmortems, in the private repo pyck-ai/incidents.
 - [Accessibility](https://github.com/pyck-ai/.github/blob/main/.github/ACCESSIBILITY.md): the organization's accessibility policy.
 - [AGENTS.md template](./templates/AGENTS.md): the start of a repository's own AGENTS.md.

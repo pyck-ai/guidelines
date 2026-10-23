@@ -33,9 +33,16 @@ Before you add a dependency, check that none of the cheaper options in [code-des
 
 - It is maintained: recent releases, answered issues, more than one maintainer.
 - You know its owner and where its releases are built.
-- Its license fits the repository. The org keeps no list of allowed licenses, so ask the owner before you add a dependency under a license the repository does not already use.
+- Its license is MIT, BSD, Apache 2.0, ISC or MPL 2.0, which you may add without asking. A GPL or AGPL license, or no license at all, needs the owner's decision.
 - It arrives through the package manager. Anything that needs a step outside the normal workflow, such as installing software by hand, is the owner's decision ([security-review.md](./security-review.md)).
 
 ## Handle a security advisory
 
-Fix a dependency that has a known advisory according to the advisory's severity. Ask the owner for anything above medium. Report a vulnerability in our own code as the [security policy](https://github.com/pyck-ai/.github/blob/main/.github/SECURITY.md) says.
+Fix a dependency that has a known advisory within a deadline set by the advisory's severity:
+
+- critical: within 2 working days.
+- high: within 7 days.
+- medium: within 30 days.
+- low: with the next Renovate update.
+
+Report a vulnerability in our own code as the [security policy](https://github.com/pyck-ai/.github/blob/main/.github/SECURITY.md) says.

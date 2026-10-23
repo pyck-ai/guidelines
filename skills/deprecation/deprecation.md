@@ -35,7 +35,7 @@ consumer cannot be shown to be unaffected is an external break.
 `v0` is the unversioned GraphQL surface. It has no compatibility guarantee, and its consumers release in lockstep with
 the API.
 
-- A `v0` break may land on any release, MAJOR or MINOR, never on a PATCH
+- A `v0` break may land in any release, PATCH included
   ([releases.md](~/.pyck/guidelines/docs/releases.md#choose-the-semver-bump)).
 - Announce every break with a `BREAKING CHANGE: <explanation>` footer line in the commit
   ([git.md](~/.pyck/guidelines/docs/git.md#footer)).

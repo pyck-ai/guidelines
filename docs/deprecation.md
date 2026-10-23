@@ -13,7 +13,7 @@ If you cannot tell which consumers exist, treat the break as external. A change 
 
 `v0` is the unversioned GraphQL surface. It has no compatibility guarantee, and its consumers release in lockstep with the API.
 
-- A `v0` break may land on any release, MAJOR or MINOR, never on a PATCH ([releases.md](./releases.md#choose-the-semver-bump)).
+- A `v0` break may land in any release, PATCH included ([releases.md](./releases.md#choose-the-semver-bump)).
 - Announce every break with a `BREAKING CHANGE: <explanation>` footer line in the commit ([git.md](./git.md#footer)).
 - Prefer a new resolver, type or field over changing or removing an active one, so consumers see only growth.
 - GraphQL stays `v0`. Parallel-versioned GraphQL schemas will not be built. A consumer that needs hard versioning uses gRPC.

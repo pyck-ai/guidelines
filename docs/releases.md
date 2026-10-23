@@ -1,6 +1,6 @@
 # Release Guidelines
 
-How a pyck-ai repository versions, tags, hotfixes, deploys and rolls back a release, and how a behaviour change ships. Who deprecates an API and for how long is in [deprecation.md](./deprecation.md). How a dependency update counts is in [dependencies.md](./dependencies.md).
+How a pyck-ai repository versions, tags, hotfixes, deploys and rolls back a release, and how a behaviour change ships. Who deprecates an API and for how long is in [deprecation.md](./deprecation.md). How a dependency or an external provider is added, updated and counted for the release is in [dependencies.md](./dependencies.md).
 
 ## Terms
 
@@ -20,7 +20,7 @@ Applies when you tag a Component Version or write a change that decides which ti
 
 - **MAJOR**: a break that consumers of the component must react to, in a surface or in behaviour. A MAJOR may ship behaviour changes live, because the bump is the signal.
 - **MINOR**: an additive, backward-compatible change. A behaviour change in a MINOR needs a toggle (see [Ship a behaviour change](#ship-a-behaviour-change)).
-- **PATCH**: a bugfix, a hotfix or a security fix. A PATCH never breaks a surface and never changes behaviour without a toggle, so it stays safe to ship under incident pressure without forcing a coordinated rebuild of its consumers.
+- **PATCH**: a bugfix, a hotfix or a security fix. A PATCH never breaks a versioned surface (`v0` is exempt, see [deprecation.md](./deprecation.md#break-v0-with-an-announcement)) and never changes behaviour without a toggle, so it stays safe to ship under incident pressure without forcing a coordinated rebuild of its consumers.
 
 A break marks itself with a `BREAKING CHANGE: <explanation>` footer line in the commit (see [git.md](./git.md)). A break between components that are built and deployed together needs no contract bump; a break for a consumer outside that group does ([deprecation.md](./deprecation.md)).
 
@@ -53,7 +53,7 @@ Applies when a change alters what a consumer observes without changing a type or
 - Remove the toggle in the next release once the new behaviour is on everywhere. This is the one permitted dual path ([changing-code.md](./changing-code.md#migrate-callers-then-delete-the-old-api)); a toggle that outlives that is debt.
 - A toggle that gates a break switches on only in the release where every affected consumer is ready. Keep such flag days rare.
 
-A `v0` surface may break in any release, MAJOR or MINOR but never PATCH, each break announced with a `BREAKING CHANGE` footer line. Prefer a new field, type or resolver over changing an active one. The rules for removal and for external consumers are in [deprecation.md](./deprecation.md).
+A `v0` surface may break in any release, PATCH included, each break announced with a `BREAKING CHANGE` footer line. Prefer a new field, type or resolver over changing an active one. The rules for removal and for external consumers are in [deprecation.md](./deprecation.md).
 
 ## Release notes
 

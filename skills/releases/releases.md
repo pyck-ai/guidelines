@@ -16,7 +16,8 @@
 
 How a pyck-ai repository versions, tags, hotfixes, deploys and rolls back a release, and how a behaviour change ships.
 Who deprecates an API and for how long is in [deprecation.md](~/.pyck/guidelines/docs/deprecation.md). How a dependency
-update counts is in [dependencies.md](~/.pyck/guidelines/docs/dependencies.md).
+or an external provider is added, updated and counted for the release is in
+[dependencies.md](~/.pyck/guidelines/docs/dependencies.md).
 
 ## Terms
 
@@ -42,8 +43,10 @@ Applies when you tag a Component Version or write a change that decides which ti
   behaviour changes live, because the bump is the signal.
 - **MINOR**: an additive, backward-compatible change. A behaviour change in a MINOR needs a toggle (see [Ship a
   behaviour change](#ship-a-behaviour-change)).
-- **PATCH**: a bugfix, a hotfix or a security fix. A PATCH never breaks a surface and never changes behaviour without a
-  toggle, so it stays safe to ship under incident pressure without forcing a coordinated rebuild of its consumers.
+- **PATCH**: a bugfix, a hotfix or a security fix. A PATCH never breaks a versioned surface (`v0` is exempt, see
+  [deprecation.md](~/.pyck/guidelines/docs/deprecation.md#break-v0-with-an-announcement)) and never changes behaviour
+  without a toggle, so it stays safe to ship under incident pressure without forcing a coordinated rebuild of its
+  consumers.
 
 A break marks itself with a `BREAKING CHANGE: <explanation>` footer line in the commit (see
 [git.md](~/.pyck/guidelines/docs/git.md)). A break between components that are built and deployed together needs no
@@ -91,9 +94,9 @@ an error code, a sort order, a dependency update that does this.
 - A toggle that gates a break switches on only in the release where every affected consumer is ready. Keep such flag
   days rare.
 
-A `v0` surface may break in any release, MAJOR or MINOR but never PATCH, each break announced with a `BREAKING CHANGE`
-footer line. Prefer a new field, type or resolver over changing an active one. The rules for removal and for external
-consumers are in [deprecation.md](~/.pyck/guidelines/docs/deprecation.md).
+A `v0` surface may break in any release, PATCH included, each break announced with a `BREAKING CHANGE` footer line.
+Prefer a new field, type or resolver over changing an active one. The rules for removal and for external consumers are
+in [deprecation.md](~/.pyck/guidelines/docs/deprecation.md).
 
 ## Release notes
 
