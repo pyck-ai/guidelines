@@ -2,8 +2,8 @@
 # Generate the files a skill carries besides its SKILL.md.
 #
 # docs/<doc>.md is the one text people edit and link. Each skill carries a
-# real copy of its doc, so a skill folder works on its own. The pull-requests
-# and github-issues skills also carry copies of the org PR template and issue
+# real copy of its doc, so a skill folder works on its own. The opening-pull-requests
+# and writing-issues skills also carry copies of the org PR template and issue
 # forms from pyck-ai/.github, so they need no network either.
 #
 # Agent files contain no URLs: an agent that fetches one reads text nobody
@@ -13,9 +13,9 @@
 #   relative link, resolved against docs/
 #                          -> ~/.pyck/guidelines/<repo path> (anchor kept)
 #   link to the PR template or an issue form or the form folder in
-#   pyck-ai/.github        -> ~/.pyck/guidelines/skills/pull-requests/PULL_REQUEST_TEMPLATE.md,
-#                             .../skills/github-issues/<n>-<kind>.yml,
-#                             .../skills/github-issues/
+#   pyck-ai/.github        -> ~/.pyck/guidelines/skills/opening-pull-requests/PULL_REQUEST_TEMPLATE.md,
+#                             .../skills/writing-issues/<n>-<kind>.yml,
+#                             .../skills/writing-issues/
 #   any other [text](http(s)://...)  -> text
 #   <http(s)://...> autolink         -> removed
 #   bare http(s):// URL in prose     -> removed, with its parentheses
@@ -104,21 +104,21 @@ LC_ALL=C
 export LC_ALL
 
 # skill:doc pairs; a skill may appear in several pairs to carry several docs.
-MAP='commit-messages:git github-issues:issues pull-requests:pull-requests readmes:readme code-review:code-review security-review:security-review quality-review:quality-review ci-pipelines:ci code-design:code-design code-design:changing-code testing:testing technical-writing:technical-writing observability:observability adrs:adrs releases:releases deprecation:deprecation dependencies:dependencies'
+MAP='writing-commits:git writing-issues:issues opening-pull-requests:pull-requests writing-readmes:readme reviewing-standards:code-review reviewing-security:security-review reviewing-quality:quality-review changing-ci:ci designing-code:code-design designing-code:changing-code testing:testing technical-writing:technical-writing adding-telemetry:observability recording-decisions:adrs managing-releases:releases deprecating-interfaces:deprecation managing-dependencies:dependencies'
 
 # skill:path pairs, paths inside the pyck-ai/.github checkout.
-GH_FILES='pull-requests:.github/PULL_REQUEST_TEMPLATE.md
-github-issues:.github/ISSUE_TEMPLATE/1-defect.yml
-github-issues:.github/ISSUE_TEMPLATE/2-feature.yml
-github-issues:.github/ISSUE_TEMPLATE/3-task.yml'
+GH_FILES='opening-pull-requests:.github/PULL_REQUEST_TEMPLATE.md
+writing-issues:.github/ISSUE_TEMPLATE/1-defect.yml
+writing-issues:.github/ISSUE_TEMPLATE/2-feature.yml
+writing-issues:.github/ISSUE_TEMPLATE/3-task.yml'
 
 usage() {
 	cat <<'USAGE'
 Usage: sh scripts/generate-skills.sh [--check]
 
   (none)    write skills/<name>/<doc>.md from docs/<doc>.md, and the
-            .github templates into skills/pull-requests/ and
-            skills/github-issues/
+            .github templates into skills/opening-pull-requests/ and
+            skills/writing-issues/
   --check   list stale or missing copies, change nothing; exit 1 if any
 $PYCK_GITHUB_DIR is a pyck-ai/.github checkout (default ../.github).
 Exit codes: 0 ok, 1 stale copy or failure, 2 usage error, wrong directory
@@ -266,14 +266,14 @@ filter() {
 	# one link [txt](tgt) -> its replacement
 	function fixlink(txt, tgt,    f) {
 		if (tgt ~ (gh "blob/main/\\.github/PULL_REQUEST_TEMPLATE\\.md$"))
-			return "[" txt "](" base "skills/pull-requests/PULL_REQUEST_TEMPLATE.md)"
+			return "[" txt "](" base "skills/opening-pull-requests/PULL_REQUEST_TEMPLATE.md)"
 		if (tgt ~ (gh "blob/main/\\.github/ISSUE_TEMPLATE/[0-9]+-[a-z]+\\.yml$")) {
 			f = tgt
 			sub(/^.*\//, "", f)
-			return "[" txt "](" base "skills/github-issues/" f ")"
+			return "[" txt "](" base "skills/writing-issues/" f ")"
 		}
 		if (tgt ~ (gh "tree/main/\\.github/ISSUE_TEMPLATE/?$"))
-			return "[" txt "](" base "skills/github-issues/)"
+			return "[" txt "](" base "skills/writing-issues/)"
 		if (tgt ~ /^https?:\/\//) return txt
 		return "[" txt "](" fix(tgt) ")"
 	}

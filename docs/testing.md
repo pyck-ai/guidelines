@@ -1,6 +1,6 @@
 # Testing Guidelines
 
-Rules for writing, changing and reviewing tests. Anything a linter or check can catch belongs in a linter or check, not here. The shape of the code under test is in the `code-design` skill ([code-design.md](code-design.md)); fixing a bug is in the same skill ([changing-code.md](changing-code.md)).
+Rules for writing, changing and reviewing tests. Anything a linter or check can catch belongs in a linter or check, not here. The shape of the code under test is in the `designing-code` skill ([code-design.md](code-design.md)); fixing a bug is in the same skill ([changing-code.md](changing-code.md)).
 
 ## Test behavior, not implementation
 

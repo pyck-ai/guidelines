@@ -330,6 +330,17 @@ check "stale link is removed" absent "$H/$NEWDIR/gone"
 check "reported as removed" says "removed   ~/$NEWDIR/gone"
 check "every skill is linked" links_ok
 
+echo "== links under a renamed skill's old name"
+new_home
+mkdir -p "$H/$NEWDIR" "$H/.pyck"
+ln -s "$REPO" "$H/.pyck/guidelines"
+ln -s "$H/.pyck/guidelines/skills/code-review" "$H/$NEWDIR/code-review"
+setup
+check "exit 0" rc_is 0
+check "the old-name link is removed" absent "$H/$NEWDIR/code-review"
+check "reported as removed" says "removed   ~/$NEWDIR/code-review"
+check "every skill is linked" links_ok
+
 echo "== migration from opencode's skills dir and ~/.claude/skills"
 echo "-- only our links"
 new_home

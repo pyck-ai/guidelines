@@ -2,7 +2,7 @@
 # Testing Guidelines
 
 Rules for writing, changing and reviewing tests. Anything a linter or check can catch belongs in a linter or check, not
-here. The shape of the code under test is in the `code-design` skill
+here. The shape of the code under test is in the `designing-code` skill
 ([code-design.md](~/.pyck/guidelines/docs/code-design.md)); fixing a bug is in the same skill
 ([changing-code.md](~/.pyck/guidelines/docs/changing-code.md)).
 

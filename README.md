@@ -23,7 +23,7 @@ Out of the box, pyck-ai/guidelines includes:
 
 - **Guideline docs**: the rules for commits, issues, pull requests, READMEs, technical writing, code design, testing, observability, architecture decisions, code review and CI, listed under [Documentation](#documentation).
 - **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a table that routes each task to its doc.
-- **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `pull-requests` and `github-issues` of the org templates, for [opencode](https://opencode.ai) and pi. Claude Code is not a supported target.
+- **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `opening-pull-requests` and `writing-issues` of the org templates, for [opencode](https://opencode.ai) and pi. Claude Code is not a supported target.
 - **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
 - **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc and of the .github templates, with links rewritten to `~/.pyck/guidelines` paths and the prose wrapped at 120 characters (`docs/` keep any width); `task generate` runs it.
 - **Template check**: [`scripts/check-templates.sh`](./scripts/check-templates.sh) fails when a doc or skill names a PR template heading or issue form that does not exist in pyck-ai/.github.
@@ -75,7 +75,7 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 - [Releases](./docs/releases.md): Component Versions and Platform Releases, SemVer bumps, hotfixes, feature toggles, deploy and rollback.
 - [Deprecation](./docs/deprecation.md): how a public API, a contract, an SDK or a client that outside consumers use is deprecated, changed and removed, and how clients identify themselves.
 - [Dependencies](./docs/dependencies.md): how a dependency is added, updated, removed and vetted, how Renovate and security advisories are handled, and how external providers are wrapped.
-- [Incidents](https://github.com/pyck-ai/incidents): the `incident` and `postmortem` skills, severities and postmortems, in the private repo pyck-ai/incidents.
+- [Incidents](https://github.com/pyck-ai/incidents): the `handling-incidents` and `writing-postmortems` skills, severities and postmortems, in the private repo pyck-ai/incidents.
 - [Accessibility](https://github.com/pyck-ai/.github/blob/main/.github/ACCESSIBILITY.md): the organization's accessibility policy.
 - [AGENTS.md template](./templates/AGENTS.md): the start of a repository's own AGENTS.md.
 - [Migrating from pyck-ai/.github](./docs/migration-from-dotgithub.md): where the old standards pages went and what changes for you; temporary, removed on 2026-12-31.
