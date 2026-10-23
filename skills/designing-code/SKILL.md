@@ -1,6 +1,6 @@
 ---
 name: designing-code
-description: "Use when designing or changing code structure: adding a module, type, API or abstraction, fixing a bug, replacing an API, or writing a migration, a retried operation or code with shared state. Also when reviewing such a change."
+description: "Use when designing or changing code structure: adding a module, type, API or abstraction, fixing a bug, replacing an API, or writing a migration, a retried operation or code with shared state. Also when reviewing such a change. Applies the org rules for the smallest change, idempotent operations, boundary validation, types, module dependencies and additive schema migrations."
 metadata:
   harness: generic
 ---
