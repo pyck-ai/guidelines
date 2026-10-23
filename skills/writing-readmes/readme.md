@@ -11,6 +11,7 @@
 - [Per-directory README](#per-directory-readme)
 - [Voice and formatting](#voice-and-formatting)
 - [Maintaining](#maintaining)
+- [Cold-start audit](#cold-start-audit)
 - [Lint](#lint)
 -->
 
@@ -123,6 +124,20 @@ same change, never as a follow-up:
 3. Fix what drifted. Add what the change introduced only if the README is its owner; otherwise link the owner.
 4. Re-read the in-code docs (package doc, script docstring, header comment) of every unit you touched and repair them
    too. See [code-review.md](~/.pyck/guidelines/docs/code-review.md#docs).
+
+## Cold-start audit
+
+Applies when you onboard an agent to a repository, and about once a quarter. Maintaining fixes drift per change; this
+audit finds what no change touched.
+
+1. Clone the repository fresh and follow the Getting started block literally. Set a time budget first, such as 15
+   minutes.
+2. Record the first step that fails and every step you had to guess. A guess counts as a gap even when it worked.
+3. Name the fastest command that checks a change to one file, and how long it takes. If only the full `task ci` exists,
+   that is a gap.
+4. Run every command the README names, as in [Maintaining](#maintaining), and fix each one that no longer matches the
+   tree.
+5. File one issue per gap.
 
 ## Lint
 
