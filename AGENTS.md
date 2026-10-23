@@ -40,7 +40,7 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | add or review logging, metrics, tracing, an alert, an SLO, a runbook or a dashboard | `observability` | `docs/observability.md` |
 | make or record an architecture decision, or write or supersede an ADR | `adrs` | `docs/adrs.md` |
 | tag, version, hotfix, deploy or roll back a release, ship a behaviour change behind a toggle, or stamp a build with its version | `releases` | `docs/releases.md` |
-| deprecate or remove an API, a field or a version that a consumer outside the repository uses | `deprecation` | `docs/deprecation.md` |
-| add, update or choose a dependency, or call an external provider | `dependencies` | `docs/dependencies.md` |
+| remove, rename or change an API, an event contract, a GraphQL or gRPC surface, a field, a client or an SDK that a consumer outside the repository uses | `deprecation` | `docs/deprecation.md` |
+| add, update, remove or choose a dependency, handle a Renovate pull request or a security advisory, or call an external provider | `dependencies` | `docs/dependencies.md` |
 | handle a prod incident or write a postmortem | `incident`, `postmortem` | `~/.pyck/incidents/README.md` (repo pyck-ai/incidents) |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |
