@@ -37,7 +37,7 @@ wave. Keep no compatibility layer, deprecated alias or dual path behind. Update
 tests to the new contract and delete those that only protected the old
 internals. This holds when no external consumer depends on the old API and the
 project can absorb the breaking change. When one does, ask the owner before you
-change it, until the org has a deprecation policy.
+change it.
 
 Design the new contract as if the requirement had been there from day one, not
 as a patch on the old design. Read everything the change touches, ask what you

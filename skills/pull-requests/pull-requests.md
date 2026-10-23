@@ -33,7 +33,7 @@ check](#guideline-check).
 
 ## Title
 
-Write the title like a commit subject (see [git: Subject line](~/.pyck/guidelines/docs/git.md#subject-line)): It names
+Write the title like a commit subject (see [git: Subject line](~/.pyck/guidelines/docs/git.md#subject-line)). It names
 the change as a whole. A PR with a single commit uses that commit's subject. Example:
 `Add zone filter to the pick list`.
 

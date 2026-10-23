@@ -10,7 +10,7 @@ The description is therefore a **short executive summary** for reviewers. A PR m
 
 ## Title
 
-Write the title like a commit subject (see [git: Subject line](./git.md#subject-line)): It names the change as a whole. A PR with a single commit uses that commit's subject. Example: `Add zone filter to the pick list`.
+Write the title like a commit subject (see [git: Subject line](./git.md#subject-line)). It names the change as a whole. A PR with a single commit uses that commit's subject. Example: `Add zone filter to the pick list`.
 
 ## Opening a PR
 
