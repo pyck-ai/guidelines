@@ -29,8 +29,8 @@ rule.
   scattered over shared code. Move the logic behind its own abstraction or into a model (see [Model the
   domain](~/.pyck/guidelines/docs/code-design.md#model-the-domain)).
 - **Magic**: generic handling that hides a simple data shape. Prefer direct, boring code.
-- **Type and boundary mess**: casts, `any` or `unknown`, optionality that is not needed, loose object shapes, a silent
-  fallback that covers an unclear invariant, or a boundary leak (see [Guard at the
+- **Type and boundary mess**: casts, `any` or `unknown`, optionality that is not needed (often added for a test or a
+  story), loose object shapes, a silent fallback that covers an unclear invariant, or a boundary leak (see [Guard at the
   boundary](~/.pyck/guidelines/docs/code-design.md#guard-at-the-boundary) and [Make illegal states
   unrepresentable](~/.pyck/guidelines/docs/code-design.md#make-illegal-states-unrepresentable)).
 - **Logic in the wrong layer**: feature logic in a shared path, internals leaking through an API, or a bespoke helper
