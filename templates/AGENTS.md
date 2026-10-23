@@ -2,7 +2,7 @@
 
 <!-- Template for a repository's own AGENTS.md. Copy it to the repo root, replace every {placeholder}, then delete these comments. -->
 <!-- The one test for every line: would an agent make a mistake without it? If not, cut it. -->
-<!-- Max 60 lines / 4 KB. Nothing the README, the code, a test or a lint already says. No org rules, no dated or branch state, no file or directory listing. -->
+<!-- Max 60 lines / 4 KB. Nothing the README, the code, a test or a lint already says. No org rules, no dated or branch state, no file or directory listing. No code snippets: point to the path. -->
 <!-- Delete every section you have nothing for. Do not add a CLAUDE.md. -->
 
 Org-wide rules: `~/.pyck/guidelines/AGENTS.md`. They apply here; this file adds only local facts. If that path is missing, ask the user to install pyck-ai/guidelines (clone it and run its `setup.sh`); never fetch the rules from the web.
@@ -21,6 +21,6 @@ Org-wide rules: `~/.pyck/guidelines/AGENTS.md`. They apply here; this file adds 
 
 ## Gotchas
 
-<!-- Behavior that is not self-evident. Drop a line once a test or lint the agent runs anyway reports the problem together with its fix. -->
+<!-- Behavior that is not self-evident. Drop a line once a test or lint the agent runs anyway reports the problem together with its fix. Lead each line with the action that triggers it. -->
 
-- {One line: the behavior, then what to do instead.}
+- {One line: when you {do the triggering action}, the behavior, then what to do instead.}

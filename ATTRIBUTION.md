@@ -53,6 +53,10 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 ## Docs and what they adapt
 
+### [templates/AGENTS.md](./templates/AGENTS.md)
+
+- The no-snippets and action-first rules in the comments: the `improve-claude-md` skill (humanlayer/skills, `main`).
+
 ### [docs/code-design.md](./docs/code-design.md)
 
 - Several rules: pstack principles (Cursor plugins, `ddf824a`).
