@@ -132,7 +132,8 @@ audit finds what no change touched.
 
 1. Clone the repository fresh and follow the Getting started block literally. Set a time budget first, such as 15
    minutes.
-2. Record the first step that fails and every step you had to guess. A guess counts as a gap even when it worked.
+2. Record the first step that fails and every step you had to guess. A guess counts as a gap even when it worked. Count
+   only a step you ran that failed, not one you expect to fail, such as a port in use or a lockfile.
 3. Name the fastest command that checks a change to one file, and how long it takes. If only the full `task ci` exists,
    that is a gap.
 4. Run every command the README names, as in [Maintaining](#maintaining), and fix each one that no longer matches the
