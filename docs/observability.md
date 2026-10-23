@@ -51,7 +51,7 @@ Applies when you add or change an alert.
 - Give every alert an owner and a runbook link. A runbook has three lines at minimum: what the alert means, the first query to run, and who to escalate to. Update the runbook when an incident shows it was wrong.
 - Justify each threshold and duration by an SLO or by past data, and write that reason next to the alert. A guessed threshold is a future false page.
 - Use two severities. A page means users are affected and someone acts now. A ticket means degradation that someone acts on this week.
-- When an alert fires on a production incident, load the `incident` skill from [pyck-ai/incidents](https://github.com/pyck-ai/incidents), which owns the triggers and the incident severities. After it is resolved, the `postmortem` skill writes it up.
+- When an alert fires on a production incident, load the `handling-incidents` skill from [pyck-ai/incidents](https://github.com/pyck-ai/incidents), which owns the triggers and the incident severities. After it is resolved, the `writing-postmortems` skill writes it up.
 
 ## Version attributes
 

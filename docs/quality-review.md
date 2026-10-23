@@ -1,6 +1,6 @@
 # Quality Review Guidelines
 
-The code quality lens of every review. The procedure, the grouping and the report format are in the `code-review` skill ([code-review.md](code-review.md)); the rules for the shape of code are in the `code-design` skill ([code-design.md](code-design.md)). This doc adds how a reviewer applies them, and what to flag that they do not already say.
+The code quality lens of every review. The procedure, the grouping and the report format are in the `reviewing-standards` skill ([code-review.md](code-review.md)); the rules for the shape of code are in the `designing-code` skill ([code-design.md](code-design.md)). This doc adds how a reviewer applies them, and what to flag that they do not already say.
 
 ## Look for the simpler structure
 
@@ -8,7 +8,7 @@ Look past "this could be a bit cleaner". Ask whether the change can be reframed 
 
 ## What to flag
 
-Each flag names the `code-design` section it comes from; cite that section in the finding rather than restating the rule.
+Each flag names the `designing-code` section it comes from; cite that section in the finding rather than restating the rule.
 
 - **Complexity a reframing would delete** (see [Smallest change](code-design.md#smallest-change)).
 - **Wrappers and thin layers** that add indirection and clarify nothing (see [Smallest change](code-design.md#smallest-change) and [Minimize reader load](code-design.md#minimize-reader-load)).

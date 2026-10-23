@@ -11,8 +11,8 @@ Every review is a maximum-effort review against every lens.
 | Lens | Question | Skill |
 | --- | --- | --- |
 | Standards | Does the diff follow the org guidelines and do what the issue asked? | this doc |
-| Correctness and security | Does it break behavior, setup or safety? | `security-review` ([security-review.md](security-review.md)) |
-| Code quality | Is there a simpler structure? | `quality-review` ([quality-review.md](quality-review.md)) |
+| Correctness and security | Does it break behavior, setup or safety? | `reviewing-security` ([security-review.md](security-review.md)) |
+| Code quality | Is there a simpler structure? | `reviewing-quality` ([quality-review.md](quality-review.md)) |
 
 Run the lenses one after another in one session, or give each to its own
 reviewer in parallel. Give every reviewer the same scoped diff and context,
@@ -55,7 +55,7 @@ decides whether it is a defect or a question:
   loss, an outage or a compromise; then put it in Consider, labeled
   speculative.
 
-For an unfinished trace, load the `security-review` skill
+For an unfinished trace, load the `reviewing-security` skill
 ([security-review.md](security-review.md#finishing-a-finding)).
 
 One finding per problem, each with the place, the rule and a fix. Number the
@@ -81,7 +81,7 @@ engineer would apply it without discussion, such as a stale comment, an unused
 variable or a wrong path. Ask first when reasonable engineers could disagree:
 a design choice, anything touching security or user-visible behavior,
 removed functionality, a large fix, and restoring or keeping a weakened gate
-(load the `security-review` skill,
+(load the `reviewing-security` skill,
 [security-review.md](security-review.md#gate-integrity)).
 
 ## Standards lens
@@ -112,7 +112,7 @@ test case.
 
 ### Design
 
-Load the `code-design` skill ([code-design.md](code-design.md)) and check the
+Load the `designing-code` skill ([code-design.md](code-design.md)) and check the
 diff against it; a bug fix or an API replacement also against
 [changing-code.md](changing-code.md).
 
@@ -122,12 +122,12 @@ limit its comment names.
 
 ### CI
 
-For a workflow or Taskfile change, load the `ci-pipelines` skill
+For a workflow or Taskfile change, load the `changing-ci` skill
 ([ci.md](ci.md)) and check the diff against it.
 
 ### Dependencies
 
-For a diff that adds or upgrades a dependency, load the `dependencies` skill ([dependencies.md](dependencies.md)) for the author rules, such as how a behaviour-changing update counts for the release. Check that:
+For a diff that adds or upgrades a dependency, load the `managing-dependencies` skill ([dependencies.md](dependencies.md)) for the author rules, such as how a behaviour-changing update counts for the release. Check that:
 
 - the author read the changelog and not only the version number, because a
   patch release can change behavior; for a major release, the migration notes;
@@ -152,7 +152,7 @@ describes. Search the repository for the old name rather than relying on the
 files the diff touches. A stale doc is Act on when it would send a reader to
 something that no longer exists; otherwise Consider.
 
-- Check a README as in the `readmes` skill
+- Check a README as in the `writing-readmes` skill
   ([readme.md](readme.md#maintaining)).
 - The doc comment that introduces a module, package or public API is updated
   in the same change whenever its purpose, exported API, invariants or
@@ -163,6 +163,6 @@ something that no longer exists; otherwise Consider.
 
 ### Commits and pull request
 
-Check the commit messages with the `commit-messages` skill ([git.md](git.md))
-and the pull request description with the `pull-requests` skill
+Check the commit messages with the `writing-commits` skill ([git.md](git.md))
+and the pull request description with the `opening-pull-requests` skill
 ([pull-requests.md](pull-requests.md)).

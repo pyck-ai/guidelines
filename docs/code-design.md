@@ -37,7 +37,7 @@ A deliberate simplification with a known limit gets a comment
 `shortcut: <the limit>, <when to upgrade>`, for example
 `shortcut: one worker, move to a queue past 50 jobs a minute`. The trigger is
 required; a shortcut without one rots. How review treats a marked shortcut is
-in the `code-review` skill ([code-review.md](code-review.md#design)).
+in the `reviewing-standards` skill ([code-review.md](code-review.md#design)).
 
 ## Minimize reader load
 

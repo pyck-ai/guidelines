@@ -1,0 +1,175 @@
+<!-- Generated from docs/pull-requests.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/pull-requests.md and run task generate. -->
+# Pull Request Guidelines
+
+<!-- toc
+## Contents
+
+- [What a PR is for](#what-a-pr-is-for)
+- [Title](#title)
+- [Opening a PR](#opening-a-pr)
+- [The PR template](#the-pr-template)
+- [Description structure](#description-structure)
+- [Summary](#summary)
+- [Size](#size)
+- [Before you mark it ready](#before-you-mark-it-ready)
+- [Definition of done](#definition-of-done)
+- [Classification](#classification)
+- [Guideline check](#guideline-check)
+-->
+
+## What a PR is for
+
+A pull request is a **mechanism for review**, nothing more; see the [change
+lifecycle](~/.pyck/guidelines/AGENTS.md#rules-for-every-change) for how it relates to issues and commits. Its
+description and discussion help reviewers evaluate the change and are not the historical record. The durable rationale
+for *why* a change was made lives in the commit message(s) (see [git](~/.pyck/guidelines/docs/git.md)): if something
+matters for the future, it belongs in a commit, not the PR description.
+
+The description is therefore a **short executive summary** for reviewers. A PR may bundle several commits and close
+several issues.
+
+pyck-review checks most of the rules below; see [Classification](#classification) and [Guideline
+check](#guideline-check).
+
+## Title
+
+Write the title like a commit subject (see [git: Subject line](~/.pyck/guidelines/docs/git.md#subject-line)). It names
+the change as a whole. A PR with a single commit uses that commit's subject. Example:
+`Add zone filter to the pick list`.
+
+## Opening a PR
+
+1. Push the branch and open the PR as a draft, with the title from [Title](#title).
+2. Fill the description from [the PR template](#the-pr-template).
+3. Do the testing (manually, where applicable) and add or update the tests the change requires.
+4. Run the [pre-ready checklist](#before-you-mark-it-ready).
+5. Mark the PR ready for review. This transition **is** the testing attestation, and reviewers treat it that way; the PR
+   has no compliance or testing checkboxes.
+
+## The PR template
+
+The PR description uses the org template,
+[`.github/PULL_REQUEST_TEMPLATE.md`](~/.pyck/guidelines/skills/opening-pull-requests/PULL_REQUEST_TEMPLATE.md) in the
+pyck-ai/.github repository, which GitHub injects into new PRs. Keep its two-part layout (see [Description
+structure](#description-structure)), replace the HTML comments with real content, and remove every instruction comment
+before the PR is ready. Add no other top-level headings; structure extra information with sub-headings under
+`## Additional Information`. To change the template, edit it in place in pyck-ai/.github.
+
+## Description structure
+
+The structure is always **summary + additional information**:
+
+1. The **summary** comes first and has no headings (see [Summary](#summary)). Linked issues go here, one per line, each
+   with one of the three trailers defined by the [Footer](~/.pyck/guidelines/docs/git.md#footer) rule: `Closes:`,
+   `Part-of:` or `See-also:`.
+2. Then exactly one `## Additional Information`. Below it is free text that the author structures with `###` or deeper
+   sub-headings. `N/A` if there is nothing to add.
+3. No other `#` or `##` headings anywhere in the description.
+
+## Summary
+
+The summary is a short executive summary of the commits. Write its sentences per the `technical-writing` skill
+([technical-writing.md](~/.pyck/guidelines/docs/technical-writing.md)). Summarize, don't copy:
+
+- It describes everything the commits change, and only that; one sentence may cover several commits.
+- Stay on the shorter side: aim for 2 or 3 paragraphs, and add more only when the PR really needs them to be understood
+  or really makes that many changes. **5 paragraphs at most.** A list counts as one paragraph; trailers do not count.
+  Details reviewers might want go under `## Additional Information`.
+- Do not paste logs, SHA lists or metric tables into the description. Link them.
+- Where a view is shorter than prose, use the smallest one that makes the key point clear and matches the change: a call
+  tree, a file tree, pseudocode, a Mermaid diagram or a diff-shaped sketch. One view, not several.
+
+The summary says in one line what breaks if the change goes wrong, and whether a revert undoes it: a **two-way door**,
+or a **one-way door** such as a data migration, a published API, a deleted resource or an **Irreversible** commit (see
+[Classification](#classification)).
+
+Exception: a PR with a **single commit** may use that commit's message 1:1 as its summary (GitHub pre-fills the
+description with it). The length limit does not apply to such a copy.
+
+## Size
+
+Keep a PR small enough to review in one sitting:
+
+- **Commits**: aim for 5 or fewer, and 10 at most. A PR holds no merge commits (see [git: Best
+  practices](~/.pyck/guidelines/docs/git.md#best-practices)).
+- **Diff**: keep the changed lines, the changed files and the largest single file small. Generated files do not count;
+  tests count, but less than production code.
+- **Spread**: touch as few modules as you can, ideally one or two.
+- **One kind of change**: never mix a feature and a defect fix in one PR, so the fix can be reviewed and released on its
+  own.
+
+When you split work into commits, order them so each builds on the one before: schema or storage, core logic, wiring,
+UI. Each commit carries its own tests (see [testing](~/.pyck/guidelines/docs/testing.md)), so every commit builds and
+passes on its own. After you rewrite a PR branch's history, prove the content did not change: note
+`git rev-parse <old>^{tree}` before the rewrite and compare it with `git rev-parse HEAD^{tree}` after. Do not push if
+they differ unintentionally.
+
+If notes in the description cannot make a PR reviewable, split it into several PRs and stack them: the first targets
+`main`, each next one targets the branch of the PR below it, so each review shows only its own layer.
+
+A stack means a native GitHub stack (see GitHub's page About stacked pull requests), not just PRs whose bases point at
+each other's branches: reviewers use GitHub's stack view, and chained bases do not show up there. Whenever one PR is
+based on another PR's branch, register the stack right away with the `gh stack` extension. To stack:
+
+1. Branch off the bottom PR's branch for each layer, and keep each layer reviewable on its own (see the limits above).
+2. Register the stack:
+   - new stack: `gh stack init`, then `gh stack submit`
+   - existing PRs: `gh stack link <bottom> ... <top>` (PR numbers, URLs or branch names, bottom first)
+3. Test each layer.
+4. Mark each PR ready only when its own layer passes the [checklist](#before-you-mark-it-ready).
+
+All branches of a stack live in the same repository; forks are not supported. Merge bottom up, for example with
+`gh stack merge`. Branch protection of the bottom PR's base applies to every layer, and admin bypass is not supported
+for stack merges. While a PR is in a stack its base cannot be changed; restructure with `gh stack unstack` first.
+
+## Before you mark it ready
+
+Run the checks, fix what fails, and run them again until all pass:
+
+- The title follows [Title](#title).
+- Every instruction comment of the template is removed, and the description follows [Description
+  structure](#description-structure) (including the trailers).
+- The summary follows [Summary](#summary).
+- The changes are tested and the tests they require are added or updated.
+- No condition of the [Definition of done](#definition-of-done) is known to be open.
+
+## Definition of done
+
+A change is done, and may merge, when each condition holds. Each links to the doc that owns it.
+
+- **Acceptance criteria.** Every criterion of the linked issue is met, and the PR or a commit shows the evidence for
+  each ([issues: Acceptance Criteria](~/.pyck/guidelines/docs/issues.md#acceptance-criteria)). A trivial change without
+  an issue states its intent in the commit.
+- **Tests.** The change has the tests that [testing](~/.pyck/guidelines/docs/testing.md) requires, and they pass.
+- **Docs.** Every README, doc comment and doc under `docs/` that the change made stale is fixed in the same change (see
+  the [change lifecycle](~/.pyck/guidelines/AGENTS.md#rules-for-every-change)).
+- **Review.** A review against [code-review](~/.pyck/guidelines/docs/code-review.md) is finished, and no finding in its
+  Act on group is open.
+- **CI.** Every required check is green ([ci: Required checks](~/.pyck/guidelines/docs/ci.md#required-checks)).
+- **ADR.** A decision that [adrs](~/.pyck/guidelines/docs/adrs.md#write-an-adr-for-a-hard-to-reverse-choice) says to
+  record has its ADR.
+- **Telemetry.** New instrumentation is verified as described in [observability: Verify the
+  telemetry](~/.pyck/guidelines/docs/observability.md#verify-the-telemetry).
+
+## Classification
+
+Every commit is exactly one kind: **defect fix**, **feature** or **task**, the same three kinds as issues (a PR may hold
+several commits, so it may hold several kinds, but never a feature together with a defect fix: see [Size](#size)). Two
+more properties are judged per commit:
+
+- **Breaking**: the commit breaks backwards compatibility. A `BREAKING CHANGE:` footer line marks it (see [git:
+  Footer](~/.pyck/guidelines/docs/git.md#footer)).
+- **Irreversible**: a revert cannot undo it. It deletes or rewrites data, removes infrastructure, or has an effect
+  outside the system.
+
+Classification is automated, so the PR has no classification checkboxes. The kind of a commit matches the type of the
+issue it links.
+
+## Guideline check
+
+pyck-review checks these rules on repos that opt in through `.github/pyck-review.json5`, together with the commit
+messages against [git](~/.pyck/guidelines/docs/git.md) and the commits' kinds against [Classification](#classification).
+Text inside code blocks is ignored. Each finding links to the section of this guideline that defines its rule. A
+blocking finding requests changes and sets the `guidelines-not-met` label, unless the repo makes every review advice
+with `pullRequests.requestChanges: false`. The thresholds are the numbers in this guideline; the list of checks is in
+`docs/rules.md` of the pyck-review repository.

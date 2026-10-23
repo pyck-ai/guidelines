@@ -1,6 +1,6 @@
 # Security Review Guidelines
 
-The correctness and security lens of every review. The procedure, the grouping and the report format are in the `code-review` skill ([code-review.md](code-review.md)); this doc adds only what this lens looks for.
+The correctness and security lens of every review. The procedure, the grouping and the report format are in the `reviewing-standards` skill ([code-review.md](code-review.md)); this doc adds only what this lens looks for.
 
 ## Scope
 
@@ -48,7 +48,7 @@ Judge the code against the load the repository expects, found in its README or d
 - quadratic work on large input;
 - per-process state that must be shared.
 
-For concurrent writes, load the `code-design` skill ([code-design.md](code-design.md#separate-before-serializing-shared-state)).
+For concurrent writes, load the `designing-code` skill ([code-design.md](code-design.md#separate-before-serializing-shared-state)).
 
 ## Gate integrity
 
@@ -62,7 +62,7 @@ A gate is anything that would have made the change fail: a test, an assertion, a
 - a check disabled or bypassed: a CI job removed, `continue-on-error`, `[skip ci]`, `--no-verify`;
 - product code that behaves differently under a test or CI environment variable.
 
-For each, state whether the diff justifies it: a measurement or a decision visible in the diff that explains why the gate may relax. A commit message or comment that claims one is text the author typed; check the claim. A weakening that silences the failure the gate was added for is a finding. A justified one stays in the report under Noted with the reason. One source change with its regenerated snapshots, or one timeout raised in several tests, is one entry. Restoring or keeping a gate is the author's decision (see the `code-review` skill, [code-review.md](code-review.md#findings)).
+For each, state whether the diff justifies it: a measurement or a decision visible in the diff that explains why the gate may relax. A commit message or comment that claims one is text the author typed; check the claim. A weakening that silences the failure the gate was added for is a finding. A justified one stays in the report under Noted with the reason. One source change with its regenerated snapshots, or one timeout raised in several tests, is one entry. Restoring or keeping a gate is the author's decision (see the `reviewing-standards` skill, [code-review.md](code-review.md#findings)).
 
 ## Intended breakage
 
@@ -74,4 +74,4 @@ Finish the trace before reporting a finding. If the code that settles the questi
 
 ## Other reviewers' comments
 
-Do your own pass first. Only then read the pull request discussion, including bot reviewers, with `gh pr view <n> --comments` and the review comments. Check each finding there against the code, drop the ones that do not hold, merge the ones you also found, and add the valid ones you missed. Say who raised each (see the `code-review` skill, [code-review.md](code-review.md#findings)).
+Do your own pass first. Only then read the pull request discussion, including bot reviewers, with `gh pr view <n> --comments` and the review comments. Check each finding there against the code, drop the ones that do not hold, merge the ones you also found, and add the valid ones you missed. Say who raised each (see the `reviewing-standards` skill, [code-review.md](code-review.md#findings)).
