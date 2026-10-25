@@ -12,6 +12,7 @@
 - [Release notes](#release-notes)
 - [Build identity](#build-identity)
 - [Deploy and roll back](#deploy-and-roll-back)
+- [Verify a deploy and decide a rollback](#verify-a-deploy-and-decide-a-rollback)
 -->
 
 How a pyck-ai repository versions, tags, hotfixes, deploys and rolls back a release, and how a behaviour change ships.
@@ -137,3 +138,23 @@ Applies when you deploy, promote or roll back.
 - Roll back by redeploying the previous release manifest. It restores the artifacts and the toggle state together.
 - Down migrations exist for local development only and are optional. A migration is safe to merge when the previous
   release's code runs against the new schema; a migration that does not meet that is a breaking change.
+
+## Verify a deploy and decide a rollback
+
+Applies when you deploy or roll back, in a release manifest or in an internal tool's own repository.
+
+- Name the rollback before the deploy starts, in the deploy's commit or pull request: the trigger that makes you roll
+  back, the steps, who decides and how you confirm it worked. A migration that the previous code cannot run against
+  rules out the rollback, so it is a breaking change (see above).
+- A deploy is done when you have shown that the new revision runs: the version or digest the platform reports equals the
+  one you shipped. An apply that exits 0, a green build and a reachable URL do not show that.
+- Report one state, with the evidence for it:
+  - Green: the new revision runs and every check the service defines for a deploy is within its threshold. Carry on.
+  - Yellow: a check is outside its threshold, or you could not run it. Name which. Start no further deploy until you
+    know the cause.
+  - Red: a check is in its red range, data is wrong or a secret is exposed. Roll back first and investigate after.
+- Treat a rollback as a deploy: it is done only when the previous revision is shown running.
+- A rollback in production is an incident. pyck-ai/incidents (README, "When to open an incident") owns the rule and the
+  severity.
+- Each service keeps its own checks, watch window and thresholds in its repository. Derive thresholds as
+  [observability.md](~/.pyck/guidelines/docs/observability.md#alerts) says.
