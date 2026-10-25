@@ -142,6 +142,20 @@ cases.
   func Cancel(order OrderID, by UserID) error // swapping the arguments no longer compiles
   ```
 
+  TypeScript has no nominal types, so a brand is an intersection, and only a
+  function that verifies the value may create one. A cast (`as UserId`) makes
+  the brand without the check, so the type claims what nobody tested. At a
+  boundary, prefer the repository's schema library over a hand-written guard
+  and infer the type from the schema.
+
+  ```ts
+  type UserId = string & { readonly __brand: 'UserId' }
+
+  function parseUserId(s: string): UserId | null {
+    return /^usr_[0-9a-z]{12}$/.test(s) ? (s as UserId) : null // the one allowed cast
+  }
+  ```
+
 - **Derive from the authoritative schema.** When a protobuf, OpenAPI, GraphQL
   or database schema owns a shape, generate the type from it instead of
   hand-writing a parallel one.
