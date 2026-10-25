@@ -19,7 +19,7 @@ Authors: poteto (pstack) and the Cursor team (cursor-team-kit, thermos, agent-co
 
 Author: Garry Tan. Project: [garrytan/gstack](https://github.com/garrytan/gstack), commit `6237994`. Licence: MIT.
 
-- The `review`, `document-release` and `document-generate` skills.
+- The `review`, `document-release`, `document-generate` and `land-and-deploy` skills.
 
 ### ponytail
 
@@ -33,7 +33,7 @@ Author: Dietrich Gebert. Project: [DietrichGebert/ponytail](https://github.com/D
 
 Author: Addy Osmani. Project: [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills), commit `aeac41d`. Licence: MIT.
 
-- The `deprecation-and-migration`, `api-and-interface-design`, `code-review-and-quality`, `security-and-hardening`, `documentation-and-adrs`, `incremental-implementation`, `constraint-driven-development`, `spec-driven-development`, `observability-and-instrumentation` and `performance-optimization` skills: <https://github.com/addyosmani/agent-skills/tree/aeac41d/skills>
+- The `deprecation-and-migration`, `api-and-interface-design`, `code-review-and-quality`, `security-and-hardening`, `documentation-and-adrs`, `incremental-implementation`, `constraint-driven-development`, `spec-driven-development`, `observability-and-instrumentation`, `performance-optimization` and `shipping-and-launch` skills: <https://github.com/addyosmani/agent-skills/tree/aeac41d/skills>
 
 ### mattpocock/skills
 
@@ -116,6 +116,11 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 - When to write an ADR, the convention-first check, the rejected-alternatives section and the supersede rule: the `documentation-and-adrs` skill (addyosmani/agent-skills, `aeac41d`).
 - The three-part test for when an ADR is worth writing: the `ADR-FORMAT.md` of the `domain-modeling` skill (mattpocock/skills, `5beb35b`).
+
+### [docs/releases.md](./docs/releases.md)
+
+- The rule that a merge, a green build or a reachable URL does not show a deploy, and the report of one state with its evidence: the `land-and-deploy` skill (gstack, `6237994`).
+- The green, yellow and red states and the four rollback fields: the `shipping-and-launch` skill (addyosmani/agent-skills, `aeac41d`).
 
 ### [docs/ci.md](./docs/ci.md)
 
