@@ -126,6 +126,10 @@ Applies when you deploy, promote or roll back.
 - A repository's own `deploy` reaches `dev` only ([ci.md](~/.pyck/guidelines/docs/ci.md#groups)). Staging and production
   change only through the release manifest in pyck-ai/deployment. The mechanics (manifest format, RC pull request,
   sign-off, tooling) are in that repository.
+- One exception: an internal tool may deploy from its own repository. A repository holds an internal tool when no
+  release manifest in pyck-ai/deployment names the tool and it runs only on the eu-management cluster. Its own `deploy`
+  may then reach that cluster. The tool owns its rollback, and the deploy README of its repository names the rollback
+  steps.
 - One version of the platform runs at a time. Compatibility across versions comes from the contract version inside that
   one deployment.
 - Deploy the server first and its consumers second. Add the new shape before you remove the old one
