@@ -65,6 +65,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 - The one-way module dependencies: the `spec-driven-development` skill (addyosmani/agent-skills, `aeac41d`).
 - The domain term rule: the `domain-modeling` skill (mattpocock/skills, `5beb35b`).
 - The optionality rule: the `narrow-react-prop-types` skill (humanlayer/skills, `main`).
+- The TypeScript brand rule and example: the `typescript-best-practices` skill (Cursor plugins `pstack`, `ddf824a`).
 
 ### [docs/changing-code.md](./docs/changing-code.md)
 
