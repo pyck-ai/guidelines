@@ -58,6 +58,9 @@ from where it enters to where it is used. Look in particular for:
 - A value trusted because of the channel that delivered it. Trust follows who wrote the value: another process's command
   line or environment, a filename on a shared volume and a path in a job payload are as attacker-controlled as a form
   field.
+- A GitHub Actions step that lets text written by someone else become code: `${{ github.event.* }}` (an issue or PR
+  title or body, a comment body, a branch name, a head ref) inside a `run:` script. Pass it through `env:` and quote the
+  variable in the script.
 - A delete, move or overwrite on a path derived from such a value. Require that the resolved target (symlinks resolved)
   sits under an allowlisted root, at least one level below it, and carries ownership evidence read before the operation.
   The level below the root keeps the root itself safe, and the ownership evidence keeps a file that another process

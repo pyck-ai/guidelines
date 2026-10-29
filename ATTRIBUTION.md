@@ -1,6 +1,6 @@
 # Attribution
 
-Some guideline docs adapt rules from open source projects. This file lists, per doc, every source it adapts. The sources are not vendored: each rule is reworded for pyck-ai, and the licence of each source is MIT.
+Some guideline docs adapt rules from open source projects. This file lists, per doc, every source it adapts. The sources are not vendored: each rule is reworded for pyck-ai, and the licence of each source is MIT unless its entry says otherwise.
 
 Links name a commit where one is known, so the text they point to does not change. Where no commit is given, the link follows the default branch.
 
@@ -14,6 +14,12 @@ Authors: poteto (pstack) and the Cursor team (cursor-team-kit, thermos, agent-co
 - `cursor-team-kit`, the `make-pr-easy-to-review` skill: <https://github.com/cursor/plugins/tree/ddf824a/cursor-team-kit>
 - `thermos`, the thermo-nuclear review skills: <https://github.com/cursor/plugins/tree/ddf824a/thermos>
 - `agent-compatibility`, the `check-agent-compatibility` skill: <https://github.com/cursor/plugins/tree/ddf824a/agent-compatibility>
+
+### anthropics/claude-plugins-official
+
+Author: Anthropic. Project: [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official), commit `a0b04d9`. Licence: Apache-2.0. Ideas only; no text is copied.
+
+- The `security-guidance` plugin: <https://github.com/anthropics/claude-plugins-official/tree/a0b04d9/plugins/security-guidance>
 
 ### gstack
 
@@ -86,6 +92,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 ### [docs/security-review.md](./docs/security-review.md)
 
 - The review lens: the thermo-nuclear review skills (Cursor plugins `thermos`, `ddf824a`).
+- The GitHub Actions script injection point: the `security-guidance` plugin (anthropics/claude-plugins-official, `a0b04d9`). Ideas only.
 - The gate integrity list: the `review` skill (gstack, `6237994`).
 - The scale check: the `ponytail-review` skill (ponytail, `09c434a`).
 - The writer-of-the-value, derived-path, model-output and leaked-secret points: the `security-and-hardening` skill (addyosmani/agent-skills, `aeac41d`).
