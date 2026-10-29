@@ -37,6 +37,8 @@ Check for flaws such as missing authorization, injection, unsafe handling of unt
 - A cache key that omits an input the response depends on, such as tenant, locale or viewer. It serves one user's data to another.
 - A metric label or span attribute that carries a user id, an email or other personal data.
 - A test fixture, seed or recorded response that holds real personal data. Fixtures use invented values.
+- An endpoint that a caller outside the cluster can reach, signed in or not, with no rate or concurrency limit, or a limit whose counter the caller can reset. Login, model calls, mail and file conversion come first.
+- A secret or server-only value read through a client-bundled prefix (`VITE_`, `NEXT_PUBLIC_`, `EXPO_PUBLIC_` and the like). It ships to every browser.
 
 ## Scale check
 

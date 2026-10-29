@@ -21,6 +21,12 @@ Author: Anthropic. Project: [anthropics/claude-plugins-official](https://github.
 
 - The `security-guidance` plugin: <https://github.com/anthropics/claude-plugins-official/tree/a0b04d9/plugins/security-guidance>
 
+### raroque/vibe-security-skill
+
+Author: Chris Raroque. Project: [raroque/vibe-security-skill](https://github.com/raroque/vibe-security-skill), commit `850938f`. Licence: MIT. Ideas only; no text is copied.
+
+- The `vibe-security` skill: <https://github.com/raroque/vibe-security-skill/tree/850938f/vibe-security>
+
 ### gstack
 
 Author: Garry Tan. Project: [garrytan/gstack](https://github.com/garrytan/gstack), commit `6237994`. Licence: MIT.
@@ -93,6 +99,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 - The review lens: the thermo-nuclear review skills (Cursor plugins `thermos`, `ddf824a`).
 - The GitHub Actions script injection point: the `security-guidance` plugin (anthropics/claude-plugins-official, `a0b04d9`). Ideas only.
+- The rate limit and client-bundled prefix points: the `vibe-security` skill (raroque/vibe-security-skill, `850938f`). Ideas only.
 - The gate integrity list: the `review` skill (gstack, `6237994`).
 - The scale check: the `ponytail-review` skill (ponytail, `09c434a`).
 - The writer-of-the-value, derived-path, model-output and leaked-secret points: the `security-and-hardening` skill (addyosmani/agent-skills, `aeac41d`).
