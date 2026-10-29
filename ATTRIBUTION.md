@@ -20,6 +20,7 @@ Authors: poteto (pstack) and the Cursor team (cursor-team-kit, thermos, agent-co
 Author: Anthropic. Project: [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official), commit `a0b04d9`. Licence: Apache-2.0. Ideas only; no text is copied.
 
 - The `security-guidance` plugin: <https://github.com/anthropics/claude-plugins-official/tree/a0b04d9/plugins/security-guidance>
+- The `code-review` plugin: <https://github.com/anthropics/claude-plugins-official/tree/a0b04d9/plugins/code-review>
 
 ### raroque/vibe-security-skill
 
@@ -94,6 +95,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 - The certainty rules and the docs check: the `review` and `document-release` skills (gstack, `6237994`).
 - The numbered findings, the "If we skip it" line and the marked-shortcut rule: the `ponytail-review` and `ponytail-debt` skills (ponytail, `09c434a`).
 - The mutation check and the dependency upgrade checks: the `code-review-and-quality` skill (addyosmani/agent-skills, `aeac41d`).
+- The rule to drop findings on untouched lines and findings that CI already reports: the `code-review` plugin (anthropics/claude-plugins-official, `a0b04d9`). Ideas only.
 
 ### [docs/security-review.md](./docs/security-review.md)
 
