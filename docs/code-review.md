@@ -27,7 +27,9 @@ and merge the results with this doc's procedure and report.
 3. Apply each lens in turn.
 4. Before reporting a finding, check it against the diff: the line exists in
    the change, and the rule you cite says what you claim. Drop the finding
-   if either fails.
+   if either fails. Also drop it when it sits on a line the diff did not
+   touch, or when the repository's own linter, type checker or compiler
+   already reports it in CI; list it under Dismissed, naming the check.
 5. Report what remains, as described in [Findings](#findings).
 
 ## Findings
