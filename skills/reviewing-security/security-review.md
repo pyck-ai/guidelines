@@ -58,6 +58,9 @@ from where it enters to where it is used. Look in particular for:
 - A value trusted because of the channel that delivered it. Trust follows who wrote the value: another process's command
   line or environment, a filename on a shared volume and a path in a job payload are as attacker-controlled as a form
   field.
+- A GitHub Actions step that lets text written by someone else become code: `${{ github.event.* }}` (an issue or PR
+  title or body, a comment body, a branch name, a head ref) inside a `run:` script. Pass it through `env:` and quote the
+  variable in the script.
 - A delete, move or overwrite on a path derived from such a value. Require that the resolved target (symlinks resolved)
   sits under an allowlisted root, at least one level below it, and carries ownership evidence read before the operation.
   The level below the root keeps the root itself safe, and the ownership evidence keeps a file that another process
@@ -70,6 +73,10 @@ from where it enters to where it is used. Look in particular for:
   to another.
 - A metric label or span attribute that carries a user id, an email or other personal data.
 - A test fixture, seed or recorded response that holds real personal data. Fixtures use invented values.
+- An endpoint that a caller outside the cluster can reach, signed in or not, with no rate or concurrency limit, or a
+  limit whose counter the caller can reset. Login, model calls, mail and file conversion come first.
+- A secret or server-only value read through a client-bundled prefix (`VITE_`, `NEXT_PUBLIC_`, `EXPO_PUBLIC_` and the
+  like). It ships to every browser.
 
 ## Scale check
 

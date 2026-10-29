@@ -1,6 +1,6 @@
 # Attribution
 
-Some guideline docs adapt rules from open source projects. This file lists, per doc, every source it adapts. The sources are not vendored: each rule is reworded for pyck-ai, and the licence of each source is MIT.
+Some guideline docs adapt rules from open source projects. This file lists, per doc, every source it adapts. The sources are not vendored: each rule is reworded for pyck-ai, and the licence of each source is MIT unless its entry says otherwise.
 
 Links name a commit where one is known, so the text they point to does not change. Where no commit is given, the link follows the default branch.
 
@@ -15,11 +15,26 @@ Authors: poteto (pstack) and the Cursor team (cursor-team-kit, thermos, agent-co
 - `thermos`, the thermo-nuclear review skills: <https://github.com/cursor/plugins/tree/ddf824a/thermos>
 - `agent-compatibility`, the `check-agent-compatibility` skill: <https://github.com/cursor/plugins/tree/ddf824a/agent-compatibility>
 
+### anthropics/claude-plugins-official
+
+Author: Anthropic. Project: [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official), commit `a0b04d9`. Licence: Apache-2.0. Ideas only; no text is copied.
+
+- The `security-guidance` plugin: <https://github.com/anthropics/claude-plugins-official/tree/a0b04d9/plugins/security-guidance>
+- The `code-review` plugin: <https://github.com/anthropics/claude-plugins-official/tree/a0b04d9/plugins/code-review>
+
+### raroque/vibe-security-skill
+
+Author: Chris Raroque. Project: [raroque/vibe-security-skill](https://github.com/raroque/vibe-security-skill), commit `850938f`. Licence: MIT. Ideas only; no text is copied.
+
+- The `vibe-security` skill: <https://github.com/raroque/vibe-security-skill/tree/850938f/vibe-security>
+
 ### gstack
 
 Author: Garry Tan. Project: [garrytan/gstack](https://github.com/garrytan/gstack), commit `6237994`. Licence: MIT.
 
 - The `review`, `document-release`, `document-generate` and `land-and-deploy` skills.
+- The `devex-review` and `plan-devex-review` skills.
+- The `canary` skill.
 
 ### ponytail
 
@@ -66,6 +81,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 - The domain term rule: the `domain-modeling` skill (mattpocock/skills, `5beb35b`).
 - The optionality rule: the `narrow-react-prop-types` skill (humanlayer/skills, `main`).
 - The TypeScript brand rule and example: the `typescript-best-practices` skill (Cursor plugins `pstack`, `ddf824a`).
+- The error rule: the error contract of the `plan-devex-review` skill (gstack, `6237994`). Ideas only.
 
 ### [docs/changing-code.md](./docs/changing-code.md)
 
@@ -82,10 +98,13 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 - The certainty rules and the docs check: the `review` and `document-release` skills (gstack, `6237994`).
 - The numbered findings, the "If we skip it" line and the marked-shortcut rule: the `ponytail-review` and `ponytail-debt` skills (ponytail, `09c434a`).
 - The mutation check and the dependency upgrade checks: the `code-review-and-quality` skill (addyosmani/agent-skills, `aeac41d`).
+- The rule to drop findings on untouched lines and findings that CI already reports: the `code-review` plugin (anthropics/claude-plugins-official, `a0b04d9`). Ideas only.
 
 ### [docs/security-review.md](./docs/security-review.md)
 
 - The review lens: the thermo-nuclear review skills (Cursor plugins `thermos`, `ddf824a`).
+- The GitHub Actions script injection point: the `security-guidance` plugin (anthropics/claude-plugins-official, `a0b04d9`). Ideas only.
+- The rate limit and client-bundled prefix points: the `vibe-security` skill (raroque/vibe-security-skill, `850938f`). Ideas only.
 - The gate integrity list: the `review` skill (gstack, `6237994`).
 - The scale check: the `ponytail-review` skill (ponytail, `09c434a`).
 - The writer-of-the-value, derived-path, model-output and leaked-secret points: the `security-and-hardening` skill (addyosmani/agent-skills, `aeac41d`).
@@ -121,6 +140,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 - The rule that a merge, a green build or a reachable URL does not show a deploy, and the report of one state with its evidence: the `land-and-deploy` skill (gstack, `6237994`).
 - The green, yellow and red states and the four rollback fields: the `shipping-and-launch` skill (addyosmani/agent-skills, `aeac41d`).
+- The check values recorded before a deploy and the second reading before a rollback: the `canary` skill (gstack, `6237994`). Ideas only.
 
 ### [docs/ci.md](./docs/ci.md)
 
@@ -131,6 +151,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 - The section names follow the [backstage/backstage README](https://github.com/backstage/backstage/blob/master/README.md). No text is adapted. Badges above the heading are pyck-ai's own convention; backstage puts them below it.
 - The cold-start audit: the `check-agent-compatibility` skill (Cursor plugins `agent-compatibility`, `ddf824a`).
+- The error step of the cold-start audit: the `devex-review` skill (gstack, `6237994`). Ideas only.
 
 ### [docs/pull-requests.md](./docs/pull-requests.md)
 

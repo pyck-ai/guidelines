@@ -85,6 +85,7 @@ Applies when you deploy or roll back, in a release manifest or in an internal to
 
 - Name the rollback before the deploy starts, in the deploy's commit or pull request: the trigger that makes you roll back, the steps, who decides and how you confirm it worked. A migration that the previous code cannot run against rules out the rollback, so it is a breaking change (see above).
 - A deploy is done when you have shown that the new revision runs: the version or digest the platform reports equals the one you shipped. An apply that exits 0, a green build and a reachable URL do not show that.
+- Record the value of each check before the deploy starts. Report a state against that record as well as the threshold, and confirm a red reading with a second reading before you roll back, unless data is wrong or a secret is exposed.
 - Report one state, with the evidence for it:
   - Green: the new revision runs and every check the service defines for a deploy is within its threshold. Carry on.
   - Yellow: a check is outside its threshold, or you could not run it. Name which. Start no further deploy until you know the cause.

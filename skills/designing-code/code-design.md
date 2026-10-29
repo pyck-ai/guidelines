@@ -8,6 +8,7 @@
 - [Minimize reader load](#minimize-reader-load)
 - [Make operations idempotent](#make-operations-idempotent)
 - [Guard at the boundary](#guard-at-the-boundary)
+- [Write errors a reader can act on](#write-errors-a-reader-can-act-on)
 - [Make illegal states unrepresentable](#make-illegal-states-unrepresentable)
 - [Model the domain](#model-the-domain)
 - [Separate before serializing shared state](#separate-before-serializing-shared-state)
@@ -110,6 +111,27 @@ validated is noise.
   without the framework.
 
 Ask of each check: is data crossing a boundary here? If not, drop it.
+
+## Write errors a reader can act on
+
+Applies when you write an error message, an error response or an exit path, above all in a public SDK, CLI or API, whose
+callers include outside developers, customers and agents.
+
+A reader, often an agent, takes an error literally and cannot ask what was meant, so the error decides whether an
+unattended run recovers or loops. Give each error that crosses a boundary:
+
+- **What failed:** the operation and the real values (input, path, id) that caused it.
+- **The fix:** on the first or last line, an exact command, flag or edit; when no safe repair exists, what a human must
+  supply.
+- **Recovery:** whether a retry is safe, and which side effects happened (none, partial, complete, unknown). For an
+  unknown outcome, say how to reconcile before retrying (see [idempotency](#make-operations-idempotent)).
+- **A stable code:** prose may change, a code may not.
+- **Context:** versions and the config in effect; env var names, never values.
+- **A trace:** for an unexpected failure only: a compact trace, the path of a file that holds it, or a correlation id
+  from a remote service.
+- **Redaction:** no secret, token or credential-bearing URL anywhere, nested causes included.
+- **The native failure channel:** a failure is a non-zero exit or an error HTTP status, never exit 0 or 200 with the
+  error in the body.
 
 ## Make illegal states unrepresentable
 

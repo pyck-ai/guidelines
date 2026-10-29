@@ -30,12 +30,15 @@ When a feature sits behind a feature flag or an internal-only check, read every 
 Check for flaws such as missing authorization, injection, unsafe handling of untrusted input, secrets in code or logs, and weakened safeguards (for a weakened test or check, see [Gate integrity](#gate-integrity)). Trace untrusted input from where it enters to where it is used. Look in particular for:
 
 - A value trusted because of the channel that delivered it. Trust follows who wrote the value: another process's command line or environment, a filename on a shared volume and a path in a job payload are as attacker-controlled as a form field.
+- A GitHub Actions step that lets text written by someone else become code: `${{ github.event.* }}` (an issue or PR title or body, a comment body, a branch name, a head ref) inside a `run:` script. Pass it through `env:` and quote the variable in the script.
 - A delete, move or overwrite on a path derived from such a value. Require that the resolved target (symlinks resolved) sits under an allowlisted root, at least one level below it, and carries ownership evidence read before the operation. The level below the root keeps the root itself safe, and the ownership evidence keeps a file that another process created safe. On a refusal, log the target and stop; a fallback to a broader default path would delete something nobody checked.
 - Output of a model or a tool used as trusted input, or a permission enforced only by a prompt. A system prompt is not a security boundary; enforce permissions in code.
 - A secret that reached a remote. Treat it as compromised: rotate it first, then purge history.
 - A cache key that omits an input the response depends on, such as tenant, locale or viewer. It serves one user's data to another.
 - A metric label or span attribute that carries a user id, an email or other personal data.
 - A test fixture, seed or recorded response that holds real personal data. Fixtures use invented values.
+- An endpoint that a caller outside the cluster can reach, signed in or not, with no rate or concurrency limit, or a limit whose counter the caller can reset. Login, model calls, mail and file conversion come first.
+- A secret or server-only value read through a client-bundled prefix (`VITE_`, `NEXT_PUBLIC_`, `EXPO_PUBLIC_` and the like). It ships to every browser.
 
 ## Scale check
 
