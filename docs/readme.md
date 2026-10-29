@@ -132,7 +132,11 @@ Maintaining fixes drift per change; this audit finds what no change touched.
    takes. If only the full `task ci` exists, that is a gap.
 4. Run every command the README names, as in [Maintaining](#maintaining), and
    fix each one that no longer matches the tree.
-5. File one issue per gap.
+5. Trigger the three errors a new user is most likely to meet, such as a
+   missing credential, a wrong config value and a bad argument. Note each that
+   fails to state its fix or exits 0, per
+   [code-design.md](code-design.md#write-errors-a-reader-can-act-on).
+6. File one issue per gap.
 
 ## Lint
 
