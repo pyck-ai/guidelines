@@ -34,6 +34,7 @@ Author: Garry Tan. Project: [garrytan/gstack](https://github.com/garrytan/gstack
 
 - The `review`, `document-release`, `document-generate` and `land-and-deploy` skills.
 - The `devex-review` and `plan-devex-review` skills.
+- The `canary` skill.
 
 ### ponytail
 
@@ -139,6 +140,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 - The rule that a merge, a green build or a reachable URL does not show a deploy, and the report of one state with its evidence: the `land-and-deploy` skill (gstack, `6237994`).
 - The green, yellow and red states and the four rollback fields: the `shipping-and-launch` skill (addyosmani/agent-skills, `aeac41d`).
+- The check values recorded before a deploy and the second reading before a rollback: the `canary` skill (gstack, `6237994`). Ideas only.
 
 ### [docs/ci.md](./docs/ci.md)
 
