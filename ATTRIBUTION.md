@@ -33,6 +33,7 @@ Author: Chris Raroque. Project: [raroque/vibe-security-skill](https://github.com
 Author: Garry Tan. Project: [garrytan/gstack](https://github.com/garrytan/gstack), commit `6237994`. Licence: MIT.
 
 - The `review`, `document-release`, `document-generate` and `land-and-deploy` skills.
+- The `devex-review` and `plan-devex-review` skills.
 
 ### ponytail
 
@@ -79,6 +80,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 - The domain term rule: the `domain-modeling` skill (mattpocock/skills, `5beb35b`).
 - The optionality rule: the `narrow-react-prop-types` skill (humanlayer/skills, `main`).
 - The TypeScript brand rule and example: the `typescript-best-practices` skill (Cursor plugins `pstack`, `ddf824a`).
+- The error rule: the error contract of the `plan-devex-review` skill (gstack, `6237994`). Ideas only.
 
 ### [docs/changing-code.md](./docs/changing-code.md)
 
@@ -147,6 +149,7 @@ Author: Dex Horthy. Project: [humanlayer/skills](https://github.com/humanlayer/s
 
 - The section names follow the [backstage/backstage README](https://github.com/backstage/backstage/blob/master/README.md). No text is adapted. Badges above the heading are pyck-ai's own convention; backstage puts them below it.
 - The cold-start audit: the `check-agent-compatibility` skill (Cursor plugins `agent-compatibility`, `ddf824a`).
+- The error step of the cold-start audit: the `devex-review` skill (gstack, `6237994`). Ideas only.
 
 ### [docs/pull-requests.md](./docs/pull-requests.md)
 
