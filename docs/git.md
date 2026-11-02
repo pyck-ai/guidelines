@@ -61,10 +61,13 @@ Closes: #456
 
 ## Branch naming
 
-- **With an issue:** `[issue-id]-[short-description]` (e.g., `123-implement-dark-mode`)
-- **Without an issue:** `u/[username]/[short-description]` (e.g., `u/michael/fix-urgent-bug`)
+A branch name takes one of two forms. Both are allowed whether or not the work has an issue:
 
-The short description is lowercase words and digits joined by hyphens.
+- **Issue branch:** `[issue-id]-[short-description]` (e.g., `123-implement-dark-mode`)
+- **Personal branch:** `u/[username]/[short-description]` (e.g., `u/michael/fix-urgent-bug`)
+
+The short description is lowercase words and digits joined by hyphens. A review does not ask for the issue form when a
+branch uses the personal form; the commit's `Closes:` or `Part-of:` trailer links the issue.
 
 ## Best practices
 
