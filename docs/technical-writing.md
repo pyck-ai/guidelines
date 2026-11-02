@@ -65,7 +65,7 @@ A text can follow every layer and still read like a machine wrote it: every sent
 
 ## Use a view when it is shorter than prose
 
-Pick the smallest view that makes the key point clear, and put it next to the sentence it supports. One view, not several. Each view below is shown for the same change, a retry added to a job.
+Pick the smallest view that makes the key point clear, and put it next to the sentence it supports. One view per point, not several for the same point. Each view below is shown for the same change, a retry added to a job.
 
 - **Call tree**: who calls what.
 
@@ -105,6 +105,19 @@ Pick the smallest view that makes the key point clear, and put it next to the se
    process
   +  retry
   ```
+
+## Show a design before you explain it
+
+A design, a proposal, a plan or a report is read by someone who did not follow the work and has to decide on it. A page of prose with file and line references makes that reader rebuild the picture in their head. Give them the picture:
+
+- **Open with what changes and what the reader decides.** The first screen names who sees a difference, what it looks like and which questions are open.
+- **Draw the parts and the flow** with a Mermaid diagram before any detail: which parts exist, what each one hands to the next, and what is new.
+- **Show every output a person sees as a draft.** A comment, a table, a screen, a message or a file appears rendered, before and after. A sentence that describes an output does not replace it.
+- **Walk one example through.** Follow one concrete case with real names and numbers from start to end, step by step, and show what each step produces.
+- **Define every term at first use.** A label you coined, a field name or an internal ID gets one plain sentence before you rely on it.
+- **Put the evidence last.** File and line references, measurements and rejected options go in an appendix, after the text the reader needs to follow.
+
+A section that only argues in prose, where a draft or a diagram would show the point, is not done.
 
 ## Example
 
