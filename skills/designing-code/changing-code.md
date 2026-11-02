@@ -64,7 +64,7 @@ Renaming `name` to `full_name` takes five:
 - Before you merge, prove that the previous release's code runs against the new schema (the previous image against the
   migrated disposable database). Production can roll back by redeploying the previous release, though fixing forward is
   the default ([releases.md](~/.pyck/guidelines/docs/releases.md#deploy-and-roll-back)), so a migration that breaks it
-  is a breaking change. A down path is optional and for local development only.
+  does not merge. A down path is optional and for local development only.
 - A component that is deployed only together with its consumers waits one deploy before the contract phase. Anything a
   customer-governed consumer reads waits for the next Platform Release.
 - Build a large index without blocking writes, for example `CREATE INDEX CONCURRENTLY` in Postgres.

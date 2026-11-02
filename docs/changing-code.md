@@ -80,7 +80,7 @@ own. Renaming `name` to `full_name` takes five:
   Production can roll back by redeploying the previous release, though
   fixing forward is the default
   ([releases.md](releases.md#deploy-and-roll-back)), so a migration that
-  breaks it is a breaking change. A down path is optional and for local
+  breaks it does not merge. A down path is optional and for local
   development only.
 - A component that is deployed only together with its consumers waits one
   deploy before the contract phase. Anything a customer-governed consumer reads

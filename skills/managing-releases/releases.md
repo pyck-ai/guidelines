@@ -161,8 +161,10 @@ Applies when you deploy, promote or roll back.
   artifacts and the toggle state together.
 - Down migrations are optional and for local development only. They never run in `test`, `staging` or production.
 - A migration is safe to merge only once the previous release has been run against the migrated schema. That a down
-  migration exists, or that the migration looks additive, proves nothing. A migration that fails this is a breaking
-  change.
+  migration exists, or that the migration looks additive, proves nothing. A migration that fails this does not merge:
+  split it into additive phases
+  ([changing-code.md](~/.pyck/guidelines/docs/changing-code.md#change-a-schema-in-additive-phases)). The schema is
+  internal, so such a migration is not a breaking change with a footer; it is not allowed at all.
 
 ## Verify a deploy and decide a rollback
 
@@ -170,7 +172,7 @@ Applies when you deploy or roll back, in a release manifest or in an internal to
 
 - Name the rollback before the deploy starts, in the deploy's commit or pull request: the trigger that makes you roll
   back, the steps, who decides and how you confirm it worked. A migration that the previous code cannot run against
-  rules out the rollback, so it is a breaking change (see above).
+  would rule out the rollback, which is why it does not merge (see above).
 - A deploy is done when you have shown that the new revision runs: the version or digest the platform reports equals the
   one you shipped. An apply that exits 0, a green build and a reachable URL do not show that.
 - Report one state, with the evidence for it:
