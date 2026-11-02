@@ -157,8 +157,9 @@ Every commit is exactly one kind: **defect fix**, **feature** or **task**, the s
 several commits, so it may hold several kinds, but never a feature together with a defect fix: see [Size](#size)). Two
 more properties are judged per commit:
 
-- **Breaking**: the commit breaks backwards compatibility. A `BREAKING CHANGE:` footer line marks it (see [git:
-  Footer](~/.pyck/guidelines/docs/git.md#footer)).
+- **Breaking**: the commit breaks the public API. A `BREAKING CHANGE:` footer line marks it (see [git:
+  Footer](~/.pyck/guidelines/docs/git.md#footer)). An internal change is never breaking ([deprecation: internal and
+  external breaks](~/.pyck/guidelines/docs/deprecation.md#tell-an-internal-break-from-an-external-one)).
 - **Irreversible**: a revert cannot undo it. It deletes or rewrites data, removes infrastructure, or has an effect
   outside the system.
 

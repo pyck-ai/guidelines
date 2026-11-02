@@ -77,7 +77,8 @@ own. Renaming `name` to `full_name` takes five:
   rename gets its own deploy, after no code references the old shape.
 - Before you merge, prove that the previous release's code runs against the
   new schema (the previous image against the migrated disposable database).
-  Production rolls back by redeploying the previous release
+  Production can roll back by redeploying the previous release, though
+  fixing forward is the default
   ([releases.md](releases.md#deploy-and-roll-back)), so a migration that
   breaks it is a breaking change. A down path is optional and for local
   development only.

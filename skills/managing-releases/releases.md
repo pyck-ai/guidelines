@@ -6,6 +6,7 @@
 
 - [Terms](#terms)
 - [Choose the SemVer bump](#choose-the-semver-bump)
+- [Release window and pipeline](#release-window-and-pipeline)
 - [Who tags and when](#who-tags-and-when)
 - [Hotfix a released version](#hotfix-a-released-version)
 - [Ship a behaviour change](#ship-a-behaviour-change)
@@ -26,10 +27,13 @@ or an external provider is added, updated and counted for the release is in
 
 - **Component Version**: the signed git tag of one repository, for example `v7.2.0`. It follows SemVer 2.0.0. GitHub
   calls the page made from a tag a "Release"; it is always a Component Version, never a Platform Release.
+- **Component release candidate**: a SemVer pre-release of the next Component Version, for example `v7.3.0-rc.1`. It is
+  deployed to `test`.
 - **Platform Release**: the manifest in pyck-ai/deployment that names the Component Version of each component deployed
   together. It is a plain integer (`1248`) with no MAJOR, MINOR or PATCH meaning, and it never gates compatibility.
-- **RC**: a candidate for a Platform Release, named `<release>-rc.N` (`1249-rc.1`). RC tags live in pyck-ai/deployment,
-  not in the component repositories.
+  Every rollout to production increments it, an ad-hoc hotfix rollout and a toggle switch in production included.
+- **Platform Release candidate**: a candidate for a Platform Release, named `<release>-rc.N` (`1249-rc.1`). Its tags
+  live in pyck-ai/deployment, not in the component repositories. It is tested on `staging`.
 - **Build**: one CI run of a repository. Its CI run ID names it and the sha256 digest of its artifact is its content.
 - **Contract version**: the version of an API contract, separate from the Component Version. `v0` is the unversioned
   GraphQL surface.
@@ -44,15 +48,31 @@ Applies when you tag a Component Version or write a change that decides which ti
   behaviour changes live, because the bump is the signal.
 - **MINOR**: an additive, backward-compatible change. A behaviour change in a MINOR needs a toggle (see [Ship a
   behaviour change](#ship-a-behaviour-change)).
-- **PATCH**: a bugfix, a hotfix or a security fix. A PATCH never breaks a versioned surface (`v0` is exempt, see
-  [deprecation.md](~/.pyck/guidelines/docs/deprecation.md#break-v0-with-an-announcement)) and never changes behaviour
-  without a toggle, so it stays safe to ship under incident pressure without forcing a coordinated rebuild of its
-  consumers.
+- **PATCH**: a bugfix, a hotfix or a security fix. A PATCH never breaks a surface, `v0` included, and never changes
+  behaviour without a toggle, so it stays safe to ship under incident pressure without forcing a coordinated rebuild of
+  its consumers.
 
-A break marks itself with a `BREAKING CHANGE: <explanation>` footer line in the commit (see
-[git.md](~/.pyck/guidelines/docs/git.md)). A break between components that are built and deployed together needs no
-contract bump; a break for a consumer outside that group does
-([deprecation.md](~/.pyck/guidelines/docs/deprecation.md)).
+A break of the public API marks itself with a `BREAKING CHANGE: <explanation>` footer line in the commit (see
+[git.md](~/.pyck/guidelines/docs/git.md)). What the public API covers is in
+[deprecation.md](~/.pyck/guidelines/docs/deprecation.md#tell-an-internal-break-from-an-external-one). An internal change
+is never a breaking change: it carries no footer and needs no contract bump.
+
+## Release window and pipeline
+
+The reasons are in ADR-26W44-01; read them there, not here.
+
+- A release window opens every two weeks, on a Tuesday. Monday is planning. Wednesday to Friday are the hotfix days. No
+  component has to release in a window, and with no full release ready there is no rollout.
+- A component moves on its own: `main` deploys to `dev`, a component release candidate runs on `test`, then it becomes a
+  full release. A full release joins the next Platform Release candidate automatically.
+- `staging` is reset to the state of production, for example from a snapshot. The candidate is applied on top, the
+  end-to-end tests run, and a person approves it. It rolls out in the next window.
+- The end-to-end tests also run nightly on `dev` and after every deploy on `test`.
+- A hotfix or a security fix ships ad hoc, with no window. It still goes through a Platform Release candidate on
+  `staging` and an approval.
+- Skipping `staging` is allowed only for data corruption, imminent data loss, unavailability or a critical security
+  issue.
+- A regular release never skips a step.
 
 ## Who tags and when
 
@@ -87,24 +107,25 @@ an error code, a sort order, a dependency update that does this.
 - In a MINOR or PATCH, ship it dark behind a toggle and switch it on in a later release or in the next MAJOR.
 - A toggle is the environment variable `PYCK_FEATURE_<X>`, read from configuration, never baked into the binary. It
   defaults to off.
-- Only the release manifest in pyck-ai/deployment switches a toggle, per release and environment. Rolling back to the
-  previous manifest switches it back.
+- Only the release manifest in pyck-ai/deployment switches a toggle, per release and environment. A toggle switch in
+  production is a rollout and creates a new Platform Release. Rolling back to the previous manifest switches it back.
 - Remove the toggle in the next release once the new behaviour is on everywhere. This is the one permitted dual path
   ([changing-code.md](~/.pyck/guidelines/docs/changing-code.md#migrate-callers-then-delete-the-old-api)); a toggle that
   outlives that is debt.
 - A toggle that gates a break switches on only in the release where every affected consumer is ready. Keep such flag
   days rare.
 
-A `v0` surface may break in any release, PATCH included, each break announced with a `BREAKING CHANGE` footer line.
-Prefer a new field, type or resolver over changing an active one. The rules for removal and for external consumers are
-in [deprecation.md](~/.pyck/guidelines/docs/deprecation.md).
+A `v0` surface break ships dark behind a backend toggle. Each affected consumer ships a release that speaks the old and
+the new behaviour behind its own toggle. The backend toggle switches on after every affected consumer has rolled out and
+at least 60 days after the announcement, never in a PATCH. Prefer a new field, type or resolver over changing an active
+one. The rules for removal and for external consumers are in [deprecation.md](~/.pyck/guidelines/docs/deprecation.md).
 
 ## Release notes
 
 pyck-release generates the notes of each Component Version's GitHub Release from the commits since the last final tag:
 fixes, improvements, dependency updates and the `BREAKING CHANGE` sections. Write the commit message for that reader
-([git.md](~/.pyck/guidelines/docs/git.md)). There are no platform-wide release notes. Revisit that when the RC workflow
-in pyck-ai/deployment exists.
+([git.md](~/.pyck/guidelines/docs/git.md)). There are no platform-wide release notes. Revisit that when the Platform
+Release candidate workflow in pyck-ai/deployment exists.
 
 ## Build identity
 
@@ -115,8 +136,8 @@ Applies when you add or change what a build records or shows.
 - Keep the identifiers apart. A version string shows the Component Version, with the Platform Release and the short
   commit as an annotation on human surfaces: `v7.2.0 (1248, a1b2c3d)`. The contract version is its own field
   (`contract: v0`).
-- Never rebuild an artifact to change a stamped value. The artifact an RC validated is the artifact that ships. Images
-  are referenced by digest ([ci.md](~/.pyck/guidelines/docs/ci.md#taskfile-and-workflows)).
+- Never rebuild an artifact to change a stamped value. The artifact a release candidate validated is the artifact that
+  ships. Images are referenced by digest ([ci.md](~/.pyck/guidelines/docs/ci.md#taskfile-and-workflows)).
 - A component exposes its identity at runtime:
   [observability.md](~/.pyck/guidelines/docs/observability.md#version-attributes).
 
@@ -125,8 +146,8 @@ Applies when you add or change what a build records or shows.
 Applies when you deploy, promote or roll back.
 
 - A repository's own `deploy` reaches `dev` only ([ci.md](~/.pyck/guidelines/docs/ci.md#groups)). Staging and production
-  change only through the release manifest in pyck-ai/deployment. The mechanics (manifest format, RC pull request,
-  sign-off, tooling) are in that repository.
+  change only through the release manifest in pyck-ai/deployment. The mechanics (manifest format, candidate pull
+  request, approval, tooling) are in that repository.
 - One exception: an internal tool may deploy from its own repository. A repository holds an internal tool when no
   release manifest in pyck-ai/deployment names the tool and it runs only on the eu-management cluster. Its own `deploy`
   may then reach that cluster. The tool owns its rollback, and the deploy README of its repository names the rollback
@@ -135,9 +156,13 @@ Applies when you deploy, promote or roll back.
   one deployment.
 - Deploy the server first and its consumers second. Add the new shape before you remove the old one
   ([changing-code.md](~/.pyck/guidelines/docs/changing-code.md#change-a-schema-in-additive-phases)).
-- Roll back by redeploying the previous release manifest. It restores the artifacts and the toggle state together.
-- Down migrations exist for local development only and are optional. A migration is safe to merge when the previous
-  release's code runs against the new schema; a migration that does not meet that is a breaking change.
+- Fix forward by default: ship a PATCH on the hotfix days, or ad hoc if the problem is critical.
+- Roll back only when a fix forward cannot land fast enough. Redeploy the previous release manifest. It restores the
+  artifacts and the toggle state together.
+- Down migrations are optional and for local development only. They never run in `test`, `staging` or production.
+- A migration is safe to merge only once the previous release has been run against the migrated schema. That a down
+  migration exists, or that the migration looks additive, proves nothing. A migration that fails this is a breaking
+  change.
 
 ## Verify a deploy and decide a rollback
 

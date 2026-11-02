@@ -95,7 +95,7 @@ A change is done, and may merge, when each condition holds. Each links to the do
 
 Every commit is exactly one kind: **defect fix**, **feature** or **task**, the same three kinds as issues (a PR may hold several commits, so it may hold several kinds, but never a feature together with a defect fix: see [Size](#size)). Two more properties are judged per commit:
 
-- **Breaking**: the commit breaks backwards compatibility. A `BREAKING CHANGE:` footer line marks it (see [git: Footer](./git.md#footer)).
+- **Breaking**: the commit breaks the public API. A `BREAKING CHANGE:` footer line marks it (see [git: Footer](./git.md#footer)). An internal change is never breaking ([deprecation: internal and external breaks](./deprecation.md#tell-an-internal-break-from-an-external-one)).
 - **Irreversible**: a revert cannot undo it. It deletes or rewrites data, removes infrastructure, or has an effect outside the system.
 
 Classification is automated, so the PR has no classification checkboxes. The kind of a commit matches the type of the issue it links.
