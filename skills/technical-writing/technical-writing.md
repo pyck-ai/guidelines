@@ -153,8 +153,8 @@ not several for the same point. Each view below is shown for the same change, a 
 A design, a proposal, a plan or a report is read by someone who did not follow the work and has to decide on it. A page
 of prose with file and line references makes that reader rebuild the picture in their head. Give them the picture:
 
-- **Open with what changes and what the reader decides.** The first screen names who sees a difference, what it looks
-  like and which questions are open.
+- **Open with what changes.** The first screen names who sees a difference and what it looks like, and points to the
+  section with the open questions.
 - **Draw the parts and the flow** with a Mermaid diagram before any detail: which parts exist, what each one hands to
   the next, and what is new.
 - **Show every output a person sees as a draft.** A comment, a table, a screen, a message or a file appears rendered,
@@ -163,8 +163,10 @@ of prose with file and line references makes that reader rebuild the picture in 
   and show what each step produces.
 - **Define every term at first use.** A label you coined, a field name or an internal ID gets one plain sentence before
   you rely on it.
-- **Put the evidence last.** File and line references, measurements and rejected options go in an appendix, after the
-  text the reader needs to follow.
+- **Put the evidence near the end.** File and line references, measurements and rejected options go in an appendix,
+  after the text the reader needs to follow.
+- **End with the open questions.** The last section lists every decision the reader has to make, each with its options
+  and a recommendation, so the reader answers them after seeing the drafts.
 
 A section that only argues in prose, where a draft or a diagram would show the point, is not done.
 
