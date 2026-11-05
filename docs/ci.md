@@ -62,7 +62,7 @@ Applies when a check enforces a number, such as a coverage minimum, a bundle siz
 
 ## Examples
 
-A minimal `ci.yml`: one job running `task ci`, then the gate.
+The examples use the runner labels explained in [ci-runners.md](./ci-runners.md), which owns the rules for where a job runs. A minimal `ci.yml`: one job running `task ci`, then the gate.
 
 ```yaml
 name: ci
@@ -71,14 +71,14 @@ on:
   push:
 jobs:
   ci:
-    runs-on: self-hosted-kata
+    runs-on: [pyck-ai, firecracker, standard]
     steps:
       - uses: actions/checkout@<sha>
       - run: task ci
   ci-success:
     needs: [ci]
     if: always()
-    runs-on: self-hosted-kata
+    runs-on: [pyck-ai, firecracker, light]
     steps:
       - uses: pyck-ai/github-actions/gate@<sha>
         with:
@@ -90,19 +90,19 @@ A repository with parallel ci jobs runs one Taskfile task per job, and the gate 
 ```yaml
 jobs:
   lint:
-    runs-on: self-hosted-kata
+    runs-on: [pyck-ai, firecracker, standard]
     steps:
       - uses: actions/checkout@<sha>
       - run: task lint
   test:
-    runs-on: self-hosted-kata
+    runs-on: [pyck-ai, firecracker, standard]
     steps:
       - uses: actions/checkout@<sha>
       - run: task test
   ci-success:
     needs: [lint, test]
     if: always()
-    runs-on: self-hosted-kata
+    runs-on: [pyck-ai, firecracker, light]
     steps:
       - uses: pyck-ai/github-actions/gate@<sha>
         with:
@@ -118,7 +118,7 @@ jobs:
   build-success:
     needs: [build]
     if: always()
-    runs-on: self-hosted-kata
+    runs-on: [pyck-ai, firecracker, light]
     steps:
       - uses: pyck-ai/github-actions/gate@<sha>
         with:

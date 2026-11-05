@@ -36,6 +36,7 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | write, change or review a test, or fix a bug | `testing` | `docs/testing.md` |
 | review a diff or pull request (every review applies all three skills) | `reviewing-standards`, `reviewing-security`, `reviewing-quality` | `docs/code-review.md`, `docs/security-review.md`, `docs/quality-review.md` |
 | add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check | `changing-ci` | `docs/ci.md` |
+| write or change a GitHub Actions job or its `runs-on`, add a workflow, call a reusable workflow, or review one | `choosing-ci-runners` | `docs/ci-runners.md` |
 | write or review the sentences of a doc, README, RFC, ADR, issue, PR description or commit message | `technical-writing` | `docs/technical-writing.md` |
 | add or review logging, metrics, tracing, an alert, an SLO, a runbook or a dashboard | `adding-telemetry` | `docs/observability.md` |
 | make or record an architecture decision, or write or supersede an ADR | `recording-decisions` | `docs/adrs.md` |

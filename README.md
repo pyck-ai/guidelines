@@ -72,6 +72,7 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 - [Security review](./docs/security-review.md): the correctness and security lens of a review.
 - [Quality review](./docs/quality-review.md): the code quality lens of a review.
 - [CI](./docs/ci.md): the pipeline groups, gate jobs and required checks.
+- [CI runners](./docs/ci-runners.md): where a job runs, with the pool labels, the size classes and what differs on the pools.
 - [Releases](./docs/releases.md): Component Versions and Platform Releases, SemVer bumps, hotfixes, feature toggles, deploy and rollback.
 - [Deprecation](./docs/deprecation.md): how a public API, a contract, an SDK or a client that outside consumers use is deprecated, changed and removed, and how clients identify themselves.
 - [Dependencies](./docs/dependencies.md): how a dependency is added, updated, removed and vetted, how Renovate and security advisories are handled, and how external providers are wrapped.
