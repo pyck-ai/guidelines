@@ -18,19 +18,15 @@ pools from a GitHub-hosted runner. The pipeline structure (groups, gate jobs, re
 ## Run every job on the pyck-ai pools
 
 Every job runs on the pyck-ai runner pools, which are Firecracker microVMs. A job runs on a GitHub-hosted runner
-(`ubuntu-latest` and so on) only for one of the reasons below, stated in a comment next to `runs-on`.
-
-| Accepted reason | Example |
-| --- | --- |
-| A break-glass path that must work when the pools are broken | `release.yml` in pyck-ai/github-actions: the pool runner image uses that repository's tooling |
-| The job tests behaviour on GitHub-hosted runners | The `test-action` job of gfm2pdf has an `ubuntu-latest` matrix leg that tests the published action where its users run it |
-| The job needs what the pools cannot give: macOS, Windows or a GPU | State which one in the comment |
+(`ubuntu-latest` and so on) only when it needs what the pools cannot give: macOS, Windows or a GPU. State which in a
+comment next to `runs-on`.
 
 These are not reasons:
 
 - "It needs Docker." The pools have rootless podman ([below](#know-what-differs-on-the-pools)).
 - "It needs node, go or task." Use the setup actions.
 - "It waits for a runner." The `light` class keeps warm runners.
+- "It is a break-glass path." If the pools break, change `runs-on` by hand in a pull request.
 
 ## Request a runner with labels
 
