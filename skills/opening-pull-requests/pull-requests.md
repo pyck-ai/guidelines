@@ -12,6 +12,7 @@
 - [Summary](#summary)
 - [Size](#size)
 - [Review early, merge soon](#review-early-merge-soon)
+- [Open and rebase with CI load in mind](#open-and-rebase-with-ci-load-in-mind)
 - [Before you mark it ready](#before-you-mark-it-ready)
 - [Definition of done](#definition-of-done)
 - [Classification](#classification)
@@ -146,6 +147,15 @@ for stack merges. While a PR is in a stack its base cannot be changed; restructu
 - Build at most two layers on an unreviewed PR, so a stack has at most three PRs. When you need a fourth, get the bottom
   one reviewed and merged first.
 - An agent working unattended follows the same limit: it stops and waits for review instead of stacking further.
+
+## Open and rebase with CI load in mind
+
+Every pushed branch starts a full CI run ([ci: Cost of a push](~/.pyck/guidelines/docs/ci.md#cost-of-a-push)).
+
+- Open a PR when it is ready, not with a batch of others. After unattended work, open the PRs one at a time over the
+  day, or group them per [Size](#size).
+- Rebase a PR when it has an approving review and is about to merge, or when it conflicts. Do not rebase a stack after
+  every change on `main`.
 
 ## Before you mark it ready
 

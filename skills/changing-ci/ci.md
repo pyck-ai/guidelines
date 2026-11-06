@@ -8,6 +8,7 @@
 - [Groups](#groups)
 - [Gate jobs](#gate-jobs)
 - [Filters](#filters)
+- [Cost of a push](#cost-of-a-push)
 - [Required checks](#required-checks)
 - [Thresholds](#thresholds)
 - [Adding a gated workflow](#adding-a-gated-workflow)
@@ -68,6 +69,14 @@ Each group ends in a gate job named `<group>-success`: `ci-success`, `build-succ
 
 Leave `paths` and `branches` filters off the triggers of a workflow with a gate. A required check that never reports
 blocks the pull request forever.
+
+## Cost of a push
+
+Every push to a branch starts the workflows that trigger on it, and a rebase of a stack pushes every branch at once. In
+pyck-ai/pyck one branch push starts 43 jobs (29 in `ci.yml`, 14 in `trigger-deploy.yml`), and the rebase of a 13-branch
+stack on 2026-11-06 started 559. To count the jobs of a run in another repository, run
+`gh api repos/<owner>/<repo>/actions/runs/<id>/jobs --jq .total_count`. How this shapes PRs is in [pull-requests: Open
+and rebase with CI load in mind](~/.pyck/guidelines/docs/pull-requests.md#open-and-rebase-with-ci-load-in-mind).
 
 ## Required checks
 
