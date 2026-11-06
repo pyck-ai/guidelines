@@ -88,10 +88,17 @@ description with it). The length limit does not apply to such a copy.
 
 ## Size
 
-Keep a PR small enough to review in one sitting:
+A PR is a tool for review. Shape it so a reviewer can check every changed line in one sitting, and get it merged soon:
+an open PR that other work builds on is a risk, because a flaw found in it invalidates everything above it. Keep a PR
+small enough to review in one sitting:
 
 - **Commits**: aim for 5 or fewer, and 10 at most. A PR holds no merge commits (see [git: Best
   practices](~/.pyck/guidelines/docs/git.md#best-practices)).
+- **Exception for defect fixes**: fixes may share a PR past the commit limit, one commit per fix, only when they protect
+  the same invariant of the code (for example "a parent's stock equals the sum of its children"), so the reviewer checks
+  that invariant once. The diff limit below still holds. Never group features or tasks this way: grouped features depend
+  on each other, and a change to one forces a rebase of all the others.
+- **Critical code**: the more fragile and important the code, the smaller the PR.
 - **Diff**: keep the changed lines, the changed files and the largest single file small. Generated files do not count;
   tests count, but less than production code.
 - **Spread**: touch as few modules as you can, ideally one or two.
@@ -104,12 +111,20 @@ passes on its own. After you rewrite a PR branch's history, prove the content di
 `git rev-parse <old>^{tree}` before the rewrite and compare it with `git rev-parse HEAD^{tree}` after. Do not push if
 they differ unintentionally.
 
-If notes in the description cannot make a PR reviewable, split it into several PRs and stack them: the first targets
-`main`, each next one targets the branch of the PR below it, so each review shows only its own layer.
+If notes in the description cannot make a PR reviewable, split it. Stacking is one answer, not the only one:
 
-A stack means a native GitHub stack (see GitHub's page About stacked pull requests), not just PRs whose bases point at
-each other's branches: reviewers use GitHub's stack view, and chained bases do not show up there. Whenever one PR is
-based on another PR's branch, register the stack right away with the `gh stack` extension. To stack:
+| The work | Do |
+| --- | --- |
+| Closely related defect fixes in one area | One PR, one commit per fix, within the diff limit. |
+| Fixes that need a common baseline (a refactor, a new API) | The baseline first, as its own PR or as the first commit, and reviewed before the fixes. |
+| Independent changes | Separate PRs on `main`, side by side. |
+| Features | One PR per feature, merged before the next feature builds on it. |
+| A large change whose lower layer is reviewable and mergeable on its own | A stack, bottom reviewed and merged first. |
+
+In a stack the first PR targets `main` and each next one targets the branch of the PR below it, so each review shows
+only its own layer. A stack means a native GitHub stack (see GitHub's page About stacked pull requests), not just PRs
+whose bases point at each other's branches: reviewers use GitHub's stack view, and chained bases do not show up there.
+Whenever one PR is based on another PR's branch, register the stack right away with the `gh stack` extension. To stack:
 
 1. Branch off the bottom PR's branch for each layer, and keep each layer reviewable on its own (see the limits above).
 2. Register the stack:
