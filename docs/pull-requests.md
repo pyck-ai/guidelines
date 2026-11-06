@@ -66,7 +66,7 @@ If notes in the description cannot make a PR reviewable, split it. Stacking is o
 | Fixes that need a common baseline (a refactor, a new API) | The baseline first, as its own PR or as the first commit, and reviewed before the fixes. |
 | Independent changes | Separate PRs on `main`, side by side. |
 | Features | One PR per feature, merged before the next feature builds on it. |
-| A large change whose lower layer is reviewable and mergeable on its own | A stack, bottom reviewed and merged first. |
+| A large change whose lower layer is reviewable and mergeable on its own | A stack of at most three PRs ([Review early, merge soon](#review-early-merge-soon)), bottom reviewed and merged first. |
 
 In a stack the first PR targets `main` and each next one targets the branch of the PR below it, so each review shows only its own layer. A stack means a native GitHub stack (see GitHub's page [About stacked pull requests](https://docs.github.com/en/pull-requests/get-started/about-stacked-prs)), not just PRs whose bases point at each other's branches: reviewers use GitHub's stack view, and chained bases do not show up there. Whenever one PR is based on another PR's branch, register the stack right away with the [`gh stack`](https://gh.io/stacks) extension. To stack:
 
@@ -78,6 +78,12 @@ In a stack the first PR targets `main` and each next one targets the branch of t
 4. Mark each PR ready only when its own layer passes the [checklist](#before-you-mark-it-ready).
 
 All branches of a stack live in the same repository; forks are not supported. Merge bottom up, for example with `gh stack merge`. Branch protection of the bottom PR's base applies to every layer, and admin bypass is not supported for stack merges. While a PR is in a stack its base cannot be changed; restructure with `gh stack unstack` first.
+
+## Review early, merge soon
+
+- Ask for review as soon as the foundation of a change exists (a refactor, a new API, the first fix), as a draft PR if it is not finished. A flaw found there costs one PR. A flaw found in the bottom of a 13-PR stack can invalidate the 12 above it.
+- Build at most two layers on an unreviewed PR, so a stack has at most three PRs. When you need a fourth, get the bottom one reviewed and merged first.
+- An agent working unattended follows the same limit: it stops and waits for review instead of stacking further.
 
 ## Before you mark it ready
 
