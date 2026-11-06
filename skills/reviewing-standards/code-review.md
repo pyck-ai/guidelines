@@ -118,6 +118,11 @@ decision, not a finding, unless the expected load already crosses the limit its 
 For a workflow or Taskfile change, load the `changing-ci` skill ([ci.md](~/.pyck/guidelines/docs/ci.md)) and check the
 diff against it.
 
+### SQL
+
+For a diff that writes or changes SQL, load the `writing-sql` skill ([sql.md](~/.pyck/guidelines/docs/sql.md)) and trace
+every string that reaches the database against it.
+
 ### Dependencies
 
 For a diff that adds or upgrades a dependency, load the `managing-dependencies` skill

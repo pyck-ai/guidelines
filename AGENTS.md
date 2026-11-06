@@ -44,5 +44,6 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | tag, version, hotfix, deploy or roll back a release, ship a behaviour change behind a toggle, or stamp a build with its version | `managing-releases` | `docs/releases.md` |
 | remove, rename or change an API, an event contract, a GraphQL or gRPC surface, a field, a client or an SDK that a consumer outside the repository uses | `deprecating-interfaces` | `docs/deprecation.md` |
 | add, update, remove or choose a dependency, handle a Renovate pull request or a security advisory, or call an external provider | `managing-dependencies` | `docs/dependencies.md` |
+| write, change or review SQL: a raw query or statement, a migration, a stored function or procedure, a lock statement, or code that passes SQL fragments around | `writing-sql` | `docs/sql.md` |
 | handle a prod incident or write a postmortem | `handling-incidents`, `writing-postmortems` | `~/.pyck/incidents/README.md` (repo pyck-ai/incidents) |
 | create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |

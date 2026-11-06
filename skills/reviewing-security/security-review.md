@@ -58,6 +58,8 @@ from where it enters to where it is used. Look in particular for:
 - A value trusted because of the channel that delivered it. Trust follows who wrote the value: another process's command
   line or environment, a filename on a shared volume and a path in a job payload are as attacker-controlled as a form
   field.
+- SQL text built at runtime, or a value written into SQL text. [sql.md](~/.pyck/guidelines/docs/sql.md) is the rule;
+  load the `writing-sql` skill.
 - A GitHub Actions step that lets text written by someone else become code: `${{ github.event.* }}` (an issue or PR
   title or body, a comment body, a branch name, a head ref) inside a `run:` script. Pass it through `env:` and quote the
   variable in the script.

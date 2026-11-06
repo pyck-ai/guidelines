@@ -104,7 +104,7 @@ LC_ALL=C
 export LC_ALL
 
 # skill:doc pairs; a skill may appear in several pairs to carry several docs.
-MAP='writing-commits:git writing-issues:issues opening-pull-requests:pull-requests writing-readmes:readme reviewing-standards:code-review reviewing-security:security-review reviewing-quality:quality-review changing-ci:ci choosing-ci-runners:ci-runners designing-code:code-design designing-code:changing-code testing:testing technical-writing:technical-writing adding-telemetry:observability recording-decisions:adrs managing-releases:releases deprecating-interfaces:deprecation managing-dependencies:dependencies'
+MAP='writing-commits:git writing-issues:issues opening-pull-requests:pull-requests writing-readmes:readme reviewing-standards:code-review reviewing-security:security-review reviewing-quality:quality-review changing-ci:ci choosing-ci-runners:ci-runners designing-code:code-design designing-code:changing-code testing:testing technical-writing:technical-writing adding-telemetry:observability recording-decisions:adrs managing-releases:releases deprecating-interfaces:deprecation managing-dependencies:dependencies writing-sql:sql'
 
 # skill:path pairs, paths inside the pyck-ai/.github checkout.
 GH_FILES='opening-pull-requests:.github/PULL_REQUEST_TEMPLATE.md
