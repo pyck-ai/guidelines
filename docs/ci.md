@@ -38,7 +38,7 @@ Each group ends in a gate job named `<group>-success`: `ci-success`,
 
 ## Filters
 
-Leave `paths` and `branches` filters off the triggers of a workflow with a gate. A required check that never reports blocks the pull request forever.
+Leave `paths` and `branches` filters off the `pull_request` trigger of a workflow with a gate. A required check that never reports blocks the pull request forever. Its `push` trigger may filter `branches` to the default branch and `release/**`: every pull request still reports the gate through `pull_request`, and commits that land on a protected branch run CI once.
 
 ## Cost of a push
 
@@ -60,7 +60,7 @@ Applies when a check enforces a number, such as a coverage minimum, a bundle siz
 
 1. Put the workflow in the repository's own workflow file, one per group.
 2. Add the gate job as described in [Gate jobs](#gate-jobs), named `<group>-success`.
-3. Leave filters off the triggers (see [Filters](#filters)).
+3. Leave filters off the `pull_request` trigger (see [Filters](#filters)).
 4. Add the check to the ruleset (see [Required checks](#required-checks)).
 5. Open a pull request and confirm the check reports under exactly that name (`gh pr checks <n>`) before relying on the ruleset: a required check whose name never reports blocks the pull request.
 
@@ -73,6 +73,7 @@ name: ci
 on:
   pull_request:
   push:
+    branches: [main, 'release/**']
 jobs:
   ci:
     runs-on: [pyck-ai, firecracker, standard]
@@ -88,6 +89,8 @@ jobs:
         with:
           needs: ${{ toJSON(needs) }}
 ```
+
+`pull_request` has no filters, so every pull request reports the gate. `push` covers only `main` and `release/**`, so a push to a pull request's branch starts one run, not two, and a merge runs CI once on the branch it lands on. That run also writes the caches new pull requests restore: a cache written by a `pull_request` run belongs to its merge ref and no other pull request can read it.
 
 A repository with parallel ci jobs runs one Taskfile task per job, and the gate needs all of them. `task ci` still runs every step in sequence locally.
 
