@@ -101,8 +101,14 @@ small enough to review in one sitting:
   that invariant once. The diff limit below still holds. Never group features or tasks this way: grouped features depend
   on each other, and a change to one forces a rebase of all the others.
 - **Critical code**: the more fragile and important the code, the smaller the PR.
-- **Diff**: keep the changed lines, the changed files and the largest single file small. Generated files do not count;
-  tests count, but less than production code.
+- **Diff**: aim for 200 changed lines or fewer. Over 400 lines needs a reason in the description. Over 1,000 lines is
+  too large to review: split it, unless the change is mechanical (see the **Mechanical changes** bullet). Keep the
+  changed files and the largest single file small too. Generated files do not count; tests count, but less than
+  production code.
+- **Mechanical changes**: put generated code, renames, moves, formatting, dependency bumps and large deletions in their
+  own PR, before or after the logic change. Such a PR may exceed the size limit. It says in its first line that it is
+  mechanical and names the command that produced it, so the reviewer can repeat the command instead of reading every
+  line.
 - **Spread**: touch as few modules as you can, ideally one or two.
 - **One kind of change**: never mix a feature and a defect fix in one PR, so the fix can be reviewed and released on its
   own.
@@ -121,6 +127,7 @@ If notes in the description cannot make a PR reviewable, split it. Stacking is o
 | Fixes that need a common baseline (a refactor, a new API) | The baseline first, as its own PR or as the first commit, and reviewed before the fixes. |
 | Independent changes | Separate PRs on `main`, side by side. |
 | Features | One PR per feature, merged before the next feature builds on it. |
+| A feature too big for one PR | Merge it in slices on `main` behind a feature toggle that is off by default ([releases: Ship a behaviour change](~/.pyck/guidelines/docs/releases.md#ship-a-behaviour-change)), each slice its own PR. Prefer this to a stack. |
 | A large change whose lower layer is reviewable and mergeable on its own | A stack of at most three PRs ([Review early, merge soon](#review-early-merge-soon)), bottom reviewed and merged first. |
 
 In a stack the first PR targets `main` and each next one targets the branch of the PR below it, so each review shows
@@ -147,6 +154,12 @@ for stack merges. While a PR is in a stack its base cannot be changed; restructu
 - Build at most two layers on an unreviewed PR, so a stack has at most three PRs. When you need a fourth, get the bottom
   one reviewed and merged first.
 - An agent working unattended follows the same limit: it stops and waits for review instead of stacking further.
+- An agent splits the work into PRs within the [size target](#size) before it writes code, and opens them one at a time.
+  It does not produce a large change and split it afterwards.
+- A PR with no commit, review or comment for 2 business days is stuck. The author acts: ping the reviewer, ask another
+  one, or split the PR if it is too big to review. A draft is exempt for 2 weeks; after that, finish it or close it.
+- Each repository decides which PRs need a human review. Bot PRs may merge without one when the change is safe enough,
+  and some repositories have no reviews. The size and response-time rules apply wherever a repository requires review.
 
 ## Open and rebase with CI load in mind
 

@@ -4,6 +4,7 @@
 <!-- toc
 ## Contents
 
+- [Response time](#response-time)
 - [Lenses](#lenses)
 - [Review procedure](#review-procedure)
 - [Findings](#findings)
@@ -12,6 +13,13 @@
 
 This doc holds the procedure every review follows and the standards lens. A repository's `CODING_STANDARDS.md` adds
 rules that apply only there; read it too.
+
+## Response time
+
+Respond to a review request within one business day: a review, or a comment saying when you will review or who should.
+Do not break off focused work for it; review between tasks. The author may ask another reviewer after one business day
+without a response. When a PR goes idle, the author acts: see [pull-requests: Review early, merge
+soon](~/.pyck/guidelines/docs/pull-requests.md#review-early-merge-soon).
 
 ## Lenses
 
