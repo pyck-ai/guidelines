@@ -20,6 +20,7 @@ Org-wide rules for every pyck-ai repository; its own `AGENTS.md` adds local fact
 - **Docs change with code.** A change that makes a README, a doc comment or anything under `docs/` stale fixes it in the same change.
 - **Each fact lives once.** Link to its owner; never copy it.
 - **Repo convention wins** where a repository's own `AGENTS.md` says so.
+- **Sources.** Code, text or files taken from outside, and outside practice a rule rests on, are listed in the repository's `docs/sources.md` in the same change, laid out as [`templates/sources.md`](./templates/sources.md); an evidence entry quotes the sentence and the date it was read.
 - **English** in code, docs, commits, issues and PRs; no em or en dashes (restructure the sentence instead).
 
 ## Guidelines, loaded on demand
