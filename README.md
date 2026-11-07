@@ -80,6 +80,7 @@ Working on this repository needs [Task](https://taskfile.dev) and a checkout of 
 - [Incidents](https://github.com/pyck-ai/incidents): the `handling-incidents` and `writing-postmortems` skills, severities and postmortems, in the private repo pyck-ai/incidents.
 - [Accessibility](https://github.com/pyck-ai/.github/blob/main/.github/ACCESSIBILITY.md): the organization's accessibility policy.
 - [AGENTS.md template](./templates/AGENTS.md): the start of a repository's own AGENTS.md.
+- [Sources](./docs/sources.md): where rules, text and files come from.
 - [Sources template](./templates/sources.md): the layout of a repository's `docs/sources.md`.
 - [Migrating from pyck-ai/.github](./docs/migration-from-dotgithub.md): where the old standards pages went and what changes for you; temporary, removed on 2026-12-31.
 
@@ -95,7 +96,7 @@ Private for now, intended to become public. In use across the organization. The 
 
 ## Attribution
 
-Several rules are adapted from open source projects; [ATTRIBUTION.md](./ATTRIBUTION.md) lists, per doc, each source with its author, link and licence. The sources include [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) by Addy Osmani (MIT, commit `aeac41d`).
+Several rules are adapted from open source projects; [docs/sources.md](./docs/sources.md) lists each source with its author, commit and licence, and per doc what it adapts. The sources include [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) by Addy Osmani (MIT, commit `aeac41d`).
 
 ## License
 
