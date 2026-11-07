@@ -141,3 +141,29 @@ What each project supplies:
 - The commit-order and tree-comparison rules: the `make-pr-easy-to-review` skill (Cursor plugins `cursor-team-kit`, `ddf824a`).
 - The summary views and the door line: the `pr` skill (mattpocock/skills, `5beb35b`).
 - The Summary section of that skill comes from the `show-me` skill (humanlayer/skills, `main`).
+
+## Evidence
+
+### [docs/pull-requests.md](./pull-requests.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Size target | [Google eng-practices, Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html) | "100 lines is usually a reasonable size for a CL, and 1000 lines is usually too large, but it’s up to the judgment of your reviewer." | 2026-11-06 |
+| Size target | [Shopify engineering, Great code reviews](https://shopify.engineering/great-code-reviews) | "Internally, for our data engineering work, the guideline is around 200-300 lines of code affected. If we go above this threshold, we almost always break up the work into smaller blocks." | 2026-11-06 |
+| Size target | [Microsoft Engineering Fundamentals Playbook, code review process guidance](https://github.com/microsoft/code-with-engineering-playbook/blob/main/docs/code-reviews/process-guidance/README.md) | "It's easy to say a developer can review few hundred lines of code, but when the code surpasses certain amount of lines, the effectiveness of defects discovery will decrease and there is a lesser chance of doing a good review." | 2026-11-07 |
+| Size target | [Chromium, Contributing](https://chromium.googlesource.com/chromium/src/+/main/docs/contributing.md) | "Patches should be a reasonable size to review. Review time often increases exponentially with patch size." | 2026-11-07 |
+| Mechanical changes | [Sadowski et al., Modern Code Review: A Case Study at Google, ICSE-SEIP 2018](https://sback.it/publications/icse2018seip.pdf) | "Changes larger than this often contain auto-generated code or large deletions, resulting in a lower average number of comments." | 2026-11-06 |
+| Mechanical changes | [Stripe, Migrating to TypeScript](https://stripe.dev/blog/migrating-to-typescript) | "In a single pull request, we converted more than 3.7 million lines of code." | 2026-11-07 |
+| Idle PRs | [Maddila et al., Nudge: Accelerating Overdue Pull Requests Towards Completion (Microsoft Research)](https://arxiv.org/abs/2011.12468) | "a randomized trial on 147 repositories in use at Microsoft, Nudge was able to reduce pull request resolution time by 60% for 8,500 pull requests, when compared to overdue pull requests for which Nudge did not send a notification." | 2026-11-06 |
+| Idle PRs | [trunkbaseddevelopment.com, Short-lived feature branches](https://trunkbaseddevelopment.com/short-lived-feature-branches/) | "the branch should only last a couple of days. Any longer than two days, and there is a risk of the branch becoming a long-lived feature branch (the antithesis of trunk-based development)." | 2026-11-06 |
+| Toggle slices | [Spotify engineering, How we release the Spotify app](https://engineering.atspotify.com/2025/04/how-we-release-the-spotify-app-part-1) | "At Spotify, we practice trunk-based development, meaning developers merge their code into the main branch as soon as it's tested and reviewed." | 2026-11-07 |
+| Agents plan PRs | [DORA, 2024 report](https://services.google.com/fh/files/misc/2024_final_dora_report.pdf) | "DORA has consistently shown that larger changes are slower and more prone to creating instability." | 2026-11-06 |
+| Agents plan PRs | [Microsoft .NET blog, Ten months with CCA in dotnet/runtime](https://devblogs.microsoft.com/dotnet/ten-months-with-cca-in-dotnet-runtime/) | "The lesson is that task scope matters more than size: a well-scoped task that produces 50 lines succeeds more reliably than a vague one that produces 200." | 2026-11-06 |
+
+### [docs/code-review.md](./code-review.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Response time | [Google eng-practices, Speed of Code Reviews](https://google.github.io/eng-practices/review/reviewer/speed.html) | "One business day is the maximum time it should take to respond to a code review request (i.e., first thing the next morning)." | 2026-11-06 |
+| Response time | [GitLab handbook, Code Review Guidelines](https://handbook.gitlab.com/handbook/engineering/workflow/code-review/) | "From GitLab team members: Review-response SLO < 2 business days" | 2026-11-06 |
+| Response time | [Mozilla, Firefox code reviews](https://firefox-source-docs.mozilla.org/contributing/reviews.html) | "We expect reviews to happen within a business day or two, and most of them do." | 2026-11-07 |
