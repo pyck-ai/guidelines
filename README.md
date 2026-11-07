@@ -38,7 +38,7 @@ git clone git@github.com:pyck-ai/guidelines.git   # anywhere you keep checkouts
 cd guidelines
 less docs/git.md                                    # read the docs, start with git
 task generate                                       # refresh the generated files under skills/ after editing docs/
-task ci                                             # check docs and skills against pyck-ai/.github, the generated files for staleness, and the setup.sh tests
+task ci                                             # every check CI runs: `task check` (docs and skills against pyck-ai/.github, generated files for staleness, setup.sh tests), zizmor and gitleaks
 ./setup.sh                                          # link ~/.pyck/guidelines and the skills into your home
 ./setup.sh uninstall                                # remove exactly what setup.sh made
 ```
@@ -55,7 +55,7 @@ Every repo with a `setup.sh` has its home at `~/.pyck/<repo>`, and `setup.sh` in
 
 `setup.sh` is tested on Linux and on WSL (run it inside the WSL home, not on the Windows drive). macOS is expected to work but is untested. Native Windows (Git Bash, PowerShell) is not supported, because `setup.sh` needs real symlinks.
 
-Working on this repository needs [Task](https://taskfile.dev) and a checkout of [pyck-ai/.github](https://github.com/pyck-ai/.github) at `../.github`, or at the path in `PYCK_GITHUB_DIR`; nothing is fetched. Run `task --list` for every other command. `./setup.sh --dry-run` previews; behavior, conflicts and exit codes: the header of [`setup.sh`](setup.sh).
+Working on this repository needs [Task](https://taskfile.dev), [zizmor](https://docs.zizmor.sh) and [gitleaks](https://github.com/gitleaks/gitleaks) on `PATH` (versions in [pyck-ai/github-actions](https://github.com/pyck-ai/github-actions); `task check` runs the docs checks alone) and a checkout of [pyck-ai/.github](https://github.com/pyck-ai/.github) at `../.github`, or at the path in `PYCK_GITHUB_DIR`; nothing is fetched. Run `task --list` for every other command. `./setup.sh --dry-run` previews; behavior, conflicts and exit codes: the header of [`setup.sh`](setup.sh).
 
 ## Documentation
 
