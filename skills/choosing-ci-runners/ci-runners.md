@@ -24,7 +24,8 @@ comment next to `runs-on`.
 These are not reasons:
 
 - "It needs Docker." The pools have rootless podman ([below](#know-what-differs-on-the-pools)).
-- "It needs node, go or task." Use the setup actions.
+- "It needs node, go or task." Use the setup actions, except `actions/setup-python`
+  ([below](#know-what-differs-on-the-pools)).
 - "It waits for a runner." The `light` class keeps warm runners.
 - "It is a break-glass path." If the pools break, change `runs-on` by hand in a pull request.
 
@@ -78,6 +79,21 @@ The runner image is `ghcr.io/pyck-ai/github-runner`. It runs unprivileged.
   on all pools.
 - **`CGO_ENABLED=0`** is set in the image. Set `CGO_ENABLED: "1"` for `go test -race`.
 - **`node` is bun.** Use `actions/setup-node` for npm and npx tools.
+- **No `actions/setup-python`.** It downloads Pythons built for GitHub's Ubuntu images and fails on the pools ("Version
+  3.11 was not found in the local cache"). Use the image's Python, which uv manages.
+- **No Docker container actions** (`runs.using: docker` in the action's `action.yml`). The pools cannot start them
+  ("failed to start the container since the entrypoint is overwritten"). Run the tool the action wraps in a `run:` step
+  instead, for example `bunx commitlint` instead of `wagoid/commitlint-github-action`.
+- **Job containers** (`container:` on a job):
+  - Steps run as the image's own user. `options: --user root` has no effect, so a step cannot install packages
+    (`apk add` fails with "Permission denied"). Pick an image that has the tools, or split the job: run the steps that
+    need the runner's tools (go, bun) in a job without a container and hand the files on with `actions/upload-artifact`.
+  - A checkout inside the job container is invisible to the runner, so a local action (`uses: ./path/to/action`) checked
+    out there fails with "Can't find 'action.yml'". Plain `run:` steps see the checkout: call the action's script in a
+    `run:` step with the `INPUT_*` variables its `action.yml` sets.
+- **ghcr.io answers HTTP 403 for an image that does not exist**, the same as for a private one. Before adding a registry
+  login for a failed pull, check that the image exists:
+  `gh api --paginate 'orgs/pyck-ai/packages?package_type=container&per_page=100'`.
 - **Reusable workflows in pyck-ai/github-actions:**
   - `.github/workflows/build-image.yml`: the input `runs-on` sets the build legs (default: `standard` with `buildkit`).
     A caller with expensive builds passes `runs-on: '["pyck-ai","firecracker","heavy","buildkit"]'`. The discover,
