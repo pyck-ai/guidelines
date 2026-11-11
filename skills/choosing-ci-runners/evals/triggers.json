@@ -1,0 +1,15 @@
+{
+  "positive": [
+    {"prompt": "Move the build job in .github/workflows/ci.yml off ubuntu-latest onto our own runners"},
+    {"prompt": "Which runs-on labels should the docker image build job in pyck-go use?"},
+    {"prompt": "The integration test job keeps getting OOM-killed on the light runner, give it a bigger class"},
+    {"prompt": "Does this release job still need a GitHub-hosted runner, or can it run on the firecracker pool?"},
+    {"prompt": "Replace self-hosted-kata in every workflow of the pyck repo with the new pool labels"}
+  ],
+  "negative": [
+    {"prompt": "Add a required check that blocks the merge when lint fails", "owner": "changing-ci"},
+    {"prompt": "Renovate opened a PR that bumps actions/checkout to v5, review it", "owner": "managing-dependencies"},
+    {"prompt": "The deploy job fails with HTTP 504 while downloading an artifact, find out why", "owner": "diagnosing-bugs"},
+    {"prompt": "Tag v1.4.0 of the CLI and roll it out", "owner": "managing-releases"}
+  ]
+}
