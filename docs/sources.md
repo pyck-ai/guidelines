@@ -167,3 +167,10 @@ What each project supplies:
 | Response time | [Google eng-practices, Speed of Code Reviews](https://google.github.io/eng-practices/review/reviewer/speed.html) | "One business day is the maximum time it should take to respond to a code review request (i.e., first thing the next morning)." | 2026-11-06 |
 | Response time | [GitLab handbook, Code Review Guidelines](https://handbook.gitlab.com/handbook/engineering/workflow/code-review/) | "From GitLab team members: Review-response SLO < 2 business days" | 2026-11-06 |
 | Response time | [Mozilla, Firefox code reviews](https://firefox-source-docs.mozilla.org/contributing/reviews.html) | "We expect reviews to happen within a business day or two, and most of them do." | 2026-11-07 |
+
+### [docs/git.md](./git.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Merge by rebase | [GitHub Docs, About merge methods on GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github) | "When using the **Rebase and Merge** option on a pull request, it's important to note that the commits in the head branch are added to the base branch without commit signature verification." | 2026-11-12 |
+| Merge by rebase | [GitHub Docs, About merge methods on GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github) | "A workaround for this is to rebase and merge locally, and then push the changes to the pull request's base branch." | 2026-11-12 |
