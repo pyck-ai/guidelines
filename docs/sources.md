@@ -181,3 +181,10 @@ What each project supplies:
 | --- | --- | --- | --- |
 | Guard reasons | [storytold/craft-contrib, house rules](https://github.com/storytold/craft-contrib/blob/main/standards/house-rules-core.md) | "A check that looks removable says what it prevents. Read that before changing it." | 2026-11-16 |
 | Keep a glossary | [Matt Pocock, Watch me ship a 21,000-line feature with mattpocock/skills](https://www.youtube.com/watch?v=jVBlkOF8sHk) (YouTube auto-generated captions) | "Scenario testing is a really great way of kind of testing your domain language" | 2026-11-19 |
+
+### [docs/git.md](./git.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Merge by rebase | [GitHub Docs, About merge methods on GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github) | "When using the **Rebase and Merge** option on a pull request, it's important to note that the commits in the head branch are added to the base branch without commit signature verification." | 2026-11-12 |
+| Merge by rebase | [GitHub Docs, About merge methods on GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github) | "A workaround for this is to rebase and merge locally, and then push the changes to the pull request's base branch." | 2026-11-12 |
