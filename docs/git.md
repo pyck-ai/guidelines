@@ -73,7 +73,7 @@ branch uses the personal form; the commit's `Closes:` or `Part-of:` trailer link
 
 - **No WIP commits on main**: clean up before merging
 - **One logical change per commit**: a feature, a refactor of a neighbouring function and a build-config change are three commits, so review and revert stay cheap
-- **Merge by rebase**: a PR lands on the default branch by rebase merge, and you update a branch from the default branch by rebasing it. Merge commits are forbidden, and so is squash merge. The commit is the record of the change, so each commit message must reach `main` as you wrote it, and a merge commit adds a commit that records no change.
+- **Merge by rebase**: a PR lands on the default branch by rebasing it onto the default branch and pushing it as a fast-forward, and you update a branch from the default branch by rebasing it. In the GitHub UI, use squash merge: GitHub's rebase merge adds the commits without a signature, which the org rulesets reject. A PR with several commits lands from the command line, so each commit message reaches `main` as you wrote it. Merge commits are forbidden: the commit is the record of the change, and a merge commit adds a commit that records no change.
 - **Signed commits**: sign every commit with a GPG or SSH key registered on your GitHub account ([GitHub's docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)). The org rulesets reject unsigned commits on the default branch.
 
 ## Before you push
