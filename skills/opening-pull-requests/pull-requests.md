@@ -41,11 +41,15 @@ the change as a whole. A PR with a single commit uses that commit's subject. Exa
 
 ## Opening a PR
 
-1. Push the branch and open the PR as a draft, with the title from [Title](#title).
-2. Fill the description from [the PR template](#the-pr-template).
-3. Do the testing (manually, where applicable) and add or update the tests the change requires.
-4. Run the [pre-ready checklist](#before-you-mark-it-ready).
-5. Mark the PR ready for review. This transition **is** the testing attestation, and reviewers treat it that way; the PR
+1. Search the open PRs for one that already fixes the same thing, with
+   `gh pr list --state open --search "<issue number or keywords>"`. If one exists, review or extend it instead of
+   opening a second. If your own PR is already open and the other is better or equal, close yours with a link to the
+   other.
+2. Push the branch and open the PR as a draft, with the title from [Title](#title).
+3. Fill the description from [the PR template](#the-pr-template).
+4. Do the testing (manually, where applicable) and add or update the tests the change requires.
+5. Run the [pre-ready checklist](#before-you-mark-it-ready).
+6. Mark the PR ready for review. This transition **is** the testing attestation, and reviewers treat it that way; the PR
    has no compliance or testing checkboxes.
 
 ## The PR template

@@ -119,6 +119,12 @@ validated is noise.
 
 Ask of each check: is data crossing a boundary here? If not, drop it.
 
+## Say why a guard exists
+
+Applies when you add, change or consider removing a guard: a check, a lint rule, a CI gate, a permission rule or a tool guard.
+
+State in one place, next to the guard or in the doc that owns it, what it prevents. A guard that looks removable and gives no reason gets weakened by the next person it blocks. Before you change a guard, read that reason, and weaken it only when the reason no longer holds. The same rule for a threshold is in [ci: Thresholds](./ci.md#thresholds).
+
 ## Write errors a reader can act on
 
 Applies when you write an error message, an error response or an exit path,

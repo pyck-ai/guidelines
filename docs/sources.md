@@ -159,6 +159,7 @@ What each project supplies:
 | Toggle slices | [Spotify engineering, How we release the Spotify app](https://engineering.atspotify.com/2025/04/how-we-release-the-spotify-app-part-1) | "At Spotify, we practice trunk-based development, meaning developers merge their code into the main branch as soon as it's tested and reviewed." | 2026-11-07 |
 | Agents plan PRs | [DORA, 2024 report](https://services.google.com/fh/files/misc/2024_final_dora_report.pdf) | "DORA has consistently shown that larger changes are slower and more prone to creating instability." | 2026-11-06 |
 | Agents plan PRs | [Microsoft .NET blog, Ten months with CCA in dotnet/runtime](https://devblogs.microsoft.com/dotnet/ten-months-with-cca-in-dotnet-runtime/) | "The lesson is that task scope matters more than size: a well-scoped task that produces 50 lines succeeds more reliably than a vague one that produces 200." | 2026-11-06 |
+| Better PR | [storytold/craft-contrib, house rules](https://github.com/storytold/craft-contrib/blob/main/standards/house-rules-core.md) | "If another fixes the same thing, close yours when it is better or equal, and say why." | 2026-11-16 |
 
 ### [docs/code-review.md](./code-review.md)
 
@@ -167,3 +168,15 @@ What each project supplies:
 | Response time | [Google eng-practices, Speed of Code Reviews](https://google.github.io/eng-practices/review/reviewer/speed.html) | "One business day is the maximum time it should take to respond to a code review request (i.e., first thing the next morning)." | 2026-11-06 |
 | Response time | [GitLab handbook, Code Review Guidelines](https://handbook.gitlab.com/handbook/engineering/workflow/code-review/) | "From GitLab team members: Review-response SLO < 2 business days" | 2026-11-06 |
 | Response time | [Mozilla, Firefox code reviews](https://firefox-source-docs.mozilla.org/contributing/reviews.html) | "We expect reviews to happen within a business day or two, and most of them do." | 2026-11-07 |
+
+### [docs/issues.md](./issues.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Starting work | [storytold/craft-contrib, house rules](https://github.com/storytold/craft-contrib/blob/main/standards/house-rules-core.md) | "Before writing code, read the issue comments, search pull requests for `#N` and the keywords, and check recent commits on `main`." | 2026-11-16 |
+
+### [docs/code-design.md](./code-design.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Guard reasons | [storytold/craft-contrib, house rules](https://github.com/storytold/craft-contrib/blob/main/standards/house-rules-core.md) | "A check that looks removable says what it prevents. Read that before changing it." | 2026-11-16 |

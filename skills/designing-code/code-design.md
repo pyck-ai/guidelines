@@ -8,6 +8,7 @@
 - [Minimize reader load](#minimize-reader-load)
 - [Make operations idempotent](#make-operations-idempotent)
 - [Guard at the boundary](#guard-at-the-boundary)
+- [Say why a guard exists](#say-why-a-guard-exists)
 - [Write errors a reader can act on](#write-errors-a-reader-can-act-on)
 - [Make illegal states unrepresentable](#make-illegal-states-unrepresentable)
 - [Model the domain](#model-the-domain)
@@ -111,6 +112,16 @@ validated is noise.
   without the framework.
 
 Ask of each check: is data crossing a boundary here? If not, drop it.
+
+## Say why a guard exists
+
+Applies when you add, change or consider removing a guard: a check, a lint rule, a CI gate, a permission rule or a tool
+guard.
+
+State in one place, next to the guard or in the doc that owns it, what it prevents. A guard that looks removable and
+gives no reason gets weakened by the next person it blocks. Before you change a guard, read that reason, and weaken it
+only when the reason no longer holds. The same rule for a threshold is in [ci:
+Thresholds](~/.pyck/guidelines/docs/ci.md#thresholds).
 
 ## Write errors a reader can act on
 

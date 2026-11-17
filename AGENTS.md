@@ -31,7 +31,7 @@ Load the skill when the task starts. Without a skill tool, read `~/.pyck/guideli
 | --- | --- | --- |
 | write a commit message or name a branch | `writing-commits` | `docs/git.md` |
 | open or edit a pull request | `opening-pull-requests` | `docs/pull-requests.md` |
-| create, edit or triage an issue | `writing-issues` | `docs/issues.md` |
+| create, edit or triage an issue, or start work on one | `writing-issues` | `docs/issues.md` |
 | create or update a README | `writing-readmes` | `docs/readme.md` |
 | design or change code structure (a module, type, API or abstraction, a bug fix, a new dependency, a migration, a retried operation, shared state) | `designing-code` | `docs/code-design.md`, `docs/changing-code.md` |
 | write, change or review a test, or fix a bug | `testing` | `docs/testing.md` |

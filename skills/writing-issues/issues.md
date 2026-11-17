@@ -5,6 +5,7 @@
 ## Contents
 
 - [Creating an issue](#creating-an-issue)
+- [Starting work on an issue](#starting-work-on-an-issue)
 - [Issue Classification & Selection](#issue-classification--selection)
 - [Issue form templates](#issue-form-templates)
 - [Determining the version for a defect](#determining-the-version-for-a-defect)
@@ -28,6 +29,14 @@ Work through these steps in order:
    rules](#other-rules).
 6. Verify: `gh issue view <n> --json issueType,title,body` shows the type and every required heading, and the fields
    read back.
+
+## Starting work on an issue
+
+Before you start work on an issue, read its comments, the open PRs that reference it
+(`gh pr list --state open --search "<issue number>"`) and the recent commits on `main` that touch the same area
+(`git log -20 origin/main -- <path>`). Someone else, or another agent session, may already be fixing it. If so, join
+that work instead of starting a second fix (see [pull-requests: Opening a
+PR](~/.pyck/guidelines/docs/pull-requests.md#opening-a-pr)).
 
 ## Issue Classification & Selection
 
