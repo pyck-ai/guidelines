@@ -25,7 +25,8 @@ Org-wide rules for every pyck-ai repository; its own `AGENTS.md` adds local fact
 
 ## Guidelines, loaded on demand
 
-Load the skill when the task starts. Without a skill tool, read `~/.pyck/guidelines/<file>`.
+Load the skill when the task starts. Without a skill tool, or when the skill is not on your agent's list, read
+`~/.pyck/guidelines/<file>`.
 
 | When you | Skill | File |
 | --- | --- | --- |
