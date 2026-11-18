@@ -10,6 +10,7 @@ git init -q -b main .
 git config user.name "Eval Fixture"
 git config user.email "eval@example.invalid"
 git config commit.gpgsign false
+git config core.hooksPath /dev/null
 
 case ${1:-} in
 events-fix)
