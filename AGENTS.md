@@ -25,26 +25,9 @@ Org-wide rules for every pyck-ai repository; its own `AGENTS.md` adds local fact
 
 ## Guidelines, loaded on demand
 
-Load the skill when the task starts. Without a skill tool, or when the skill is not on your agent's list, read
-`~/.pyck/guidelines/<file>`.
+Load the matching skill when the task starts; the harness lists the skills and when to use each. Without a skill tool,
+or when the skill is not on your agent's list, find the skill by its `description` in
+`~/.pyck/guidelines/skills/*/SKILL.md` and read the guideline file in that folder that it names.
 
-| When you | Skill | File |
-| --- | --- | --- |
-| write a commit message or name a branch | `writing-commits` | `docs/git.md` |
-| open or edit a pull request | `opening-pull-requests` | `docs/pull-requests.md` |
-| create, edit or triage an issue, or start work on one | `writing-issues` | `docs/issues.md` |
-| create or update a README | `writing-readmes` | `docs/readme.md` |
-| design or change code structure (a module, type, API or abstraction, a bug fix, a new dependency, a migration, a retried operation, shared state) | `designing-code` | `docs/code-design.md`, `docs/changing-code.md` |
-| write, change or review a test, or fix a bug | `testing` | `docs/testing.md` |
-| review a diff or pull request (every review applies all three skills) | `reviewing-standards`, `reviewing-security`, `reviewing-quality` | `docs/code-review.md`, `docs/security-review.md`, `docs/quality-review.md` |
-| add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check | `changing-ci` | `docs/ci.md` |
-| write or change a GitHub Actions job or its `runs-on`, add a workflow, call a reusable workflow, or review one | `choosing-ci-runners` | `docs/ci-runners.md` |
-| write or review the sentences of a doc, README, RFC, ADR, issue, PR description or commit message | `technical-writing` | `docs/technical-writing.md` |
-| add or review logging, metrics, tracing, an alert, an SLO, a runbook or a dashboard | `adding-telemetry` | `docs/observability.md` |
-| make or record an architecture decision, or write or supersede an ADR | `recording-decisions` | `docs/adrs.md` |
-| tag, version, hotfix, deploy or roll back a release, ship a behaviour change behind a toggle, or stamp a build with its version | `managing-releases` | `docs/releases.md` |
-| remove, rename or change an API, an event contract, a GraphQL or gRPC surface, a field, a client or an SDK that a consumer outside the repository uses | `deprecating-interfaces` | `docs/deprecation.md` |
-| add, update, remove or choose a dependency, handle a Renovate pull request or a security advisory, or call an external provider | `managing-dependencies` | `docs/dependencies.md` |
-| write, change or review SQL: a raw query or statement, a migration, a stored function or procedure, a lock statement, or code that passes SQL fragments around | `writing-sql` | `docs/sql.md` |
-| handle a prod incident or write a postmortem | `handling-incidents`, `writing-postmortems` | `~/.pyck/incidents/README.md` (repo pyck-ai/incidents) |
-| create or restructure a repository's `AGENTS.md` | - | `templates/AGENTS.md` |
+- A prod incident or a postmortem: read `~/.pyck/incidents/README.md` (repo pyck-ai/incidents).
+- Creating or restructuring a repository's `AGENTS.md`: start from [`templates/AGENTS.md`](./templates/AGENTS.md).

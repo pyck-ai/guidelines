@@ -22,7 +22,7 @@ Commits, issues, pull requests, READMEs, code reviews and CI pipelines follow th
 Out of the box, pyck-ai/guidelines includes:
 
 - **Guideline docs**: the rules for commits, issues, pull requests, READMEs, technical writing, code design, testing, SQL, observability, architecture decisions, code review and CI, listed under [Documentation](#documentation).
-- **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a table that routes each task to its doc.
+- **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a pointer to the skill for each task.
 - **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `opening-pull-requests` and `writing-issues` of the org templates, for [opencode](https://opencode.ai) and pi. Claude Code is not a supported target.
 - **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
 - **Sources template**: [`templates/sources.md`](./templates/sources.md), the layout of a repository's `docs/sources.md`.
