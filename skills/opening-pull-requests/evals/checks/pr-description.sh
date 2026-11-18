@@ -4,8 +4,10 @@
 # failure print one line per broken rule on stderr and exit 1.
 # Usage: sh pr-description.sh [--trailer "Closes: #482"] [--forbid TEXT]...
 #   --trailer  the description holds exactly this trailer line, and no other
-#              Closes/Part-of/See-also line
-#   --forbid   the description must not contain TEXT (for example a pasted log)
+#              Closes/Part-of/See-also line; it is in the last block of the
+#              summary, and every line of that block is a trailer
+#   --forbid   the description must not contain TEXT (for example a pasted
+#              log); every hit is reported
 # Always checked: the title is a commit-style subject (at most 72 characters,
 # capital letter, no trailing period, no type prefix); the description has a
 # summary of 1 to 5 paragraphs with no heading, then exactly one
@@ -86,13 +88,24 @@ if [ -n "$trailer" ]; then
 	[ "$c" = 1 ] || no "trailer line '$trailer' found $c times, want once"
 	o=$(grep -E '^(Closes|Part-of|See-also): ' pr-body.md | grep -Fvx -- "$trailer" || true)
 	[ -z "$o" ] || no "unexpected other trailer: $o"
+	# the trailer sits in the last block of the summary, and that block holds
+	# trailer lines only (a trailer glued to a prose line is not a trailer)
+	last=$(printf '%s\n' "$summary" | awk '
+		/^[ \t]*$/ { if (blk != "") last = blk; blk = ""; next }
+		{ blk = blk (blk == "" ? "" : "\n") $0 }
+		END { if (blk != "") last = blk; print last }')
+	printf '%s\n' "$last" | grep -Fxq -- "$trailer" ||
+		no "trailer line '$trailer' is not in the last block of the summary (before '## Additional Information')"
+	prose=$(printf '%s\n' "$last" | grep -Ev '^(Closes|Part-of|See-also): ' || true)
+	[ -z "$prose" ] || no "the trailer block holds a line that is not a trailer: $(printf '%s\n' "$prose" | sed -n 1p)"
 fi
-printf '%s\n' "$forbids" | while IFS= read -r f; do
+while IFS= read -r f; do
 	[ -n "$f" ] || continue
 	if grep -Fq -- "$f" pr-body.md; then
-		echo "FAIL: the description contains '$f'" >&2
-		exit 1
+		no "the description contains '$f'"
 	fi
-done || bad=1
+done <<EOF
+$forbids
+EOF
 
 exit "$bad"

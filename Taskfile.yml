@@ -19,6 +19,7 @@ tasks:
       - sh scripts/generate-skills.sh --check
       - sh tests/setup-test.sh
       - sh tests/generate-test.sh
+      - sh tests/evals-test.sh
   zizmor:
     desc: Scan the workflows for security problems
     # Findings that exist today go in .github/zizmor.yml, which may only

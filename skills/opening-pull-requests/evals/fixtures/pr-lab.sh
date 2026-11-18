@@ -6,6 +6,8 @@
 # Usage: sh pr-lab.sh [with-log]
 set -eu
 
+[ -z "$(ls -A)" ] || { echo "pr-lab.sh: $(pwd) is not empty, refusing" >&2; exit 1; }
+
 git init -q -b main .
 git config user.name "Eval Fixture"
 git config user.email "eval@example.invalid"

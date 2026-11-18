@@ -4,6 +4,8 @@
 # No network, no signing, no hooks; the identity is local to the repository.
 set -eu
 
+[ -z "$(ls -A)" ] || { echo "commit-lab.sh: $(pwd) is not empty, refusing" >&2; exit 1; }
+
 git init -q -b main .
 git config user.name "Eval Fixture"
 git config user.email "eval@example.invalid"

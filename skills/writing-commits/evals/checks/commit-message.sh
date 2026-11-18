@@ -5,13 +5,16 @@
 # Usage: sh commit-message.sh [--fix] [--trailer "Closes: #231" | --no-trailer] [--body]
 #   --fix      the subject starts with "Fix " (a bug fix)
 #   --trailer  the message holds exactly this trailer line, and no other
-#              trailer-like line; the forbidden spellings never appear
+#              trailer-like line; it is in the last block (the footer) and
+#              every line of that block is a trailer; the forbidden
+#              spellings never appear
 #   --no-trailer  the message holds no Closes/Part-of/See-also line (nothing to reference)
 #   --body     there is a body: a blank line after the subject, then prose
 # Always checked: the run made exactly one commit on top of the fixture's
 # first one, nothing is left unstaged or uncommitted, the subject is at most
 # 72 characters with a capital letter, no trailing period and no type prefix,
-# and no body line is over 72 characters (a URL or a trailer may be).
+# and no body line is over 72 characters (a URL, a trailer, a line indented by 4 spaces or a tab, or a table row
+# starting with | may be).
 set -eu
 
 fix=0 trailer="" body=0 none=0
@@ -65,7 +68,7 @@ fi
 rest=$(printf '%s\n' "$msg" | sed '1d')
 if [ -n "$rest" ]; then
 	[ -z "$(printf '%s\n' "$rest" | sed -n 1p)" ] || no "no blank line between subject and body"
-	long=$(printf '%s\n' "$rest" | grep -Ev '^(Closes|Part-of|See-also|BREAKING CHANGE): ' | grep -Ev 'https?://' | awk 'length($0) > 72' || true)
+	long=$(printf '%s\n' "$rest" | grep -Ev '^(Closes|Part-of|See-also|BREAKING CHANGE): ' | grep -Ev 'https?://' | grep -Ev '^(    |	)|^\|' | awk 'length($0) > 72' || true)
 	[ -z "$long" ] || no "body line over 72 characters: $(printf '%s\n' "$long" | sed -n 1p)"
 fi
 if [ "$body" = 1 ]; then
@@ -84,6 +87,15 @@ if [ -n "$trailer" ]; then
 	[ "$n" = 1 ] || no "trailer line '$trailer' found $n times, want once"
 	others=$(printf '%s\n' "$msg" | sed 1d | grep -E '^(Closes|Part-of|See-also): ' | grep -Fvx -- "$trailer" || true)
 	[ -z "$others" ] || no "unexpected other trailer: $others"
+	# the footer: the last blank-line-separated block, trailer lines only
+	last=$(printf '%s\n' "$msg" | awk '
+		/^[ \t]*$/ { if (blk != "") last = blk; blk = ""; next }
+		{ blk = blk (blk == "" ? "" : "\n") $0 }
+		END { if (blk != "") last = blk; print last }')
+	printf '%s\n' "$last" | grep -Fxq -- "$trailer" ||
+		no "trailer line '$trailer' is not in the last block of the message (the footer)"
+	prose=$(printf '%s\n' "$last" | grep -Ev '^(Closes|Part-of|See-also|BREAKING CHANGE): ' || true)
+	[ -z "$prose" ] || no "the footer block holds a line that is not a trailer: $(printf '%s\n' "$prose" | sed -n 1p)"
 fi
 
 exit "$bad"
