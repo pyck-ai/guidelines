@@ -22,11 +22,12 @@ Commits, issues, pull requests, READMEs, code reviews and CI pipelines follow th
 Out of the box, pyck-ai/guidelines includes:
 
 - **Guideline docs**: the rules for commits, issues, pull requests, READMEs, technical writing, code design, testing, SQL, observability, architecture decisions, code review and CI, listed under [Documentation](#documentation).
-- **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a table that routes each task to its doc.
+- **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a generated table that routes each task to its doc.
 - **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `opening-pull-requests` and `writing-issues` of the org templates, for [opencode](https://opencode.ai) and pi. Claude Code is not a supported target.
 - **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
 - **Sources template**: [`templates/sources.md`](./templates/sources.md), the layout of a repository's `docs/sources.md`.
 - **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc and of the .github templates, with links rewritten to `~/.pyck/guidelines` paths and the prose wrapped at 120 characters (`docs/` keep any width); `task generate` runs it.
+- **Skill table generator**: [`scripts/generate-table.sh`](./scripts/generate-table.sh) renders the table in `AGENTS.md` from [`scripts/rules-table.txt`](./scripts/rules-table.txt) (the "When you" text of each row) and the skill-to-doc `MAP` of the skill generator, and `--check` fails on a stale row, a doc or skill without a row, or a row naming a skill or file that does not exist; `task generate` runs it. Edit the source, never the table.
 - **Template check**: [`scripts/check-templates.sh`](./scripts/check-templates.sh) fails when a doc or skill names a PR template heading or issue form that does not exist in pyck-ai/.github.
 
 GitHub's own org defaults (issue forms, the PR template, the code of conduct, the security policy) stay in [pyck-ai/.github](https://github.com/pyck-ai/.github).

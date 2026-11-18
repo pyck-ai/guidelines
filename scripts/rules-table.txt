@@ -1,0 +1,37 @@
+# Source of the table in AGENTS.md ("Guidelines, loaded on demand"), read by
+# scripts/generate-table.sh. One row per line, three fields separated by " | ":
+#
+#   skills | files | when
+#
+#   skills  skill names, comma-separated, in display order; `-` for none. Each
+#           skill of a row without its own files needs a skills/<name>/SKILL.md.
+#   files   `auto`: the docs of those skills, from MAP in scripts/generate-skills.sh.
+#           Anything else is the cell verbatim (for rows whose skills or files live
+#           outside this repository); repo paths in backticks must exist.
+#   when    the text of the "When you" column, verbatim; this is the only part of the
+#           table that is written by hand.
+#
+# Row order is table order. A new doc with a skill needs its row here and its pair
+# in MAP; then run `task generate`.
+#
+# skip: docs that are no guideline and so get no row.
+skip: sources migration-from-dotgithub
+
+writing-commits | auto | write a commit message or name a branch
+opening-pull-requests | auto | open or edit a pull request
+writing-issues | auto | create, edit or triage an issue, or start work on one
+writing-readmes | auto | create or update a README
+designing-code | auto | design or change code structure (a module, type, API or abstraction, a bug fix, a new dependency, a migration, a retried operation, shared state)
+testing | auto | write, change or review a test, or fix a bug
+reviewing-standards,reviewing-security,reviewing-quality | auto | review a diff or pull request (every review applies all three skills)
+changing-ci | auto | add or change a CI workflow, a Taskfile `ci`/`build`/`deploy` task or a required check
+choosing-ci-runners | auto | write or change a GitHub Actions job or its `runs-on`, add a workflow, call a reusable workflow, or review one
+technical-writing | auto | write or review the sentences of a doc, README, RFC, ADR, issue, PR description or commit message
+adding-telemetry | auto | add or review logging, metrics, tracing, an alert, an SLO, a runbook or a dashboard
+recording-decisions | auto | make or record an architecture decision, or write or supersede an ADR
+managing-releases | auto | tag, version, hotfix, deploy or roll back a release, ship a behaviour change behind a toggle, or stamp a build with its version
+deprecating-interfaces | auto | remove, rename or change an API, an event contract, a GraphQL or gRPC surface, a field, a client or an SDK that a consumer outside the repository uses
+managing-dependencies | auto | add, update, remove or choose a dependency, handle a Renovate pull request or a security advisory, or call an external provider
+writing-sql | auto | write, change or review SQL: a raw query or statement, a migration, a stored function or procedure, a lock statement, or code that passes SQL fragments around
+handling-incidents,writing-postmortems | `~/.pyck/incidents/README.md` (repo pyck-ai/incidents) | handle a prod incident or write a postmortem
+- | `templates/AGENTS.md` | create or restructure a repository's `AGENTS.md`

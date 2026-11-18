@@ -13,10 +13,11 @@ tasks:
       - task: zizmor
       - task: gitleaks
   check:
-    desc: Check that docs and skills are in order; fails if setup.sh misbehaves, if a generated file under skills/ is stale, or if a doc or skill names a PR template heading or issue form that pyck-ai/.github lacks. Reads the checkout in PYCK_GITHUB_DIR (default ../.github)
+    desc: Check that docs and skills are in order; fails if setup.sh misbehaves, if a generated file under skills/ or the skill table in AGENTS.md is stale, or if a doc or skill names a PR template heading or issue form that pyck-ai/.github lacks. Reads the checkout in PYCK_GITHUB_DIR (default ../.github)
     cmds:
       - sh scripts/check-templates.sh
       - sh scripts/generate-skills.sh --check
+      - sh scripts/generate-table.sh --check
       - sh tests/setup-test.sh
       - sh tests/generate-test.sh
   zizmor:
@@ -33,6 +34,7 @@ tasks:
     cmds:
       - gitleaks git --redact --no-banner --baseline-path .gitleaks-baseline.json .
   generate:
-    desc: Write the generated files under skills/ with `sh scripts/generate-skills.sh`; run it after editing docs/. Reads the checkout in PYCK_GITHUB_DIR (default ../.github)
+    desc: Write the generated files under skills/ with `sh scripts/generate-skills.sh` and the skill table in AGENTS.md with `sh scripts/generate-table.sh`; run it after editing docs/ or scripts/rules-table.txt. Reads the checkout in PYCK_GITHUB_DIR (default ../.github)
     cmds:
       - sh scripts/generate-skills.sh
+      - sh scripts/generate-table.sh
