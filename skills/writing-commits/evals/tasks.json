@@ -1,0 +1,23 @@
+{
+  "replicates": 2,
+  "tasks": [
+    {
+      "id": "fix-bug-subject",
+      "prompt": "I fixed the duplicate-start bug by filtering state-change events in events.ts and staged it. Write the commit.",
+      "setup": ["sh \"$EVALS/fixtures/commit-lab.sh\" events-fix"],
+      "pass": {"command": "sh \"$EVALS/checks/commit-message.sh\" --fix --no-trailer"}
+    },
+    {
+      "id": "why-body-closes",
+      "prompt": "Commit what's staged. It moves the retry helper into shared/ because billing and sync each had their own copy and the copies had drifted apart. This completes issue #231, so link it, but the commit message has to make sense without opening the issue.",
+      "setup": ["sh \"$EVALS/fixtures/commit-lab.sh\" retry-move"],
+      "pass": {"command": "sh \"$EVALS/checks/commit-message.sh\" --body --trailer 'Closes: #231'"}
+    },
+    {
+      "id": "no-prefix-casual",
+      "prompt": "just commit whats staged pls",
+      "setup": ["sh \"$EVALS/fixtures/commit-lab.sh\" events-fix"],
+      "pass": {"command": "sh \"$EVALS/checks/commit-message.sh\" --no-trailer"}
+    }
+  ]
+}

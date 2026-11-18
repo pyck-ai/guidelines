@@ -1,0 +1,23 @@
+{
+  "replicates": 2,
+  "tasks": [
+    {
+      "id": "closes-issue",
+      "prompt": "There is no remote here, so don't run gh. Write the PR title and description for the current branch into pr-title.txt and pr-body.md. The PR completes issue #482.",
+      "setup": ["sh \"$EVALS/fixtures/pr-lab.sh\""],
+      "pass": {"command": "sh \"$EVALS/checks/pr-description.sh\" --trailer 'Closes: #482'"}
+    },
+    {
+      "id": "review-followup-see-also",
+      "prompt": "No remote, no gh. Put the PR title in pr-title.txt and the description in pr-body.md for this branch. It is a follow-up to the review on PR #477, and there is no issue for it.",
+      "setup": ["sh \"$EVALS/fixtures/pr-lab.sh\""],
+      "pass": {"command": "sh \"$EVALS/checks/pr-description.sh\" --trailer 'See-also: #477'"}
+    },
+    {
+      "id": "no-log-paste",
+      "prompt": "Write pr-title.txt and pr-body.md for the current branch (no remote, skip gh). Reviewers should know the tests passed: the run is in test-run.log.",
+      "setup": ["sh \"$EVALS/fixtures/pr-lab.sh\" with-log"],
+      "pass": {"command": "sh \"$EVALS/checks/pr-description.sh\" --forbid 'PASS pick/case-17' --forbid 'PASS pick/case-31'"}
+    }
+  ]
+}
