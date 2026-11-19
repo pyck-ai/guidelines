@@ -108,9 +108,10 @@ small enough to review in one sitting:
 - **Diff**: aim for 200 changed lines or fewer. Over 400 lines needs a reason in the description. Over 1,000 lines is
   too large to review: split it, unless the change is mechanical (see the **Mechanical changes** bullet). Keep the
   changed files and the largest single file small too. Generated files do not count, and neither do patch files
-  (`*.patch`, `*.diff`): they carry a change made elsewhere, such as an upstream fix applied until a release contains
-  it, so the description links where the patch comes from and the reviewer checks that instead of every line. Tests
-  count, but less than production code.
+  (`*.patch`, `*.diff`) whose source the description links. Such a patch carries a change made elsewhere, such as an
+  upstream fix applied to a pinned dependency until a release contains it. The reviewer checks the linked source instead
+  of every line of the patch. A patch with no source elsewhere counts as production code. Tests count, but less than
+  production code.
 - **Mechanical changes**: put generated code, renames, moves, formatting, dependency bumps and large deletions in their
   own PR, before or after the logic change. Such a PR may exceed the size limit. It says in its first line that it is
   mechanical and names the command that produced it, so the reviewer can repeat the command instead of reading every
