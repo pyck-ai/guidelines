@@ -163,6 +163,11 @@ if [ ! -d "$GH/.github" ]; then
 	echo "generate-skills: clone it there or set PYCK_GITHUB_DIR; nothing is fetched." >&2
 	exit 2
 fi
+# src_hash (below) needs one of the two; a missing tool would write an empty hash
+if ! command -v sha256sum >/dev/null 2>&1 && ! command -v shasum >/dev/null 2>&1; then
+	echo "generate-skills: needs sha256sum or shasum" >&2
+	exit 2
+fi
 
 # Every skill folder needs a doc in MAP, or it would ship without one.
 for d in skills/*/; do
@@ -665,10 +670,11 @@ toc() {
 # be compared; a content hash, so an unrelated commit leaves the copies as they are.
 src_hash() {
 	if command -v sha256sum >/dev/null 2>&1; then
-		sha256sum "$1"
+		_h=$(sha256sum <"$1")
 	else
-		shasum -a 256 "$1"
-	fi | cut -c 1-12
+		_h=$(shasum -a 256 <"$1")
+	fi
+	printf "%s\n" "$_h" | cut -c 1-12
 }
 
 # gen DOC OUT: write the generated copy of docs/DOC.md to OUT.
