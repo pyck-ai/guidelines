@@ -12,6 +12,7 @@
 - [Write errors a reader can act on](#write-errors-a-reader-can-act-on)
 - [Make illegal states unrepresentable](#make-illegal-states-unrepresentable)
 - [Model the domain](#model-the-domain)
+- [Keep a glossary](#keep-a-glossary)
 - [Separate before serializing shared state](#separate-before-serializing-shared-state)
 - [Point module dependencies one way](#point-module-dependencies-one-way)
 - [Data shape and scaffold first](#data-shape-and-scaffold-first)
@@ -195,6 +196,17 @@ invalid state; code that is already clear, local and unlikely to grow stays as i
 Name a new type, field, module or event with the term from the repository's glossary if it has one; otherwise with the
 term the code already uses. When a term is vague, or one word means two things or two words mean one, name the conflict
 and ask which is meant before it spreads into more code.
+
+## Keep a glossary
+
+Applies when a design discussion settles a domain word that code, issues or docs will use.
+
+Keep one glossary per repository in `docs/glossary.md`: a term, a one-line meaning and any words to avoid for it. Add
+the term in the change that first uses it. To choose between candidates, write two or three real sentences from the
+domain with each candidate, such as "I started the report from the order snapshot, then edited it". Keep the term whose
+sentences read unambiguously and sound like how people at the company talk. The glossary lists terms in active use only.
+Remove a replaced term and name the replacement in the commit, or link the ADR that replaced it
+([adrs.md](~/.pyck/guidelines/docs/adrs.md)).
 
 ## Separate before serializing shared state
 
