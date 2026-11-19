@@ -62,7 +62,6 @@ What each project supplies:
 - The idempotency key steps: the `api-and-interface-design` skill (addyosmani/agent-skills, `aeac41d`).
 - The one-way module dependencies: the `spec-driven-development` skill (addyosmani/agent-skills, `aeac41d`).
 - The domain term rule: the `domain-modeling` skill (mattpocock/skills, `5beb35b`).
-- The glossary section: Matt Pocock's talk [Watch me ship a 21,000-line feature with mattpocock/skills](https://www.youtube.com/watch?v=jVBlkOF8sHk), read 2026-11-19. A living glossary whose candidate terms are tested in real sentences. Ideas only, no text copied.
 - The optionality rule: the `narrow-react-prop-types` skill (humanlayer/skills, `main`).
 - The TypeScript brand rule and example: the `typescript-best-practices` skill (Cursor plugins `pstack`, `ddf824a`).
 - The error rule: the error contract of the `plan-devex-review` skill (gstack, `6237994`). Ideas only.
@@ -181,3 +180,4 @@ What each project supplies:
 | Rule | Source | Quote | Read on |
 | --- | --- | --- | --- |
 | Guard reasons | [storytold/craft-contrib, house rules](https://github.com/storytold/craft-contrib/blob/main/standards/house-rules-core.md) | "A check that looks removable says what it prevents. Read that before changing it." | 2026-11-16 |
+| Keep a glossary | [Matt Pocock, Watch me ship a 21,000-line feature with mattpocock/skills](https://www.youtube.com/watch?v=jVBlkOF8sHk) (YouTube auto-generated captions) | "Scenario testing is a really great way of kind of testing your domain language" | 2026-11-19 |

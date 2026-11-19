@@ -203,10 +203,10 @@ Applies when a design discussion settles a domain word that code, issues or docs
 
 Keep one glossary per repository in `docs/glossary.md`: a term, a one-line meaning and any words to avoid for it. Add
 the term in the change that first uses it. To choose between candidates, write two or three real sentences from the
-domain with each candidate, such as "I started the report from the order snapshot, then edited it". Keep the term whose
-sentences read unambiguously and sound like how people at the company talk. The glossary lists terms in active use only.
-Remove a replaced term and name the replacement in the commit, or link the ADR that replaced it
-([adrs.md](~/.pyck/guidelines/docs/adrs.md)).
+domain with each candidate, such as "the picker moved the tote to the packing zone" against "the picker moved the bin to
+the packing zone". Keep the term whose sentences read unambiguously and sound like how people at the company talk. The
+glossary lists terms in active use only. Remove a replaced term and name the replacement in the commit, or link the ADR
+that replaced it ([adrs.md](~/.pyck/guidelines/docs/adrs.md)).
 
 ## Separate before serializing shared state
 
