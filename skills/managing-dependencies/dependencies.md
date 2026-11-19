@@ -1,4 +1,4 @@
-<!-- Generated from docs/dependencies.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/dependencies.md and run task generate. -->
+<!-- Generated from docs/dependencies.md (sha256 fdac59023b83) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/dependencies.md and run task generate. -->
 # Dependency Guidelines
 
 Rules for adding, upgrading and removing a dependency, and for handling a Renovate pull request. The checks a reviewer

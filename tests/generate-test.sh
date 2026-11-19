@@ -110,6 +110,28 @@ Last line.'
 gen --check
 check "--check passes on the fresh copy" rc_is 0
 
+echo "== source version"
+# the header names the first 12 hex characters of the sha256 of the source; a
+# one-byte change of the source changes it, and --check fails until regenerated
+hash_of() { sha256sum "$W/$1" | cut -c 1-12; }
+header_is() { [ "$(head -n 1 "$W/$COPY")" = "<!-- Generated from $DOC (sha256 $1) by scripts/generate-skills.sh. DO NOT EDIT: edit $DOC and run task generate. -->" ]; }
+H1=$(hash_of "$DOC")
+check "header carries the source hash" header_is "$H1"
+printf 'x' >>"$W/$DOC"
+gen --check
+check "source changed by one byte: --check exits 1" rc_is 1
+check "source changed by one byte: --check names the copy" says "stale   $COPY"
+gen
+H2=$(hash_of "$DOC")
+check "source changed by one byte: the hash differs" test "$H1" != "$H2"
+check "source changed by one byte: the copy carries the new hash" header_is "$H2"
+gen --check
+check "regenerated: --check passes" rc_is 0
+# a .github copy carries the hash of its .github file
+GHC=skills/opening-pull-requests/PULL_REQUEST_TEMPLATE.md
+GHS=.github/PULL_REQUEST_TEMPLATE.md
+check ".github copy carries the hash of its source" test "$(head -n 1 "$W/$GHC")" = "<!-- Generated from pyck-ai/.github $GHS (sha256 $(sha256sum "$GH/$GHS" | cut -c 1-12)) by scripts/generate-skills.sh. DO NOT EDIT. -->"
+
 echo "== table of contents"
 # filler N: N list items, one line each (prose lines would be joined by the wrap).
 filler() { awk -v n="$1" 'BEGIN { for (i = 1; i <= n; i++) print "- line " i; }'; }
@@ -403,7 +425,10 @@ gen
 cp "$W/$COPY" "$ROOT/first.md"
 tail -n +2 "$ROOT/first.md" >"$W/$DOC"
 gen
-check "wrap twice: same output" cmp -s "$ROOT/first.md" "$W/$COPY"
+# the header names a different source (hash), so compare the copies without it
+tail -n +2 "$W/$COPY" >"$ROOT/second.md"
+tail -n +2 "$ROOT/first.md" >"$ROOT/first-body.md"
+check "wrap twice: same output" cmp -s "$ROOT/first-body.md" "$ROOT/second.md"
 
 # the 100-line limit counts wrapped lines: 40 one-line paragraphs make a doc of
 # 84 lines but a copy of over 100; 40 paragraphs of five short lines make a doc

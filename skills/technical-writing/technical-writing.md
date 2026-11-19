@@ -1,4 +1,4 @@
-<!-- Generated from docs/technical-writing.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/technical-writing.md and run task generate. -->
+<!-- Generated from docs/technical-writing.md (sha256 ed9b141d2e88) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/technical-writing.md and run task generate. -->
 # Technical Writing Guidelines
 
 <!-- toc

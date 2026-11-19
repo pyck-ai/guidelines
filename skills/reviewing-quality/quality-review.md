@@ -1,4 +1,4 @@
-<!-- Generated from docs/quality-review.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/quality-review.md and run task generate. -->
+<!-- Generated from docs/quality-review.md (sha256 711f27e9e90d) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/quality-review.md and run task generate. -->
 # Quality Review Guidelines
 
 The code quality lens of every review. The procedure, the grouping and the report format are in the

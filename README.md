@@ -26,7 +26,7 @@ Out of the box, pyck-ai/guidelines includes:
 - **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `opening-pull-requests` and `writing-issues` of the org templates, for [opencode](https://opencode.ai) and pi. Claude Code is not a supported target.
 - **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
 - **Sources template**: [`templates/sources.md`](./templates/sources.md), the layout of a repository's `docs/sources.md`.
-- **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc and of the .github templates, with links rewritten to `~/.pyck/guidelines` paths and the prose wrapped at 120 characters (`docs/` keep any width); `task generate` runs it.
+- **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc and of the .github templates, with links rewritten to `~/.pyck/guidelines` paths and the prose wrapped at 120 characters (`docs/` keep any width); `task generate` runs it. The first line of each copy names its source and the version of it, `(sha256 <12 hex characters>)`: the start of the sha256 of the source file's bytes, so two copies of one source match when the hashes do.
 - **Template check**: [`scripts/check-templates.sh`](./scripts/check-templates.sh) fails when a doc or skill names a PR template heading or issue form that does not exist in pyck-ai/.github.
 
 GitHub's own org defaults (issue forms, the PR template, the code of conduct, the security policy) stay in [pyck-ai/.github](https://github.com/pyck-ai/.github).

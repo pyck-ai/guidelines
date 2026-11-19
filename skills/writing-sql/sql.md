@@ -1,4 +1,4 @@
-<!-- Generated from docs/sql.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/sql.md and run task generate. -->
+<!-- Generated from docs/sql.md (sha256 3863f7ae0f27) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/sql.md and run task generate. -->
 # SQL Guidelines
 
 Rules for SQL text, its parameters and stored functions, in Go and in any other language. They apply to SQL a person

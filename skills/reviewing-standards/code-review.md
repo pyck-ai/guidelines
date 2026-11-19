@@ -1,4 +1,4 @@
-<!-- Generated from docs/code-review.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/code-review.md and run task generate. -->
+<!-- Generated from docs/code-review.md (sha256 b3d45f493762) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/code-review.md and run task generate. -->
 # Code Review Guidelines
 
 <!-- toc

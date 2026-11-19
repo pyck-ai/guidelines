@@ -1,4 +1,4 @@
-<!-- Generated from docs/issues.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/issues.md and run task generate. -->
+<!-- Generated from docs/issues.md (sha256 fc20a49126d5) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/issues.md and run task generate. -->
 # Issue Guidelines
 
 <!-- toc

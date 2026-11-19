@@ -8,7 +8,11 @@
 #
 # Agent files contain no URLs: an agent that fetches one reads text nobody
 # reviewed, from a source that can change. So the copy of a doc starts with a
-# DO NOT EDIT comment and its markdown links are rewritten to local paths:
+# DO NOT EDIT comment and its markdown links are rewritten to local paths. That
+# first line also names the source's version, "(sha256 <12 hex>)": the first 12
+# hex characters of the sha256 of the source file's bytes, so two copies of one
+# source can be compared. A content hash, not a commit id or a date, so an
+# unrelated commit changes nothing and --check stays deterministic.
 #
 #   relative link, resolved against docs/
 #                          -> ~/.pyck/guidelines/<repo path> (anchor kept)
@@ -84,8 +88,9 @@
 # reference file over 100 lines has a table of contents, and a shorter file
 # reads whole. The .github copies get none.
 #
-# The copies of the .github files get a DO NOT EDIT comment on the first line
-# and are otherwise verbatim; the script fails if one has a URL outside code.
+# The copies of the .github files get a DO NOT EDIT comment, with the same
+# (sha256 ...) of the .github file, on the first line and are otherwise
+# verbatim; the script fails if one has a URL outside code.
 # They are read from the pyck-ai/.github checkout in $PYCK_GITHUB_DIR
 # (default ../.github); nothing is ever fetched.
 #
@@ -655,6 +660,17 @@ toc() {
 	'
 }
 
+# src_hash FILE: the first 12 hex characters of the sha256 of FILE's bytes. The
+# "Generated from" line of each copy carries it, so two copies of one source can
+# be compared; a content hash, so an unrelated commit leaves the copies as they are.
+src_hash() {
+	if command -v sha256sum >/dev/null 2>&1; then
+		sha256sum "$1"
+	else
+		shasum -a 256 "$1"
+	fi | cut -c 1-12
+}
+
 # gen DOC OUT: write the generated copy of docs/DOC.md to OUT.
 gen() {
 	# shellcheck disable=SC2094 # the name is only a label for messages
@@ -662,7 +678,7 @@ gen() {
 	filter rewrite "doc $1" <"$TMP/doc-$1.md" >"$TMP/rw-$1.md" || exit 1
 	wrap 120 <"$TMP/rw-$1.md" >"$TMP/wr-$1.md" || exit 1
 	{
-		printf '<!-- Generated from docs/%s.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/%s.md and run task generate. -->\n' "$1" "$1"
+		printf '<!-- Generated from docs/%s.md (sha256 %s) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/%s.md and run task generate. -->\n' "$1" "$(src_hash "docs/$1.md")" "$1"
 		# the DO NOT EDIT line counts toward the 100 lines
 		toc 99 <"$TMP/wr-$1.md"
 	} >"$2"
@@ -673,8 +689,8 @@ gen() {
 gen_gh() {
 	{
 		case $1 in
-		*.md) printf '<!-- Generated from pyck-ai/.github %s by scripts/generate-skills.sh. DO NOT EDIT. -->\n' "$1" ;;
-		*) printf '# Generated from pyck-ai/.github %s by scripts/generate-skills.sh. DO NOT EDIT.\n' "$1" ;;
+		*.md) printf '<!-- Generated from pyck-ai/.github %s (sha256 %s) by scripts/generate-skills.sh. DO NOT EDIT. -->\n' "$1" "$(src_hash "$GH/$1")" ;;
+		*) printf '# Generated from pyck-ai/.github %s (sha256 %s) by scripts/generate-skills.sh. DO NOT EDIT.\n' "$1" "$(src_hash "$GH/$1")" ;;
 		esac
 		filter copy "$1" <"$GH/$1"
 	} >"$2"

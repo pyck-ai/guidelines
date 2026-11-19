@@ -1,4 +1,4 @@
-<!-- Generated from docs/ci.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/ci.md and run task generate. -->
+<!-- Generated from docs/ci.md (sha256 d490540b9373) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/ci.md and run task generate. -->
 # CI Guidelines
 
 <!-- toc

@@ -1,4 +1,4 @@
-<!-- Generated from docs/ci-runners.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/ci-runners.md and run task generate. -->
+<!-- Generated from docs/ci-runners.md (sha256 35676c0d238d) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/ci-runners.md and run task generate. -->
 # CI Runner Placement Guidelines
 
 <!-- toc

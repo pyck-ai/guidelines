@@ -1,4 +1,4 @@
-<!-- Generated from docs/readme.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/readme.md and run task generate. -->
+<!-- Generated from docs/readme.md (sha256 becc1d190e0a) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/readme.md and run task generate. -->
 # README Guidelines
 
 <!-- toc

@@ -1,4 +1,4 @@
-<!-- Generated from docs/testing.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/testing.md and run task generate. -->
+<!-- Generated from docs/testing.md (sha256 add196c882ff) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/testing.md and run task generate. -->
 # Testing Guidelines
 
 Rules for writing, changing and reviewing tests. Anything a linter or check can catch belongs in a linter or check, not

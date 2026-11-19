@@ -1,4 +1,4 @@
-<!-- Generated from docs/git.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/git.md and run task generate. -->
+<!-- Generated from docs/git.md (sha256 9184d178c8ba) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/git.md and run task generate. -->
 # Git Guidelines
 
 <!-- toc

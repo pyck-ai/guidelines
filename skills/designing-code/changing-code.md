@@ -1,4 +1,4 @@
-<!-- Generated from docs/changing-code.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/changing-code.md and run task generate. -->
+<!-- Generated from docs/changing-code.md (sha256 22b1c618076e) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/changing-code.md and run task generate. -->
 # Changing Code Guidelines
 
 Judgement calls about changing code that already exists. The shape of the code itself is in

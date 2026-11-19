@@ -1,4 +1,4 @@
-<!-- Generated from docs/releases.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/releases.md and run task generate. -->
+<!-- Generated from docs/releases.md (sha256 979205f3a53a) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/releases.md and run task generate. -->
 # Release Guidelines
 
 <!-- toc

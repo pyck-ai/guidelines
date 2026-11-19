@@ -1,4 +1,4 @@
-<!-- Generated from docs/adrs.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/adrs.md and run task generate. -->
+<!-- Generated from docs/adrs.md (sha256 7aa76114dff0) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/adrs.md and run task generate. -->
 # ADR Guidelines
 
 Rules for writing, numbering and superseding architecture decision records (ADRs). An ADR records one decision and the

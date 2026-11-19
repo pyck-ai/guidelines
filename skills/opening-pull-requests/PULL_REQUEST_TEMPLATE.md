@@ -1,4 +1,4 @@
-<!-- Generated from pyck-ai/.github .github/PULL_REQUEST_TEMPLATE.md by scripts/generate-skills.sh. DO NOT EDIT. -->
+<!-- Generated from pyck-ai/.github .github/PULL_REQUEST_TEMPLATE.md (sha256 4f2773993f06) by scripts/generate-skills.sh. DO NOT EDIT. -->
 <!-- ---------------------------------------------------------------------------
 Start with a SHORT executive summary of what the Pull Request changes or adds,
 with no headings. Aim for 2 or 3 paragraphs; add more only when the PR really

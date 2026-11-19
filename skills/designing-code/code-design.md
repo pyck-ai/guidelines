@@ -1,4 +1,4 @@
-<!-- Generated from docs/code-design.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/code-design.md and run task generate. -->
+<!-- Generated from docs/code-design.md (sha256 70b60bd2a18c) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/code-design.md and run task generate. -->
 # Code Design Guidelines
 
 <!-- toc

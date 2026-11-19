@@ -1,4 +1,4 @@
-<!-- Generated from docs/deprecation.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/deprecation.md and run task generate. -->
+<!-- Generated from docs/deprecation.md (sha256 f0a629fcc0d5) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/deprecation.md and run task generate. -->
 # Deprecation Guidelines
 
 <!-- toc

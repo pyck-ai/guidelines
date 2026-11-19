@@ -1,4 +1,4 @@
-<!-- Generated from docs/observability.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/observability.md and run task generate. -->
+<!-- Generated from docs/observability.md (sha256 e10e6942837a) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/observability.md and run task generate. -->
 # Observability Guidelines
 
 Rules for the logs, metrics, traces and alerts of a service. They name no vendor, so they hold for any backend. The

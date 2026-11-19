@@ -1,4 +1,4 @@
-<!-- Generated from docs/security-review.md by scripts/generate-skills.sh. DO NOT EDIT: edit docs/security-review.md and run task generate. -->
+<!-- Generated from docs/security-review.md (sha256 ae21fbc2aab1) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/security-review.md and run task generate. -->
 # Security Review Guidelines
 
 <!-- toc
