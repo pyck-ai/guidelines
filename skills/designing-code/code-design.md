@@ -1,4 +1,4 @@
-<!-- Generated from docs/code-design.md (sha256 70b60bd2a18c) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/code-design.md and run task generate. -->
+<!-- Generated from docs/code-design.md (sha256 7d0b61fda4c4) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/code-design.md and run task generate. -->
 # Code Design Guidelines
 
 <!-- toc
@@ -10,6 +10,7 @@
 - [Guard at the boundary](#guard-at-the-boundary)
 - [Say why a guard exists](#say-why-a-guard-exists)
 - [Write errors a reader can act on](#write-errors-a-reader-can-act-on)
+- [Design a new public API](#design-a-new-public-api)
 - [Make illegal states unrepresentable](#make-illegal-states-unrepresentable)
 - [Model the domain](#model-the-domain)
 - [Keep a glossary](#keep-a-glossary)
@@ -144,6 +145,30 @@ unattended run recovers or loops. Give each error that crosses a boundary:
 - **Redaction:** no secret, token or credential-bearing URL anywhere, nested causes included.
 - **The native failure channel:** a failure is a non-zero exit or an error HTTP status, never exit 0 or 200 with the
   error in the body.
+
+## Design a new public API
+
+Applies when you add a GraphQL field, type or mutation, or any other surface that outside consumers call.
+
+- **The first release is public.** A GraphQL field is public even when only our frontend reads it, so removing or
+  retyping it later costs a [deprecation](~/.pyck/guidelines/docs/deprecation.md). Settle the shape before merge.
+- **Durations are integers with the unit in the name**, not a language-specific string such as Go's `1h0m0s`:
+  `timeoutSeconds: Int!`. Google AIP-142: "For integers, include the meaning ... and the unit of measurement ... as a
+  final suffix."
+- **Name a field for what it means**, not after the upstream SDK: `periodSeconds`, not `every`.
+- **A field whose source can be missing is nullable.** Never fill a non-null field with `""` or `0` (see [Make illegal
+  states unrepresentable](#make-illegal-states-unrepresentable)).
+- **One input type per mutation**, even when the shapes match today: `PauseScheduleInput` and `UnpauseScheduleInput`,
+  not one shared input.
+- **A schema doc comment is the contract.** API clients and AI agents read it (the supergraph is exposed through an MCP
+  server), so every count, order and consistency promise in it must hold for every resolver that returns the type.
+
+```graphql
+type Schedule {
+  periodSeconds: Int!
+  lastRunAt: Time # null until the first run, never a zero time
+}
+```
 
 ## Make illegal states unrepresentable
 

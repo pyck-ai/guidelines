@@ -1,4 +1,4 @@
-<!-- Generated from docs/quality-review.md (sha256 711f27e9e90d) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/quality-review.md and run task generate. -->
+<!-- Generated from docs/quality-review.md (sha256 8b92b8cfbab4) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/quality-review.md and run task generate. -->
 # Quality Review Guidelines
 
 The code quality lens of every review. The procedure, the grouping and the report format are in the
@@ -32,7 +32,10 @@ rule.
 - **Type and boundary mess**: casts, `any` or `unknown`, optionality that is not needed (often added for a test or a
   story), loose object shapes, a silent fallback that covers an unclear invariant, or a boundary leak (see [Guard at the
   boundary](~/.pyck/guidelines/docs/code-design.md#guard-at-the-boundary) and [Make illegal states
-  unrepresentable](~/.pyck/guidelines/docs/code-design.md#make-illegal-states-unrepresentable)).
+  unrepresentable](~/.pyck/guidelines/docs/code-design.md#make-illegal-states-unrepresentable)). A silent fallback
+  returns a zero value (`""`, `0`, `nil`, an empty struct) for an input the code does not expect, including a non-null
+  API field filled with `""` when the source has no value. The fix is a sentinel error wrapped with context (and a test
+  with `errors.Is`), or a nullable field.
 - **Logic in the wrong layer**: feature logic in a shared path, internals leaking through an API, or a bespoke helper
   where the codebase already has a canonical one. Reuse it, or move the code to the module that owns the concept.
 - **File growth**: a change that takes a file from under 1000 lines to over it needs a strong reason; ask whether to

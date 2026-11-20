@@ -35,6 +35,7 @@ Check for flaws such as missing authorization, injection, unsafe handling of unt
 - A delete, move or overwrite on a path derived from such a value. Require that the resolved target (symlinks resolved) sits under an allowlisted root, at least one level below it, and carries ownership evidence read before the operation. The level below the root keeps the root itself safe, and the ownership evidence keeps a file that another process created safe. On a refusal, log the target and stop; a fallback to a broader default path would delete something nobody checked.
 - Output of a model or a tool used as trusted input, or a permission enforced only by a prompt. A system prompt is not a security boundary; enforce permissions in code.
 - A secret that reached a remote. Treat it as compromised: rotate it first, then purge history.
+- A new read or write path into a shared system (a Temporal namespace, a NATS stream, a bucket, a shared table). List what pyck itself already keeps there, such as internal schedules, system workflows and platform data, and show that the new path cannot reach it or that it filters it. Name the separation (namespace, prefix, owner marker); an assumed one is a finding.
 - A cache key that omits an input the response depends on, such as tenant, locale or viewer. It serves one user's data to another.
 - A metric label or span attribute that carries a user id, an email or other personal data.
 - A test fixture, seed or recorded response that holds real personal data. Fixtures use invented values.

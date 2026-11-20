@@ -1,4 +1,4 @@
-<!-- Generated from docs/security-review.md (sha256 ae21fbc2aab1) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/security-review.md and run task generate. -->
+<!-- Generated from docs/security-review.md (sha256 31454f3e5a48) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/security-review.md and run task generate. -->
 # Security Review Guidelines
 
 <!-- toc
@@ -71,6 +71,10 @@ from where it enters to where it is used. Look in particular for:
 - Output of a model or a tool used as trusted input, or a permission enforced only by a prompt. A system prompt is not a
   security boundary; enforce permissions in code.
 - A secret that reached a remote. Treat it as compromised: rotate it first, then purge history.
+- A new read or write path into a shared system (a Temporal namespace, a NATS stream, a bucket, a shared table). List
+  what pyck itself already keeps there, such as internal schedules, system workflows and platform data, and show that
+  the new path cannot reach it or that it filters it. Name the separation (namespace, prefix, owner marker); an assumed
+  one is a finding.
 - A cache key that omits an input the response depends on, such as tenant, locale or viewer. It serves one user's data
   to another.
 - A metric label or span attribute that carries a user id, an email or other personal data.

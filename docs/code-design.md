@@ -151,6 +151,35 @@ each error that crosses a boundary:
 - **The native failure channel:** a failure is a non-zero exit or an error HTTP
   status, never exit 0 or 200 with the error in the body.
 
+## Design a new public API
+
+Applies when you add a GraphQL field, type or mutation, or any other surface that
+outside consumers call.
+
+- **The first release is public.** A GraphQL field is public even when only our
+  frontend reads it, so removing or retyping it later costs a
+  [deprecation](deprecation.md). Settle the shape before merge.
+- **Durations are integers with the unit in the name**, not a language-specific
+  string such as Go's `1h0m0s`: `timeoutSeconds: Int!`. Google AIP-142: "For
+  integers, include the meaning ... and the unit of measurement ... as a final
+  suffix."
+- **Name a field for what it means**, not after the upstream SDK: `periodSeconds`,
+  not `every`.
+- **A field whose source can be missing is nullable.** Never fill a non-null
+  field with `""` or `0` (see [Make illegal states unrepresentable](#make-illegal-states-unrepresentable)).
+- **One input type per mutation**, even when the shapes match today:
+  `PauseScheduleInput` and `UnpauseScheduleInput`, not one shared input.
+- **A schema doc comment is the contract.** API clients and AI agents read it (the
+  supergraph is exposed through an MCP server), so every count, order and
+  consistency promise in it must hold for every resolver that returns the type.
+
+```graphql
+type Schedule {
+  periodSeconds: Int!
+  lastRunAt: Time # null until the first run, never a zero time
+}
+```
+
 ## Make illegal states unrepresentable
 
 Applies when you define a type, a signature or handle external data.

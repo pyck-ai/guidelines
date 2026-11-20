@@ -1,4 +1,4 @@
-<!-- Generated from docs/code-review.md (sha256 b3d45f493762) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/code-review.md and run task generate. -->
+<!-- Generated from docs/code-review.md (sha256 ac230d254614) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/code-review.md and run task generate. -->
 # Code Review Guidelines
 
 <!-- toc
@@ -70,8 +70,9 @@ question:
 For an unfinished trace, load the `reviewing-security` skill
 ([security-review.md](~/.pyck/guidelines/docs/security-review.md#finishing-a-finding)).
 
-One finding per problem, each with the place, the rule and a fix. Number the findings across all groups, so the author
-can say "fix 2 and 5"; within a group, list the larger impact first. An Act on or Consider finding also says what
+One finding per problem, each with the place, the rule and a fix. A finding that breaks a rule asks for that rule's fix,
+not a weaker alternative such as "or document the current behavior". Number the findings across all groups, so the
+author can say "fix 2 and 5"; within a group, list the larger impact first. An Act on or Consider finding also says what
 happens if it is not fixed:
 
 ```text
