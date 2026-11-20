@@ -181,3 +181,4 @@ What each project supplies:
 | --- | --- | --- | --- |
 | Guard reasons | [storytold/craft-contrib, house rules](https://github.com/storytold/craft-contrib/blob/main/standards/house-rules-core.md) | "A check that looks removable says what it prevents. Read that before changing it." | 2026-11-16 |
 | Keep a glossary | [Matt Pocock, Watch me ship a 21,000-line feature with mattpocock/skills](https://www.youtube.com/watch?v=jVBlkOF8sHk) (YouTube auto-generated captions) | "Scenario testing is a really great way of kind of testing your domain language" | 2026-11-19 |
+| Duration fields | [Google AIP-142, Time and duration](https://google.aip.dev/142) | "For integers, include the meaning (examples: `time`, `duration`, `delay`, `latency`) **and** the unit of measurement (valid values: `seconds`, `millis`, `micros`, `nanos`) as a final suffix." | 2026-11-20 |
