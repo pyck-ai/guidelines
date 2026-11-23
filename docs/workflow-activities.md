@@ -22,6 +22,10 @@ After a failed create, look once more before you return the error: the first loo
 
 `time.Now()`, `uuid.New()` and random values in an activity are for logs and cache expiry only. One exception reaches a record: a number drawn from a shared range. A repeat uses up a number, so the record that carries it needs its own key.
 
+## Move stock, never set it
+
+Stock changes only by a movement. Creating a movement reserves the stock; executing it books it. To block stock, place the pallet in an excluded subarea: there is no flag that blocks it. A movement's endpoints and quantity cannot change, so a retarget [replaces the movement](#order-a-replace-so-that-a-retry-recognises-every-state).
+
 ## Check both retry points of a create and its settle
 
 A booking is a create and an execute. Look up your movement, executed ones included: create it when it is absent, execute it when it is not executed, and return it otherwise. A guard that asks "is the pallet at the target already?" is true only after the execute landed. After a create that landed and an execute that did not, the guard passes, the platform refuses the second create (one open movement per repository), and the run fails with the goods moved and the books unchanged.

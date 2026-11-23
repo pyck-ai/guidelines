@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-runs.md (sha256 c61527c3f203) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-runs.md and run task generate. -->
+<!-- Generated from docs/workflow-runs.md (sha256 7b6c44af013b) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-runs.md and run task generate. -->
 # Workflow Run Guidelines
 
 <!-- toc
@@ -162,8 +162,14 @@ error that an activity can meet its class:
   constant, with a comment that it breaks when the wording changes.
 - A non-retryable error says that a retry cannot help. "I cannot see my write yet" never is one.
 - Return the typed application error itself. A new error built from its text is retryable.
-- An activity that fails for good fails the run. Decide for each activity whether that is right, or whether the workflow
-  takes a branch to an exception end with a screen and a notification.
+- An activity that fails for good fails the run, and a failed run shows only in the Temporal UI. So no run fails: in
+  every workflow, catch the error when the retries ran out and take the [recovery
+  path](~/.pyck/guidelines/docs/workflow-modeling.md#model-the-recovery-path-of-every-call-that-can-fail) that the BPMN
+  models: a screen that lets the operator heal the error (try again, reprint, choose another), or a named exception end
+  that tells a person and names what starts the work again. A run without an operator takes the exception end.
+- The operator sees what happened and what to do, in [their
+  words](~/.pyck/guidelines/docs/workflow-screens.md#write-every-text-for-a-logistician). The GraphQL error and its
+  cause go to the log, never to the screen.
 
 ## Give every resource an exit
 

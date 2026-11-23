@@ -1,10 +1,11 @@
-<!-- Generated from docs/workflow-activities.md (sha256 4d28a60cdb09) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-activities.md and run task generate. -->
+<!-- Generated from docs/workflow-activities.md (sha256 61a3b4530731) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-activities.md and run task generate. -->
 # Workflow Activity Guidelines
 
 <!-- toc
 ## Contents
 
 - [Look up your own record before you create one](#look-up-your-own-record-before-you-create-one)
+- [Move stock, never set it](#move-stock-never-set-it)
 - [Check both retry points of a create and its settle](#check-both-retry-points-of-a-create-and-its-settle)
 - [Order a replace so that a retry recognises every state](#order-a-replace-so-that-a-retry-recognises-every-state)
 - [Guard a conditional write with compare-and-swap](#guard-a-conditional-write-with-compare-and-swap)
@@ -54,6 +55,12 @@ landed. Four mistakes make the lookup look right and miss:
 
 `time.Now()`, `uuid.New()` and random values in an activity are for logs and cache expiry only. One exception reaches a
 record: a number drawn from a shared range. A repeat uses up a number, so the record that carries it needs its own key.
+
+## Move stock, never set it
+
+Stock changes only by a movement. Creating a movement reserves the stock; executing it books it. To block stock, place
+the pallet in an excluded subarea: there is no flag that blocks it. A movement's endpoints and quantity cannot change,
+so a retarget [replaces the movement](#order-a-replace-so-that-a-retry-recognises-every-state).
 
 ## Check both retry points of a create and its settle
 

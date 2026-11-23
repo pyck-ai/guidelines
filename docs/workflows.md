@@ -1,6 +1,8 @@
 # Workflow Guidelines
 
-Rules for writing or changing a Temporal workflow on the Pyck platform (Go, workflowsdk): its activities, its workflow function, its start and its exits. The patterns for an activity are in [workflow-activities.md](workflow-activities.md), the rules for a run in [workflow-runs.md](workflow-runs.md). The general rules for a repeated operation are in [code-design.md](code-design.md#make-operations-idempotent); these docs apply them to a workflow. Testing and reviewing a workflow are not covered.
+Rules for writing or changing a Temporal workflow on the Pyck platform (Go, workflowsdk): its model, its screens, its activities, its workflow function, its start, its exits and its tests. The rules for the BPMN model are in [workflow-modeling.md](workflow-modeling.md), for the screens and documents in [workflow-screens.md](workflow-screens.md), the patterns for an activity in [workflow-activities.md](workflow-activities.md) and the rules for a run in [workflow-runs.md](workflow-runs.md). The general rules for a repeated operation are in [code-design.md](code-design.md#make-operations-idempotent) and for a test in [testing.md](testing.md); these docs apply them to a workflow. Reviewing a workflow is not covered.
+
+These docs replace the workflow rules that a workflow repository kept in its own `AGENTS.md`. When a repository adopts them, remove that copy, and keep only the repository's local facts.
 
 The repository's `docs/framework-facts.md` and `TRIGGERS.md` own the platform's behaviour. Read the rows for every feature you touch before you design, and add a row, with its source, the first time the platform surprises you. The rules here hold for workflowsdk v0.25.
 
@@ -17,15 +19,32 @@ A workflow that passes every test can still pay a carrier twice, book stock twic
 
 A person takes seconds between two steps and hides all four. Write every activity for the case where the next activity, the next run and a retry arrive within milliseconds.
 
+The order that the BPMN shows is the order the design intends, not the order that arrives. Whatever can happen will happen: a submit twice, a signal late, a trigger again on a record halfway through, a step started again from the middle. Every step can be reached again and finds the state it needs, or [names what starts the work again](workflow-runs.md#name-what-starts-the-work-again-after-an-early-end).
+
+## Give one run to one person
+
+A run belongs to one person, from its start to its end, and only one person works on it at a time. Work that several people can do in parallel becomes several workflows that coordinate by signals and the [hand-over](workflow-runs.md#write-the-hand-over-down-once). The assignee belongs to the whole run and cannot change, so a wait that outlives one person's turn [ends the run](workflow-runs.md#keep-the-workflow-function-deterministic-and-thin).
+
+## Design for the largest instance
+
+A workflow runs at the throughput of the busiest tenant and on its largest records: an order with hundreds of packages, a tour with hundreds of stops. Design for that size from the start, with as few API calls as possible:
+
+- Read a unit of work once, in batches by id list, and carry it through workflow state. Never read one row per item, and never poll.
+- Send the device a whole unit of work and sync at natural pauses ([workflow-screens.md](workflow-screens.md#send-a-whole-unit-of-work-to-the-device)).
+- Count the calls per item and per run, and keep the count in `IMPLEMENTATION.md`. A count that grows with the items times the items is a design error.
+- [Pace](workflow-activities.md#pace-loops-that-write-or-start-runs) the writes that start runs. The worker's rate limiter is a safety net, not the design.
+
 ## Build in this order
 
-1. **Read the design and the facts**: the process's `PROCESS.md`, `IMPLEMENTATION.md` and `.bpmn`, the repository's `CONVENTIONS.md`, and for a hand-over the other workflow's start guard or sending activity. Done when you can name the records each activity reads and writes, who starts the run and what that sender wrote just before.
+1. **Read the design and the facts**: the process's `PROCESS.md`, `IMPLEMENTATION.md` and `.bpmn`, the repository's `CONVENTIONS.md`, and for a hand-over the other workflow's start guard or sending activity. Done when you can name the records each activity reads and writes, who starts the run and what that sender wrote just before, and when the `.bpmn` follows [workflow-modeling.md](workflow-modeling.md): `pyck bpmn lint` passes, every outcome has a named end event and every call that can fail has its [recovery path](workflow-modeling.md#model-the-recovery-path-of-every-call-that-can-fail).
 2. **Prove the start before the body exists.** Write only the registration, the start signal, the input type, one log line and a registration test that pins topic, operation, filter and decoded payload. Deploy it to dev and fire the real trigger. Done when you saw one open run with the expected input for the intended event, and none for every other write in the [write-matrix](workflow-runs.md#keep-a-write-matrix-for-a-domain-event-start). An API that answers `success: true` proves nothing. On the last project, 18 of 23 workflows could not start when someone first tried, eleven days into coding.
 3. **Write the [activity contract](#write-the-activity-contract-before-the-code)** of every activity that writes. Done when no line says "cannot happen" without naming what prevents it: a workflow id, a uniqueness rule the platform enforces, a `TEST` in the same patch.
 4. **Write each activity from [the pattern its effects need](#give-each-effect-the-pattern-its-class-needs).** Done when the retry walk passes: for each write in turn, assume it landed and the reply was lost, run the body again from the top, and reach the state of one clean attempt. A walk that ends in a refused call, a second record or a doubled number fails.
 5. **Write the [workflow function](workflow-runs.md#keep-the-workflow-function-deterministic-and-thin).** Done when it sets the timeouts and the retry policy itself, every fact the next activity needs travels through workflow state, and no activity reads back what an earlier activity of the same run wrote.
 6. **Write the [exits](workflow-runs.md#give-every-resource-an-exit).** Done when every resource the run creates has an exit on done, cancel, failure and reset, every end that leaves work undone tells a person, and every early end names what starts the work again.
-7. **Check and report.** Run the repository's verification commands. Report the rung you reached on its evidence ladder and what you observed yourself, never "verified".
+7. **Write the [screens](workflow-screens.md).** Done when each screen shows one physical step, every text speaks to a logistician, and every document the run generates is attached to its record.
+8. **[Test every edge case](#test-every-edge-case).** Done when every line of every activity contract and every end event of the BPMN has at least one unit test that fails without the code that handles it.
+9. **Check and report.** Run the repository's verification commands. Report the rung you reached on its evidence ladder and what you observed yourself, never "verified".
 
 ## Write the activity contract before the code
 
@@ -70,3 +89,18 @@ The code for each pattern is in [workflow-activities.md](workflow-activities.md)
 - **One effect that cannot repeat per activity.** Temporal stores an activity's result, never its progress. Where a replace needs two writes in one activity, order them so that the lookup recognises every state between them.
 - **Ids, numbers and timestamps come from the workflow.** A value that reaches a written record, a file name, a dedup key or an outside request comes from `workflow.SideEffect`, `workflow.Now` or the run id. Created inside the activity, it differs on every attempt.
 - **A rule that several workflows share lives in one `lib/` package** with its own state-matrix test: free stock, scan resolution, release on cancel, notification text. The first workflow that needs the rule writes the package.
+
+## Test every edge case
+
+Every edge case is tested, at least by a unit test. An edge case without a test is not handled: the next change breaks it without a sign. The general rules are in [testing.md](testing.md). For a workflow, the edge cases come from the design, so the list is never guessed:
+
+- **Every line of every activity contract.** Repeat: the effect landed, the reply was lost, the body runs again and reaches the state of one attempt. Lag: the read returns the state from before the last write. Twin: the platform refuses, the loser reads again. Stuck: the retries run out.
+- **Every error class** in [Classify every error](workflow-runs.md#classify-every-error) that the activity can meet, with the result or error it returns, retryable or not.
+- **Every end event and every recovery path of the BPMN**, unhappy ends included, through the workflow with the Temporal test suite (`testsuite.WorkflowTestSuite`) and mocked activities.
+- **Every screen's refusals in `Validate`:** a bad scan, a scan as text with leading zeros, an untouched number (0), a number above the maximum, a double submit, a late duplicate after the screen was awaited again.
+- **Every document path:** reprint from the attachment, a stand-in with its error text, a print that fails after its first byte.
+- **Order and repetition:** a trigger again on a record halfway through, a signal before its wait or after the run moved on, a step reached again from the middle.
+- **Parallel runs** on the same stock, repository, order or slot: exactly one wins, and the loser gets its answer.
+- **The largest instance:** a run with hundreds of items, with the number of API calls asserted, not only the result.
+
+A test fakes the platform with the behaviour that matters: a fake that ignores a filter, never refuses a second movement or never lags passes code that fails live. Where the fake cannot show a platform rule, name the rule and the dev run that showed it.
