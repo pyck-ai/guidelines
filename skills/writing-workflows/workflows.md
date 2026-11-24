@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflows.md (sha256 e86fa1bb6bc8) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflows.md and run task generate. -->
+<!-- Generated from docs/workflows.md (sha256 b7c1976ae7f6) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflows.md and run task generate. -->
 # Workflow Guidelines
 
 <!-- toc
@@ -12,6 +12,7 @@
 - [Write the activity contract before the code](#write-the-activity-contract-before-the-code)
 - [Give each effect the pattern its class needs](#give-each-effect-the-pattern-its-class-needs)
 - [Test every edge case](#test-every-edge-case)
+- [Load-test the largest instance](#load-test-the-largest-instance)
 -->
 
 Rules for writing or changing a Temporal workflow on the Pyck platform (Go, workflowsdk): its model, its screens, its
@@ -68,8 +69,9 @@ run](~/.pyck/guidelines/docs/workflow-runs.md#keep-the-workflow-function-determi
 
 ## Design for the largest instance
 
-A workflow runs at the throughput of the busiest tenant and on its largest records: an order with hundreds of packages,
-a tour with hundreds of stops. Design for that size from the start, with as few API calls as possible:
+Ask the user for the largest amounts the workflow must handle, in one run and in all runs open at the same time: items,
+orders, repositories, serial numbers. The design size is twice these amounts. Keep both in `IMPLEMENTATION.md`. Design
+for that size from the start, with as few API calls as possible:
 
 - Read a unit of work once, in batches by id list, and carry it through workflow state. Never read one row per item, and
   never poll.
@@ -84,9 +86,10 @@ a tour with hundreds of stops. Design for that size from the start, with as few 
 
 1. **Read the design and the facts**: the process's `PROCESS.md`, `IMPLEMENTATION.md` and `.bpmn`, the repository's
    `CONVENTIONS.md`, and for a hand-over the other workflow's start guard or sending activity. Done when you can name
-   the records each activity reads and writes, who starts the run and what that sender wrote just before, and when the
-   `.bpmn` follows [workflow-modeling.md](~/.pyck/guidelines/docs/workflow-modeling.md): `pyck bpmn lint` passes, every
-   outcome has a named end event and every call that can fail has its [recovery
+   the records each activity reads and writes, who starts the run, what that sender wrote just before and the [design
+   size](#design-for-the-largest-instance), and when the `.bpmn` follows
+   [workflow-modeling.md](~/.pyck/guidelines/docs/workflow-modeling.md): `pyck bpmn lint` passes, every outcome has a
+   named end event and every call that can fail has its [recovery
    path](~/.pyck/guidelines/docs/workflow-modeling.md#model-the-recovery-path-of-every-call-that-can-fail).
 2. **Prove the start before the body exists.** Write only the registration, the start signal, the input type, one log
    line and a registration test that pins topic, operation, filter and decoded payload. Deploy it to dev and fire the
@@ -112,8 +115,10 @@ a tour with hundreds of stops. Design for that size from the start, with as few 
    every text speaks to a logistician, and every document the run generates is attached to its record.
 8. **[Test every edge case](#test-every-edge-case).** Done when every line of every activity contract and every end
    event of the BPMN has at least one unit test that fails without the code that handles it.
-9. **Check and report.** Run the repository's verification commands. Report the rung you reached on its evidence ladder
-   and what you observed yourself, never "verified".
+9. **[Load-test the largest instance](#load-test-the-largest-instance).** Done when every run at the design size reached
+   its expected end event on the user's environment, and the result is in `IMPLEMENTATION.md`.
+10. **Check and report.** Run the repository's verification commands. Report the rung you reached on its evidence ladder
+    and what you observed yourself, never "verified".
 
 ## Write the activity contract before the code
 
@@ -191,8 +196,21 @@ cases come from the design, so the list is never guessed:
 - **Order and repetition:** a trigger again on a record halfway through, a signal before its wait or after the run moved
   on, a step reached again from the middle.
 - **Parallel runs** on the same stock, repository, order or slot: exactly one wins, and the loser gets its answer.
-- **The largest instance:** a run with hundreds of items, with the number of API calls asserted, not only the result.
+- **The largest instance:** a run at the design size, with the number of API calls asserted, not only the result.
 
 A test fakes the platform with the behaviour that matters: a fake that ignores a filter, never refuses a second movement
 or never lags passes code that fails live. Where the fake cannot show a platform rule, name the rule and the dev run
 that showed it.
+
+## Load-test the largest instance
+
+A unit test counts calls on fakes. Only a deployed run shows what the platform does at the design size: the rate limit,
+the read lag, the time a screen takes. Every workflow gets a load test:
+
+- **Size.** The [design size](#design-for-the-largest-instance) from `IMPLEMENTATION.md`.
+- **Where.** The user's environment, usually dev. Never prod.
+- **Data.** A seed script creates the data at that size: the repositories, the items, the serial numbers.
+- **What.** Every step that loads or checks many records, above all loading and checking serial numbers and loading many
+  repositories and items.
+- **Done when** every run reached its expected end event and its API calls match the count in `IMPLEMENTATION.md`.
+  Record the size, the environment, the date and the result there.
