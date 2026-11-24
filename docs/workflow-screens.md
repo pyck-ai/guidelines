@@ -14,6 +14,10 @@ A screen asks for what one person does with their hands in one place: scan the p
 
 "Everything is OK" is one tap. Fields for details appear only after the operator flags a deviation: a missing piece, a damaged pallet, a wrong slot.
 
+## Let Pyck propose and the scan confirm
+
+Pyck proposes the pallet split, the sort field and the storage location, and the screen shows the proposal. The scan of the label confirms the screen: avoid an extra tap after the scan where you can. A scan that does not match the proposal is refused on the spot.
+
 ## Validate a scan on its screen
 
 A bad scan shows an error on the same screen and asks again. It never moves the flow on. A check that needs the platform runs after the submit, and the workflow awaits the same screen again with the reason, as in [Keep Validate pure](workflow-runs.md#keep-validate-pure-and-tie-every-submit-to-its-screen).

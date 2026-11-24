@@ -24,7 +24,7 @@ After a failed create, look once more before you return the error: the first loo
 
 ## Move stock, never set it
 
-Stock changes only by a movement. Creating a movement reserves the stock; executing it books it. To block stock, place the pallet in an excluded subarea: there is no flag that blocks it. A movement's endpoints and quantity cannot change, so a retarget [replaces the movement](#order-a-replace-so-that-a-retry-recognises-every-state).
+Stock changes only by a movement. Creating a movement reserves the stock; executing it books it. To block stock, place the pallet in an excluded subarea: there is no flag that blocks it. Blocked goods stay booked like any stock, but stand in subareas that are never used for orders. A movement's endpoints and quantity cannot change, so a retarget [replaces the movement](#order-a-replace-so-that-a-retry-recognises-every-state).
 
 ## Check both retry points of a create and its settle
 

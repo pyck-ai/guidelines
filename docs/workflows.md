@@ -21,9 +21,13 @@ A person takes seconds between two steps and hides all four. Write every activit
 
 The order that the BPMN shows is the order the design intends, not the order that arrives. Whatever can happen will happen: a submit twice, a signal late, a trigger again on a record halfway through, a step started again from the middle. Every step can be reached again and finds the state it needs, or [names what starts the work again](workflow-runs.md#name-what-starts-the-work-again-after-an-early-end).
 
+## Put the shopfloor on the device and the office in the web app
+
+A workflow serves two roles. The shopfloor works on the device (the scanner), the office in the web app. An approval or a clarification always goes to the office, never to an operator on the floor. Every exception [goes to the office](workflow-runs.md#send-every-exception-to-the-office) too, and the floor carries on with the rest of its work.
+
 ## Give one run to one person
 
-A run belongs to one person, from its start to its end, and only one person works on it at a time. Work that several people can do in parallel becomes several workflows that coordinate by signals and the [hand-over](workflow-runs.md#write-the-hand-over-down-once). The assignee belongs to the whole run and cannot change, so a wait that outlives one person's turn [ends the run](workflow-runs.md#keep-the-workflow-function-deterministic-and-thin).
+A run belongs to one person, from its start to its end, and only one person works on it at a time. Work that several people can do in parallel, such as several people booking one truck, becomes several workflows that coordinate by signals and the [hand-over](workflow-runs.md#write-the-hand-over-down-once). The assignee belongs to the whole run and cannot change, so a wait that outlives one person's turn [ends the run](workflow-runs.md#keep-the-workflow-function-deterministic-and-thin).
 
 ## Design for the largest instance
 

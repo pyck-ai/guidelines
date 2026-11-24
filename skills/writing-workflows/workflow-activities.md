@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-activities.md (sha256 61a3b4530731) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-activities.md and run task generate. -->
+<!-- Generated from docs/workflow-activities.md (sha256 bedb98e0bacf) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-activities.md and run task generate. -->
 # Workflow Activity Guidelines
 
 <!-- toc
@@ -59,8 +59,9 @@ record: a number drawn from a shared range. A repeat uses up a number, so the re
 ## Move stock, never set it
 
 Stock changes only by a movement. Creating a movement reserves the stock; executing it books it. To block stock, place
-the pallet in an excluded subarea: there is no flag that blocks it. A movement's endpoints and quantity cannot change,
-so a retarget [replaces the movement](#order-a-replace-so-that-a-retry-recognises-every-state).
+the pallet in an excluded subarea: there is no flag that blocks it. Blocked goods stay booked like any stock, but stand
+in subareas that are never used for orders. A movement's endpoints and quantity cannot change, so a retarget [replaces
+the movement](#order-a-replace-so-that-a-retry-recognises-every-state).
 
 ## Check both retry points of a create and its settle
 

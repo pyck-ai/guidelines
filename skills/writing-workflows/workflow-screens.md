@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-screens.md (sha256 da2793fb82c9) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-screens.md and run task generate. -->
+<!-- Generated from docs/workflow-screens.md (sha256 90297cf4ce05) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-screens.md and run task generate. -->
 # Workflow Screen Guidelines
 
 The rules for the screens of a workflow's user tasks and for the documents it generates. The rules for the BPMN model
@@ -21,6 +21,12 @@ on. A crowded screen means a split is missing.
 
 "Everything is OK" is one tap. Fields for details appear only after the operator flags a deviation: a missing piece, a
 damaged pallet, a wrong slot.
+
+## Let Pyck propose and the scan confirm
+
+Pyck proposes the pallet split, the sort field and the storage location, and the screen shows the proposal. The scan of
+the label confirms the screen: avoid an extra tap after the scan where you can. A scan that does not match the proposal
+is refused on the spot.
 
 ## Validate a scan on its screen
 

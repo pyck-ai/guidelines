@@ -103,6 +103,12 @@ The SDK default is 10 minutes per attempt and unlimited attempts, so a refusal r
 - An activity that fails for good fails the run, and a failed run shows only in the Temporal UI. So no run fails: in every workflow, catch the error when the retries ran out and take the [recovery path](workflow-modeling.md#model-the-recovery-path-of-every-call-that-can-fail) that the BPMN models: a screen that lets the operator heal the error (try again, reprint, choose another), or a named exception end that tells a person and names what starts the work again. A run without an operator takes the exception end.
 - The operator sees what happened and what to do, in [their words](workflow-screens.md#write-every-text-for-a-logistician). The GraphQL error and its cause go to the log, never to the screen.
 
+## Send every exception to the office
+
+Every exception goes to the office: a damaged pallet, a missing piece, a refusal the floor cannot heal. How the office is told is decided per project and written in its docs. [An event alone tells nobody](workflow-activities.md#send-an-event-last-from-its-own-activity).
+
+The floor carries on with the rest of the delivery. The exception takes the affected item out of the run's work. It does not end the run, and the run does not wait for the office.
+
 ## Give every resource an exit
 
 Nothing restarts a run. The workflow's `IMPLEMENTATION.md` keeps a release matrix: every reservation, block, label, stamp, claim, recorded serial and started job that the run creates, and its exit on done, cancel, failure and reset. An exit can be "stays, the office lifts it" (a slot block) or "retired when empty" (a pallet). A started job is told or cancelled.

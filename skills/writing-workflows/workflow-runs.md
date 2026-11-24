@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-runs.md (sha256 7b6c44af013b) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-runs.md and run task generate. -->
+<!-- Generated from docs/workflow-runs.md (sha256 5fcbb980804a) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-runs.md and run task generate. -->
 # Workflow Run Guidelines
 
 <!-- toc
@@ -11,6 +11,7 @@
 - [Keep Validate pure and tie every submit to its screen](#keep-validate-pure-and-tie-every-submit-to-its-screen)
 - [Set the timeouts and the retry policy yourself](#set-the-timeouts-and-the-retry-policy-yourself)
 - [Classify every error](#classify-every-error)
+- [Send every exception to the office](#send-every-exception-to-the-office)
 - [Give every resource an exit](#give-every-resource-an-exit)
 - [Name what starts the work again after an early end](#name-what-starts-the-work-again-after-an-early-end)
 - [Treat open runs as users of the code](#treat-open-runs-as-users-of-the-code)
@@ -170,6 +171,15 @@ error that an activity can meet its class:
 - The operator sees what happened and what to do, in [their
   words](~/.pyck/guidelines/docs/workflow-screens.md#write-every-text-for-a-logistician). The GraphQL error and its
   cause go to the log, never to the screen.
+
+## Send every exception to the office
+
+Every exception goes to the office: a damaged pallet, a missing piece, a refusal the floor cannot heal. How the office
+is told is decided per project and written in its docs. [An event alone tells
+nobody](~/.pyck/guidelines/docs/workflow-activities.md#send-an-event-last-from-its-own-activity).
+
+The floor carries on with the rest of the delivery. The exception takes the affected item out of the run's work. It does
+not end the run, and the run does not wait for the office.
 
 ## Give every resource an exit
 
