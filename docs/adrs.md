@@ -31,6 +31,16 @@ Applies when you create an ADR file.
 - Title the ADR `# ADR-26W27-02: <the decision as a phrase>`.
 - Keep one copy of an ADR. Another repository links to it and does not copy it.
 
+## An ADR is public by default
+
+Applies when you write an ADR or decide where it goes.
+
+- Write every ADR as if anyone can read it. A repository can publish its docs through a public mirror or a docs site, and an ADR outlives the repository's current visibility.
+- Keep internal detail out: customer and tenant names, incident numbers and what happened in them, links to private repositories, issues and pull requests, internal hostnames and environment names, deployment and configuration details (limits, topology, what runs where at which version), and anything that helps an attacker.
+- State the evidence without the detail: "a customer project found 499 runs that never ended", not the repository and the issue. Name planned work by a stable public name, not by an internal issue number. The mapping from name to issue and the full evidence go into an internal file next to the ADR, such as `docs/adr/internal/adr-{yy}w{ww}-{nn}-tracking.md`.
+- Put an ADR in `docs/adr/internal/` only when the decision itself cannot be stated without internal detail. It keeps the same naming and numbering as the public ADRs, so numbers never collide, and it is listed in `docs/adr/internal/README.md`, not in the public index.
+- Before you put anything in `docs/adr/internal/`, check that the repository's mirror and docs site strip it, for example a `.publicignore` with the line `docs/**/internal/`. A repository without that rule is not ready for internal ADRs.
+
 ## The template
 
 Applies when you write the body of an ADR.
