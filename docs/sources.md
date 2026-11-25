@@ -196,9 +196,28 @@ What each project supplies:
 | Rule | Source | Quote | Read on |
 | --- | --- | --- | --- |
 | Trailing list of runs | [Temporal docs, Visibility](https://docs.temporal.io/visibility) | "Treat Visibility as eventually consistent and avoid depending on a fixed or guaranteed delay." | 2026-11-19 |
+| No retry loop on a 429 | [Temporal docs, Activity Definition](https://docs.temporal.io/activity-definition) | "You should typically not write retry logic manually within your Activity Definition." | 2026-11-23 |
+| Retry after the server's delay | [Temporal docs, Delayed Retry](https://docs.temporal.io/design-patterns/delayed-retry) | "Throw an `ApplicationFailure` with `nextRetryDelay` set inside the Activity to delay the next retry for a fixed time." | 2026-11-23 |
+| Idempotency key from the run | [Temporal docs, Activity Definition](https://docs.temporal.io/activity-definition) | "You can use a combination of the Workflow Run ID and the Activity ID as an idempotency key" | 2026-11-23 |
 
 ### [docs/workflow-runs.md](./workflow-runs.md)
 
 | Rule | Source | Quote | Read on |
 | --- | --- | --- | --- |
 | One run per record | [Temporal docs, Visibility](https://docs.temporal.io/visibility) | "To check whether a specific workflow exists, start it and handle the already-started result, or look it up by ID with `DescribeWorkflowExecution`." | 2026-11-19 |
+
+### [docs/workflow-testing.md](./workflow-testing.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Replay tests in CI | [Temporal docs, Go testing suite](https://docs.temporal.io/develop/go/best-practices/testing-suite) | "Fail CI if any error is encountered during replay" | 2026-11-23 |
+| The test mix | [Temporal docs, .NET testing suite](https://docs.temporal.io/develop/dotnet/best-practices/testing-suite) | "We generally recommend writing the majority of your tests as integration tests" | 2026-11-23 |
+| The static check misses some cases | [workflowcheck README](https://github.com/temporalio/sdk-go/blob/main/contrib/tools/workflowcheck/README.md) | "This will not catch all cases of non-determinism such as global var mutation." | 2026-11-23 |
+
+### [docs/workflow-review.md](./workflow-review.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Version gate for a changed workflow | [Temporal docs, Safe deployments](https://docs.temporal.io/develop/safe-deployments) | "Changes to your Workflow code that qualify as non-deterministic need to be protected by either using Worker Versioning" | 2026-11-23 |
+| Check that the tests are valid | [Google engineering practices, What to look for](https://google.github.io/eng-practices/review/reviewer/looking-for.html) | "Tests do not test themselves" | 2026-11-23 |
+| One business day to reply | [Google engineering practices, Speed of code reviews](https://google.github.io/eng-practices/review/reviewer/speed.html) | "One business day is the maximum time it should take to respond to a code review request" | 2026-11-23 |

@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-activities.md (sha256 bedb98e0bacf) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-activities.md and run task generate. -->
+<!-- Generated from docs/workflow-activities.md (sha256 ee8ea4a17a99) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-activities.md and run task generate. -->
 # Workflow Activity Guidelines
 
 <!-- toc
@@ -23,7 +23,8 @@
 
 The patterns behind the effect classes in
 [workflows.md](~/.pyck/guidelines/docs/workflows.md#give-each-effect-the-pattern-its-class-needs), and the rules for an
-activity that reads right after a write or works next to a twin. Helper names in the examples are placeholders.
+activity that reads right after a write or works next to a twin. Read a section when a build step or a check names it,
+not up front. Helper names in the examples are placeholders, defined in the example itself.
 
 Temporal runs an activity again after a failed call, a lost reply, a dead worker, or an attempt that outlived
 `StartToCloseTimeout` while its work went on. In the last three cases the platform holds a write that the code never saw
@@ -53,8 +54,15 @@ landed. Four mistakes make the lookup look right and miss:
   and both create. Name the platform rule that refuses the second create, or claim the name first with a
   [compare-and-swap](#guard-a-conditional-write-with-compare-and-swap).
 
+Build the key by hand as above and look it up before every create. An opt-in idempotency key per call is planned
+(`limitation:no-idempotency-key-client`). It does not replace the lookup: a reset gives a new run id, and an activity
+after the reset point gets a new activity id unless it sets `ActivityOptions.ActivityID`.
+
 `time.Now()`, `uuid.New()` and random values in an activity are for logs and cache expiry only. One exception reaches a
 record: a number drawn from a shared range. A repeat uses up a number, so the record that carries it needs its own key.
+
+Checked by: the workflow analyzers (`pyck vet`, planned, `limitation:no-workflow-analyzers`) for `time.Now` and
+`uuid.New` in an activity that reaches a record.
 
 ## Move stock, never set it
 
@@ -150,7 +158,7 @@ with every retry.
 - Put into a start event's `data` what the receiver would read back: the ids you created, the status you set, the
   quantities.
 - A completed run does not absorb a second event with its id, so the receiver's start guard handles a duplicate.
-- An event that nobody subscribes to tells nobody. "The office is told" needs a transport that a person reads.
+- An event alone tells nobody: nobody may subscribe to it. "The office is told" needs a transport that a person reads.
 
 ## Make a loop resume
 
@@ -161,8 +169,8 @@ loop only inflates the timeout.
 
 ## Decide from facts the run holds
 
-Pyck answers queries from a read replica, and Temporal's list of runs trails the same way. A stale read hits where it
-decides most:
+A read right after a write can miss the write, and Temporal's list of runs trails the same way (platform behaviour doc
+in workflowsdk, "Reads and writes" and "History and visibility"). A stale read hits where it decides most:
 
 - a start guard reads what the sender just wrote: "not found", the run ends silently and the sender's reservation stays;
 - an activity reads back its own write: "the claim did not land", and a run whose write succeeded fails;
@@ -173,17 +181,19 @@ So read less:
 
 - Pass facts through workflow state within a run and in the start payload between runs, and take a write's result from
   its response.
-- Read again only what another actor changes: another run, the office, another operator.
+- Read again only what another actor changes: another run, the office, another warehouse worker.
 - Read your own write back to learn why a patch was refused, never to confirm that it landed. A stale read-back is a
   retryable error, and the next attempt, a second later, reads again. A non-retryable error on "not visible" turns lag
   into a failed run.
+- Decide from facts the run holds, or retry the read, until the platform reads its own writes. A position token that
+  makes the read wait for the write is planned (`limitation:no-read-your-writes`).
 - Compute a figure from what you booked, not from stock read right after the execute: "the pallet is empty now", "the
   next number is n+1".
-- Lag is one way a read is wrong. `docs/framework-facts.md` lists the others, which answer plausibly and raise no error:
-  a list read without `first` stops at 200 rows, `stocks` returns history where `currentStocks` returns the present, a
-  stock row has a rolled-up and an own figure, and an area is a stored pallet's ancestor, not its parent. Each of these
-  shipped green at least once, because a fake that ignores filters passes a query the server refuses or answers
-  differently: check every new query against the live schema once.
+- Lag is one way a read is wrong. The platform behaviour doc in workflowsdk lists the others, which answer plausibly and
+  raise no error: a list read without `first` stops at a page cap, `stocks` returns history where `currentStocks`
+  returns the present, a stock row has a rolled-up and an own figure, and an area is a stored pallet's ancestor, not its
+  parent. A fake that ignores filters passes a query the server refuses or answers differently: check every new query
+  against the live schema once.
 
 ## Retry what the start guard cannot see yet
 
@@ -194,16 +204,17 @@ evidence is young, and the real answer on the last attempt:
 
 ```go
 if reservation == nil {
-	if replicalag.Young(in.ReservationID, time.Now(), youngBound) && !replicalag.LastAttempt(ctx) {
-		return nil, replicalag.Error("reservation " + in.ReservationID + " not visible yet")
+	if young(in.ReservationID, youngBound) && !lastAttempt(ctx) {
+		return nil, fmt.Errorf("reservation %s not visible yet", in.ReservationID) // a plain error is retryable
 	}
 	return notApplicable(reasonReservationNotFound)
 }
 ```
 
-`Young` tests a UUID v7 id against a bound. `LastAttempt` compares the attempt with `MaximumAttempts` of the retry
-policy. Without that value every attempt counts as the last, and the guard stops retrying without a sign. Where the
-repository has no `lib/replicalag`, write the two helpers there first.
+`young(id, bound)` tests whether the time in a UUID v7 id is within `bound` of now. `lastAttempt(ctx)` compares
+`activity.GetInfo(ctx).Attempt` with `MaximumAttempts` of the retry policy. Without that value every attempt counts as
+the last, and the guard stops retrying without a sign. Write the two helpers next to the guard; the bound comes from the
+platform behaviour doc in workflowsdk, "Reads and writes".
 
 ## Let a platform rule pick the winner
 
@@ -218,14 +229,14 @@ the strongest:
 | a create fails when the source cannot cover it | over-reserving stock | stock reservations |
 
 - Use the id, never a lookup of open runs, which trails.
-- Turn a refusal into an answer: plan again, take the next candidate or tell the operator. A retry with the same input
-  meets the same refusal until the run fails.
+- Turn a refusal into an answer: plan again, take the next candidate or tell the warehouse worker. A retry with the same
+  input meets the same refusal until the run fails.
 - Pick and reserve in one activity. After a refusal, read the candidates again and take the next, a bounded number of
   times. A choice made in one activity is fixed in the next activity's input, and two jobs that read one ordered list
   pick the same first candidate.
-- Know which reservation the platform refuses. It refuses a second movement of the same pallet. No known rule refuses a
-  second movement into the same slot: check `docs/framework-facts.md`. Claim such a target with a `TEST` against `null`
-  and an `ADD` on its data, or give the second operator a screen that resolves the collision.
+- Know which reservation the platform refuses. It refuses a second movement of the same pallet. Check the platform
+  behaviour doc in workflowsdk for a second movement into the same slot. Claim such a target with a `TEST` against
+  `null` and an `ADD` on its data, or give the second warehouse worker a screen that resolves the collision.
 - Keep a writer matrix for a `data` key with several writers: the key, every writer, the class of each write and its
   guard. A relative write with several writers loses updates unless it is a compare-and-swap. The office's web form is a
   writer too: it sends every declared key back on save.
@@ -244,12 +255,17 @@ Stuck:
 
 ## Pace loops that write or start runs
 
-The gateway refuses a burst, and the requests of every run that a write starts count against the same limit.
-`docs/framework-facts.md` has the numbers.
+The gateway refuses a burst, and the requests of every run that a write starts count against the same limit. The limits
+are platform facts: the platform behaviour doc in workflowsdk ("Rate limits") owns them.
 
 - Use one activity per item, with a `workflow.Sleep` between them in the workflow, never a sleep in an activity. Budget
   each write plus the requests of the run it starts.
-- Where a refusal for rate is likely, back off in seconds and size `ScheduleToCloseTimeout` for minutes.
+- Write no retry loop inside an activity on a rate refusal (HTTP 429). Return a retryable error and let the activity
+  retry after the server's delay. A retry after a 429 still counts an attempt, so `ScheduleToCloseTimeout` bounds a
+  throttled call: size it for minutes where a refusal for rate is likely.
 - Batch reads by id list (`idIn`, `parentIDIn`): one read per row is a burst of its own.
 - A trigger on Stock rows starts one run per ancestor row of a movement. Let the filter and the start guard reject those
   rows before any read.
+
+The SDK does not read the retry delay of a 429 yet (planned, `limitation:throttle-not-honoured`): set `NextRetryDelay`
+on the error yourself from the response's retry header, and space the requests by hand.

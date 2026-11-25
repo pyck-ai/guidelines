@@ -1,16 +1,23 @@
-<!-- Generated from docs/workflow-screens.md (sha256 90297cf4ce05) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-screens.md and run task generate. -->
+<!-- Generated from docs/workflow-screens.md (sha256 ee3b1346f1a8) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-screens.md and run task generate. -->
 # Workflow Screen Guidelines
 
 The rules for the screens of a workflow's user tasks and for the documents it generates. The rules for the BPMN model
 are in [workflow-modeling.md](~/.pyck/guidelines/docs/workflow-modeling.md), the rules for `Validate` in
-[workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#keep-validate-pure-and-tie-every-submit-to-its-screen).
+[workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#keep-validate-pure-and-tie-every-submit-to-its-screen). Read
+this page when a build step or a check names it, not up front.
 
-## Write every text for a logistician
+## Write every text for a warehouse worker
 
 Every text on a screen and on a document is written for the people in the warehouse: titles, hints, choices and error
 messages. It names the order, the pallet, the slot and what to do next. It never shows an error code, a GraphQL message,
-a stack trace, an id that nobody reads or a word such as "activity", "update" or "workflow". The technical cause goes to
-the log.
+a stack trace, an id that nobody reads or a word such as "activity", "update" or "workflow".
+
+The API returns generic errors, and the real error is reachable through a separate error details API (planned,
+`limitation:raw-api-errors`). Until then the screen shows a plain worker text, and the technical cause goes to the log
+together with the run id, never to a user field, so a person can find it from the run.
+
+Checked by: a string check on screen definitions (planned, `limitation:no-workflow-analyzers`) for forbidden words,
+codes and ids.
 
 ## Show one physical step per screen
 
@@ -19,8 +26,8 @@ on. A crowded screen means a split is missing.
 
 ## Ask for the minimum
 
-"Everything is OK" is one tap. Fields for details appear only after the operator flags a deviation: a missing piece, a
-damaged pallet, a wrong slot.
+"Everything is OK" is one tap. Fields for details appear only after the warehouse worker flags a deviation: a missing
+piece, a damaged pallet, a wrong slot.
 
 ## Let Pyck propose and the scan confirm
 
@@ -32,7 +39,7 @@ is refused on the spot.
 
 A bad scan shows an error on the same screen and asks again. It never moves the flow on. A check that needs the platform
 runs after the submit, and the workflow awaits the same screen again with the reason, as in [Keep Validate
-pure](~/.pyck/guidelines/docs/workflow-runs.md#keep-validate-pure-and-tie-every-submit-to-its-screen).
+pure](workflow-runs.md#keep-validate-pure-and-tie-every-submit-to-its-screen).
 
 ## Send a whole unit of work to the device
 
@@ -42,9 +49,10 @@ screen are a convenience: the binding checks run in service tasks.
 
 ## Avoid the Remote Flutter Widget traps
 
-- A `NumberInput` with a `max` changes a larger typed value to the maximum without a message (in UAT 120 was typed and
-  40 booked). Show the error with `When` and refuse the value in `Validate` instead.
-- The device sends 0 for a number the operator did not touch. Refuse it in `Validate` where 0 is not a real answer.
+- A `NumberInput` with a `max` changes a larger typed value to the maximum without a message (a typed 120 books 40).
+  Show the error with `When` and refuse the value in `Validate` instead.
+- The device sends 0 for a number the warehouse worker did not touch. Refuse it in `Validate` where 0 is not a real
+  answer.
 - Never name a context value like an input field. The two collide in the widget's data.
 - A `ScanField` copies numbers as text. Parse the scan on purpose, and compare it with the context as text where leading
   zeros matter.
@@ -55,17 +63,18 @@ A label, a delivery note or a packing list that the workflow generates is attach
 order, the pallet, the shipment. A reprint reads the attachment and never generates the document again. A second
 generation can buy a second carrier label or draw a second number.
 
-## Print once, and let the operator confirm it
+## Print once, and let the warehouse worker confirm it
 
 A print job has no job id, so nobody can ask the printer whether it printed.
 
 - Never retry a print after its first byte went out. Run it with one attempt, as in [Keep an outside call alone in its
-  activity](~/.pyck/guidelines/docs/workflow-activities.md#keep-an-outside-call-alone-in-its-activity).
-- "Printed" is the operator's confirmation on the screen after the print, not the result of the call.
+  activity](workflow-activities.md#keep-an-outside-call-alone-in-its-activity).
+- "Printed" is the warehouse worker's confirmation on the screen after the print, not the result of the call.
 - The screen offers a reprint of the attached document, so a jammed or lost print never needs the office.
 
 ## Mark a stand-in document so nobody mistakes it
 
 When the real document cannot be generated, for example a carrier refuses the label, a stand-in may let the work go on.
-A stand-in carries a large bold error text, such as "NOT A VALID LABEL: carrier refused", so that nobody can confuse it
-with a real document. The run tells a person and offers the recovery path that replaces it with the real one.
+This holds for every document the workflow generates. A stand-in carries a large bold error text, such as "NOT A VALID
+LABEL: carrier refused", so that nobody can confuse it with a real document. The run tells a person and offers the
+recovery path that replaces it with the real one.
