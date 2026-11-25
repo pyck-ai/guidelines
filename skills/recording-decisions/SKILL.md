@@ -3,6 +3,7 @@ name: recording-decisions
 description: Use when making or recording an architecture decision, writing, numbering or superseding an ADR, and before adding a file to a docs/adr directory. Applies the org rules for when an ADR is needed, how it is named and laid out, and how a later ADR replaces it.
 metadata:
   harness: generic
+  roles: [write]
 ---
 
 # ADRs guideline

@@ -3,6 +3,7 @@ name: testing
 description: Use when writing, changing or reviewing a test, or deciding what to test. Applies the org rules for tests.
 metadata:
   harness: generic
+  roles: [implement]
 ---
 
 # Testing guideline

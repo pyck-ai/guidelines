@@ -3,6 +3,7 @@ name: writing-commits
 description: Use before writing, amending, rewording or reviewing a commit message, creating or renaming a branch, adding an issue reference (Closes, Part-of, See-also) or signing commits. Applies the org rules for git commit messages and branch names.
 metadata:
   harness: generic
+  roles: [write]
 ---
 
 # Commit and branch guideline

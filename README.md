@@ -24,6 +24,14 @@ Out of the box, pyck-ai/guidelines includes:
 - **Guideline docs**: the rules for commits, issues, pull requests, READMEs, technical writing, code design, testing, SQL, observability, architecture decisions, code review and CI, listed under [Documentation](#documentation).
 - **AGENTS.md**: [the org-wide rules](./AGENTS.md) every agent follows, with a pointer to the skill for each task.
 - **Skills**: one per doc under [`skills/`](./skills), each a short "when to use" plus a generated copy of the doc, and for `opening-pull-requests` and `writing-issues` of the org templates, for [opencode](https://opencode.ai) and pi. Claude Code is not a supported target.
+- **Skill roles**: each `SKILL.md` carries `metadata.roles`, a one-line list such as `roles: [implement, write]` next to `metadata.harness`. A role is a kind of work, never the name of an agent or a harness, so a harness can map its own workers to roles. A skill takes the roles of the work it is used for:
+  - `implement`: writing and changing code, with the org code rules, debugging, design before code and simplifying.
+  - `review`: judging a diff, a pull request or existing code against rules, and reporting findings rather than fixes.
+  - `research`: gathering and explaining facts from the codebase or the outside world, read only.
+  - `write`: producing prose a person reads, such as docs, commits, issues, pull request text, reports and decks.
+  - `verify`: proving a claim or a change with evidence, such as planning the evidence and working-method principles.
+  - `ops`: operating and measuring the running systems, such as incidents, releases, benchmarks and reports on our own infrastructure.
+  - `orchestrate`: coordinating other workers and the person, such as dispatching helpers, gating their results and asking for decisions.
 - **AGENTS.md template**: [`templates/AGENTS.md`](./templates/AGENTS.md), the start of a repository's own `AGENTS.md`.
 - **Sources template**: [`templates/sources.md`](./templates/sources.md), the layout of a repository's `docs/sources.md`.
 - **Skill generator**: [`scripts/generate-skills.sh`](./scripts/generate-skills.sh) writes each skill's copy of its doc and of the .github templates, with links rewritten to `~/.pyck/guidelines` paths and the prose wrapped at 120 characters (`docs/` keep any width); `task generate` runs it. The first line of each copy names its source and the version of it, `(sha256 <12 hex characters>)`: the start of the sha256 of the source file's bytes, so two copies of one source match when the hashes do.

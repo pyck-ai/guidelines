@@ -3,6 +3,7 @@ name: writing-issues
 description: Use before creating, editing, triaging, retyping or reviewing an issue, starting work on one, adding a sub-issue or setting an issue's milestone. Applies the org rules for GitHub issues.
 metadata:
   harness: generic
+  roles: [write]
 ---
 
 # Issue guideline
