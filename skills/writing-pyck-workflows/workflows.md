@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflows.md (sha256 7eec3dd57bea) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflows.md and run task generate. -->
+<!-- Generated from docs/workflows.md (sha256 c80d35f5b0e8) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflows.md and run task generate. -->
 # Workflow Guidelines
 
 <!-- toc
@@ -16,8 +16,8 @@
 What to decide before you write a Temporal workflow on the Pyck platform (Go, workflowsdk). Get it working first, then
 run the checks and fix what they name. This page holds only what no tool reports.
 
-Read the rows of the platform behaviour doc in workflowsdk (`backend/workflowsdk/docs/platform-behaviour.md`) for every
-feature you touch. A surprise it does not list goes into `docs/tenant-facts.md` with its source. General rules:
+Read the rows of the platform behaviour doc of workflowsdk for every feature you touch. A surprise it does not list goes
+into `docs/tenant-facts.md` with its source. General rules:
 [code-design.md](~/.pyck/guidelines/docs/code-design.md#make-operations-idempotent),
 [testing.md](~/.pyck/guidelines/docs/testing.md).
 
@@ -25,8 +25,8 @@ feature you touch. A surprise it does not list goes into `docs/tenant-facts.md` 
 
 Run `go build ./... && go vet ./...`, `go tool workflowcheck ./...`, `pyck bpmn lint --fail-on warning`,
 `pyck bpmn fmt --check`, `pyck layout lint` and `go test ./...`. One command, `pyck workflow check`, will run them in
-order (planned, ADR-26W48-01 §2.13). A rule that a check enforces is not repeated here: fix what the message says and
-open the doc it links.
+order (planned, `limitation:no-workflow-check-command`). A rule that a check enforces is not repeated here: fix what the
+message says and open the doc it links.
 
 ## Design for the four things the happy path hides
 
@@ -114,30 +114,31 @@ because a value made inside an activity differs on every attempt; a rule that se
 
 ## What ships today and what comes later
 
-The one status table for every doc (ADR-26W48-01 §2.12). A rule holds today, holds with the workaround named, or is
-planned: do not build a private version of a planned rule.
+The one status table for every doc. A rule holds today, holds with the workaround named, or is planned: do not build a
+private version of a planned rule. A limitation id names a platform gap; the limitations list of workflowsdk says what
+is missing, the workaround and what removes it.
 
-| ADR § | Rule | Today | Workaround until |
+| Limitation | Rule | Today | Workaround until |
 | --- | --- | --- | --- |
-| 2.1 | START and SIGNAL kinds; a cancelled create run is final | SIGNAL by id | re-read after a broadcast; cap the first attempts |
-| 2.2 | One open run per concurrency key | none | a thin trigger run starts the job as a child under a record id |
-| 2.3 | Duplicate defence in three layers | request ids, lookup before write | a hand-written seen set |
-| 2.4 | A panic stalls the run; an uncaught expected kind fails it | expected kinds caught | `MaximumAttempts` and `ScheduleToCloseTimeout` per activity |
-| 2.5 | Plain Go errors that survive Temporal | none | the root workflow matches with `IsError` only on errors built in the same worker |
-| 2.6 | Reset to a named point | restart | an engineer resets to a step the design doc names |
-| 2.7 | Bounded waits; no run lives longer than 30 days | bounded: `workflow.AwaitWithTimeout` | end the run and restart on the event, or continue as new before 30 days |
-| 2.8 | Read-your-writes, 429 delay | reads on the primary | decide from facts the run holds, or retry the read |
-| 2.9 | Error details through a separate API | worker text on the screen | technical cause only in the log |
-| 2.11 | Alerts on failed and stalled runs | none | every end that leaves work undone tells a person |
-| 2.13 | One check command, BPMN subset and docs checks | the separate commands | run each by hand |
+| `limitation:start-delivered-twice`, `limitation:broadcast-misses-fresh-run`, `limitation:cancelled-create-restarts` | START and SIGNAL kinds; a cancelled create run is final | SIGNAL by id | re-read after a broadcast; cap the first attempts |
+| `limitation:no-concurrency-key`, `limitation:no-schedules-api` | One open run per concurrency key | none | a thin trigger run starts the job as a child under a record id |
+| `limitation:no-event-loop`, `limitation:no-idempotency-key-client`, `limitation:no-update-id` | Duplicate defence in three layers | request ids, lookup before write | a hand-written seen set |
+| `limitation:panic-policy-implicit`, `limitation:unbounded-retries` | A panic stalls the run; an uncaught expected kind fails it | expected kinds caught | `MaximumAttempts` and `ScheduleToCloseTimeout` per activity |
+| `limitation:unstable-error-type`, `limitation:errors-lose-identity` | Plain Go errors that survive Temporal | none | the root workflow matches with `IsError` only on errors built in the same worker |
+| `limitation:no-reset-points`, `limitation:no-tenant-run-controls` | Reset to a named point | restart | an engineer resets to a step the design doc names |
+| `limitation:no-run-limit` | Bounded waits; no run lives longer than 30 days | bounded: `workflow.AwaitWithTimeout` | end the run and restart on the event, or continue as new before 30 days |
+| `limitation:no-read-your-writes`, `limitation:throttle-not-honoured` | Read-your-writes, 429 delay | reads on the primary | decide from facts the run holds, or retry the read |
+| `limitation:raw-api-errors` | Error details through a separate API | worker text on the screen | technical cause only in the log |
+| `limitation:no-failure-alerts` | Alerts on failed and stalled runs | none | every end that leaves work undone tells a person |
+| `limitation:no-workflow-check-command`, `limitation:layout-lint-outdated`, `limitation:no-workflow-analyzers`, `limitation:no-bpmn-subset-lint`, `limitation:no-client-freshness-check`, `limitation:no-data-index-check` | One check command, BPMN subset and docs checks | the separate commands | run each by hand |
 
 Mark every workaround, so it can be removed when its fix ships. This covers a workaround from the table and any code
 that works around a missing platform feature or a known defect. Put the marker on the line above the code, naming the
-issue that blocks the real fix (ADR-26W48-01 §2.12 links each one), and add the same issue to the "Workarounds" table
-of the workflow's `README.md`:
+limitation id from the limitations list of workflowsdk, and add the same id to the "Workarounds" table of the workflow's
+`README.md`:
 
 ```go
-// WORKAROUND(pyck-ai/pyck#<n>): <what this does instead>; remove when <the fix> ships.
+// WORKAROUND(limitation:<id>): <what this does instead>; remove when the limitations list marks it resolved.
 ```
 
-When the issue closes, `grep -rn 'WORKAROUND(<repo>#<n>)'` finds every place to remove.
+When the limitations list marks an id resolved, `grep -rn 'WORKAROUND(limitation:<id>)'` finds every place to remove.

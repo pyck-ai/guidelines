@@ -32,11 +32,11 @@
 
 ## Workarounds
 
-<!-- One row per WORKAROUND(<repo>#<n>) marker in this workflow's code, sorted by issue. A marker without a row, or a row without a marker, is a defect. Delete the section when the table is empty. See docs/workflows.md. -->
+<!-- One row per WORKAROUND(limitation:<id>) marker in this workflow's code, sorted by id. A marker without a row, or a row without a marker, is a defect. Delete the section when the table is empty. See docs/workflows.md. -->
 
-| Issue | Workaround | Where |
+| Limitation | Workaround | Where |
 | --- | --- | --- |
-| {pyck-ai/pyck#n} | {What the code does instead of the missing feature or the fix.} | {package or file} |
+| {limitation:<id>} | {What the code does instead of the missing feature or the fix.} | {package or file} |
 
 ## Docs and issues
 

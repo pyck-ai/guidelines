@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-runs.md (sha256 72a413ce88eb) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-runs.md and run task generate. -->
+<!-- Generated from docs/workflow-runs.md (sha256 0807e73e6161) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-runs.md and run task generate. -->
 # Workflow Run Guidelines
 
 <!-- toc
@@ -23,14 +23,13 @@ a deploy. The patterns for its activities are in
 [workflow-activities.md](~/.pyck/guidelines/docs/workflow-activities.md). Read this page when a build step or a check
 names a section of it, not up front.
 
-Rules that a tool will check carry a "Checked by" line (ADR-26W48-01 §2.13). When the check ships, the rule shrinks to
-the check's message.
+Rules that a tool will check carry a "Checked by" line. When the check ships, the rule shrinks to the check's message.
 
 ## Keep a write-matrix for a domain-event start
 
-The platform behaviour doc in workflowsdk (`backend/workflowsdk/docs/platform-behaviour.md`, section "Starts and the
-router") owns the mechanics of a start: registration, operations, filter syntax, schedules and signals by id. The
-repository's `docs/tenant-facts.md` records what one tenant shows beyond it. Three consequences shape the design:
+The platform behaviour doc of workflowsdk (section "Starts and the router") owns the mechanics of a start: registration,
+operations, filter syntax, schedules and signals by id. The repository's `docs/tenant-facts.md` records what one tenant
+shows beyond it. Three consequences shape the design:
 
 - A filter sees the record after the change and nothing before it. A filter on a status matches every write while the
   status holds, not only the transition.
@@ -128,15 +127,15 @@ activities.
 - Give a wait for another run a second check or a second trigger for the case that its event never comes, and a test in
   which the event is dropped.
 - Make every wait bounded: a deadline that escalates, such as a reminder, a reassignment, a recovery screen or an
-  exception end. No run lives longer than 30 days (ADR-26W48-01 §2.7). A wait for something that comes days later, such
-  as stock for a pallet, ends the run, and the event starts a new one. A run that must live long continues as new before
-  30 days. `WorkflowRunTimeout` of 30 days is the backstop and never the designed end.
+  exception end. No run lives longer than 30 days (`limitation:no-run-limit`). A wait for something that comes days
+  later, such as stock for a pallet, ends the run, and the event starts a new one. A run that must live long continues
+  as new before 30 days. `WorkflowRunTimeout` of 30 days is the backstop and never the designed end.
 - Reassign a run when a wait outlives one person's turn. The assignee of a run can change at any time, so the run stays
   open. Do not end it and restart it as a new run. A workflow that must not change hands says so in `docs/design.md`.
 
-Checked by: `workflowcheck` today; the workflow analyzers (`pyck vet`, planned, ADR-26W48-01 §2.13) for `time.Now` and
-`uuid.New` in workflow code, a `SideEffect` closure that assigns an outer variable, an `Await` with no timeout and
-personal data in a search attribute.
+Checked by: `workflowcheck` today; the workflow analyzers (`pyck vet`, planned, `limitation:no-workflow-analyzers`) for
+`time.Now` and `uuid.New` in workflow code, a `SideEffect` closure that assigns an outer variable, an `Await` with no
+timeout and personal data in a search attribute.
 
 ## Keep Validate pure and tie every submit to its screen
 
@@ -158,8 +157,8 @@ A user task is one screen: an update that the run awaits. Its `Validate` is a Te
   main flow act. Where a handler runs an activity, serialise with `workflow.NewMutex`, and wait for
   `workflow.AllHandlersFinished` before the run returns or continues as new.
 
-Checked by: the workflow analyzers (planned, §2.13) for a `Validate` that calls an activity or writes state, and for a
-return path without `AllHandlersFinished`.
+Checked by: the workflow analyzers (planned, `limitation:no-workflow-analyzers`) for a `Validate` that calls an activity
+or writes state, and for a return path without `AllHandlersFinished`.
 
 ## Set the timeouts and the retry policy yourself
 
@@ -179,8 +178,9 @@ idle (platform behaviour doc, "Retries and errors").
   still counts an attempt, so `ScheduleToCloseTimeout`, not `MaximumAttempts`, bounds a throttled call.
 - Give a child workflow its own retry policy, as in the [example](#start-one-run-per-record-under-an-id-you-choose).
 
-Checked by: the workflow analyzers (planned, §2.13) for a missing timeout or `MaximumAttempts` on an activity or child
-workflow. A bounded default retry policy (ADR-26W48-01 §2.4, planned) will remove the rule for the usual case.
+Checked by: the workflow analyzers (planned, `limitation:no-workflow-analyzers`) for a missing timeout or
+`MaximumAttempts` on an activity or child workflow. A bounded default retry policy (`limitation:unbounded-retries`,
+planned) will remove the rule for the usual case.
 
 ## Classify every error
 
@@ -202,7 +202,7 @@ error that an activity can meet its class:
 - A non-retryable error says that a retry cannot help. "I cannot see my write yet" never is one.
 - Return the typed application error itself. A new error built from its text is retryable.
 
-Errors come in two kinds (ADR-26W48-01 §2.4):
+Errors come in two kinds:
 
 - An expected condition is one the BPMN draws a recovery path for: an outside system is down, a print is refused, stock
   is short or damaged. The root workflow handles it on that path, after the retries ran out: a screen that lets the
@@ -220,8 +220,8 @@ programming errors that a person should see as a stalled or failed run.
 
 Write an error as plain Go: `var ErrFoo = fmt.Errorf("foo: %w", wferr.ErrSomeKind)` and nothing else. A generated
 registry and a failure converter that make `errors.Is` and `errors.As` work across the activity boundary are planned
-(ADR-26W48-01 §2.5). Today the type of an application error is its message text, so the root workflow matches with
-`workflowsdk.IsError`, and only on an error built in the same worker.
+(`limitation:errors-lose-identity`). Today the type of an application error is its message text, so the root workflow
+matches with `workflowsdk.IsError`, and only on an error built in the same worker.
 
 - The warehouse worker sees what happened and what to do, in [their
   words](workflow-screens.md#write-every-text-for-a-warehouse-worker). The technical cause goes to the log with the run

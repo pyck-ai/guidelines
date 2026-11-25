@@ -98,7 +98,7 @@ Each test fails without the code that handles its case. An edge case without a t
 
 Applies when a workflow or an activity returns or handles an error.
 
-The platform separates expected conditions from programming errors (ADR-26W48-01 §2.4). Test each in its own way.
+The platform separates expected conditions from programming errors. Test each in its own way.
 
 | Kind | What the test proves |
 | --- | --- |
@@ -173,7 +173,7 @@ the read lag and the time a screen takes at the design size.
 ## Run the static checks on every push
 
 Applies to every Go workflow repository. Run each check in CI as well as by hand. `pyck workflow check` will run them in
-order (planned, ADR-26W48-01 §2.13); until it ships, run each command.
+order (planned, `limitation:no-workflow-check-command`); until it ships, run each command.
 
 | Command | What it catches | Today |
 | --- | --- | --- |

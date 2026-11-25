@@ -32,14 +32,14 @@ landed. Four mistakes make the lookup look right and miss:
   [compare-and-swap](#guard-a-conditional-write-with-compare-and-swap).
 
 Build the key by hand as above and look it up before every create. An opt-in idempotency key per call is planned
-(ADR-26W48-01 §2.3). It does not replace the lookup: a reset gives a new run id, and an activity after the reset point
-gets a new activity id unless it sets `ActivityOptions.ActivityID`.
+(`limitation:no-idempotency-key-client`). It does not replace the lookup: a reset gives a new run id, and an activity
+after the reset point gets a new activity id unless it sets `ActivityOptions.ActivityID`.
 
 `time.Now()`, `uuid.New()` and random values in an activity are for logs and cache expiry only. One exception reaches a
 record: a number drawn from a shared range. A repeat uses up a number, so the record that carries it needs its own key.
 
-Checked by: the workflow analyzers (`pyck vet`, planned, ADR-26W48-01 §2.13) for `time.Now` and `uuid.New` in an
-activity that reaches a record.
+Checked by: the workflow analyzers (`pyck vet`, planned, `limitation:no-workflow-analyzers`) for `time.Now` and
+`uuid.New` in an activity that reaches a record.
 
 ## Move stock, never set it
 
@@ -162,7 +162,7 @@ So read less:
   retryable error, and the next attempt, a second later, reads again. A non-retryable error on "not visible" turns lag
   into a failed run.
 - Decide from facts the run holds, or retry the read, until the platform reads its own writes. A position token that
-  makes the read wait for the write is planned (ADR-26W48-01 §2.8).
+  makes the read wait for the write is planned (`limitation:no-read-your-writes`).
 - Compute a figure from what you booked, not from stock read right after the execute: "the pallet is empty now", "the
   next number is n+1".
 - Lag is one way a read is wrong. The platform behaviour doc in workflowsdk lists the others, which answer plausibly and
@@ -243,5 +243,5 @@ are platform facts: the platform behaviour doc in workflowsdk ("Rate limits") ow
 - A trigger on Stock rows starts one run per ancestor row of a movement. Let the filter and the start guard reject those
   rows before any read.
 
-The SDK does not read the retry delay of a 429 yet (planned, ADR-26W48-01 §2.8): set `NextRetryDelay` on the error
-yourself from the response's retry header, and space the requests by hand.
+The SDK does not read the retry delay of a 429 yet (planned, `limitation:throttle-not-honoured`): set `NextRetryDelay`
+on the error yourself from the response's retry header, and space the requests by hand.

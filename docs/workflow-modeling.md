@@ -26,8 +26,8 @@ It contains no boundary event, timer event, message event, subprocess or paralle
 service task followed by a gateway that asks the question ("Within SLA?"), and describe how the run starts in the
 README.
 
-Checked by: the BPMN subset lint in `pyck bpmn lint` (planned, ADR-26W48-01 §2.13) will own this list, and this section
-shrinks to its message.
+Checked by: the BPMN subset lint in `pyck bpmn lint` (planned, `limitation:no-bpmn-subset-lint`) will own this list, and
+this section shrinks to its message.
 
 ## Let every branch run to its own end
 
@@ -50,7 +50,7 @@ the run takes a recovery path that the BPMN shows when the failure is one the wo
 - a named end event for each way the recovery ends, with the state it leaves;
 - or a separate workflow that a person starts to finish the work, named in the end event.
 
-There are two kinds of error (ADR-26W48-01 §2.4). An expected condition is one the workflow can name: a failed booking,
+There are two kinds of error. An expected condition is one the workflow can name: a failed booking,
 a failed print, a refused call, a lost connection. A warehouse worker heals it from the device, so it takes the recovery
 path the BPMN draws, and an expected condition that fails the run is a gap in the model. A programming error is a bug
 that stalls or fails the run, and a person recovers it. The code side of this rule is in [Classify every

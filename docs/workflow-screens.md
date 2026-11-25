@@ -12,10 +12,11 @@ messages. It names the order, the pallet, the slot and what to do next. It never
 a stack trace, an id that nobody reads or a word such as "activity", "update" or "workflow".
 
 The API returns generic errors, and the real error is reachable through a separate error details API (planned,
-ADR-26W48-01 §2.9). Until then the screen shows a plain worker text, and the technical cause goes to the log together
-with the run id, never to a user field, so a person can find it from the run.
+`limitation:raw-api-errors`). Until then the screen shows a plain worker text, and the technical cause goes to the log
+together with the run id, never to a user field, so a person can find it from the run.
 
-Checked by: a string check on screen definitions (planned, ADR-26W48-01 §2.13) for forbidden words, codes and ids.
+Checked by: a string check on screen definitions (planned, `limitation:no-workflow-analyzers`) for forbidden
+words, codes and ids.
 
 ## Show one physical step per screen
 

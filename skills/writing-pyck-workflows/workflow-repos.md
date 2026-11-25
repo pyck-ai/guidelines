@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-repos.md (sha256 154b2d94b5dc) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-repos.md and run task generate. -->
+<!-- Generated from docs/workflow-repos.md (sha256 684d6e4a3c8e) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-repos.md and run task generate. -->
 # Workflow Repository Guidelines
 
 <!-- toc
@@ -54,7 +54,7 @@ A workflow folder is `workflows/NNN-name/`, lowercase and dash-separated. The `.
 
 | File | Contains | Must not contain |
 | --- | --- | --- |
-| `README.md` | one sentence on what the workflow does; how it starts; a table of its end events with the state each leaves; the screens by widget id; the workarounds, each with its blocking issue; links to the docs and issues | the order of the steps, a diagram, API names |
+| `README.md` | one sentence on what the workflow does; how it starts; a table of its end events with the state each leaves; the screens by widget id; the workarounds, each with its limitation id; links to the docs and issues | the order of the steps, a diagram, API names |
 | `NNN-name.bpmn` | the flow: steps, gateways, named flows, end events, `ID: <Widget>` annotations | prose that belongs in the docs |
 | `docs/process.md` | the business view in warehouse words: roles, rules, contract cutoffs, why | the order of the steps, API names, code |
 | `docs/design.md` | how it is built: mental model, set-up, how it starts, a node-to-API table keyed by node name, activity contracts and effect classes, requests per activity, design size and load-test result, release matrix, derived fields, schedules, waits, error kinds and recovery (restart or reset, reset points), decision log, sources | which node follows which |
@@ -85,7 +85,7 @@ Use the templates in [templates/workflow/](~/.pyck/guidelines/templates/workflow
 
 Do not keep a copy of these guidelines in the repository, and remove one that an earlier setup left in `AGENTS.md`: no
 `CONVENTIONS.md`, no `CLAUDE.md`. The rules are in the skills, and the platform's behaviour is in the platform behaviour
-doc in workflowsdk (ADR-26W48-01 §2.10).
+doc of workflowsdk.
 
 ```
 <repo>/
@@ -124,9 +124,9 @@ doc in workflowsdk (ADR-26W48-01 §2.10).
 ## What checks the layout
 
 `pyck layout lint` checks that the files are where this layout says, and `pyck workflow check` will run it with the
-other checks (planned, ADR-26W48-01 §2.13). Today the lint still expects the old names: `CONVENTIONS.md` at the root,
-and `IMPLEMENTATION.md` and `PROCESS.md` in the workflow folder. A failure on one of these is the lint lagging, not a
-mistake of yours. Name the case in the pull request.
+other checks (planned, `limitation:layout-lint-outdated`). Today the lint still expects the old names: `CONVENTIONS.md`
+at the root, and `IMPLEMENTATION.md` and `PROCESS.md` in the workflow folder. A failure on one of these is the lint
+lagging, not a mistake of yours. Name the case in the pull request.
 
 A check that keeps the docs and the BPMN in step is planned in the same section and does not exist yet: a node name in a
 doc that is not in the BPMN, a missing or extra end event row, a "next node" line. Until it exists, review the docs
