@@ -12,6 +12,8 @@ Write an ADR when all three hold:
 - A reader of the code will ask "why is it done this way?".
 - There were real alternatives, and you chose between them for stated reasons.
 
+Before a hard-to-reverse choice, search the existing ADRs across the org's repositories for related decisions; the `graph.json` that [the generator](#the-adr-graph) writes is the index, and `grep` over `docs/adr/` does the same.
+
 In every other case a lighter record is enough. A choice that is cheap to reverse, or that has no real alternative, goes into the commit message ([git.md](git.md)). The reason for one line of code goes into a comment beside it.
 
 ## Match the existing convention first
@@ -76,3 +78,9 @@ Applies when you implement or touch a decided area.
 - In a commit, cite the ADR in a `See-also:` trailer ([git: Footer](git.md#footer)).
 - In code, put the ADR id and a link in a comment at the non-obvious spot. The comment states the constraint, and the ADR keeps the reasoning.
 - In an issue that carries out the decision, link the ADR instead of restating it.
+
+## The ADR graph
+
+Applies when you want the ADRs of one or more repositories as a graph or an index.
+
+`sh scripts/adr-graph.sh --out DIR ADR_DIR...` reads the ADR files in each `docs/adr` directory and writes `DIR/graph.json` (nodes with id, title, repo, status, date and path; edges for `supersedes` and `related`), `DIR/graph.mmd` (Mermaid) and `DIR/graph.html` (a table plus an SVG graph, no script and no network). It uses only the rules of this doc: the id from the file name, the status from the blockquote (or an older `## Status` section), "Supersedes ADR-X" and "Superseded by ADR-Y" in the status text, and links or bare ids elsewhere as `related`. An unknown status or a reference that matches no file is a warning on stderr that names the file; the exit status stays 0. The output is derived: regenerate it, never edit it, and keep it only in the repository whose ADRs it shows. A repository may wire it as a task that writes `docs/adr/graph.html`. The header of the script has the exact rules.
