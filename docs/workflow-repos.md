@@ -1,16 +1,25 @@
 # Workflow Repository Guidelines
 
-The layout of a repository that holds Pyck workflows, and the docs each part carries. The rules for the model are in [workflow-modeling.md](workflow-modeling.md), the rules for the code in [workflows.md](workflows.md). The templates for a workflow's docs are in [templates/workflow/](../templates/workflow/). The org rules for a README, an `AGENTS.md` and an ADR still apply: [readme.md](readme.md), [../templates/AGENTS.md](../templates/AGENTS.md) and [adrs.md](adrs.md).
+The layout of a repository that holds Pyck workflows, and the docs each part carries. Read it when a step of
+[workflows.md](workflows.md) or a layout check asks where a file or a fact lives. The rules for the model are in
+[workflow-modeling.md](workflow-modeling.md). The templates for a workflow's docs are in
+[templates/workflow/](../templates/workflow/). The org rules for a README, an `AGENTS.md` and an ADR still apply:
+[readme.md](readme.md), [../templates/AGENTS.md](../templates/AGENTS.md) and [adrs.md](adrs.md).
 
 ## Keep each workflow self-contained
 
-A workflow folder holds everything needed to understand, build, test and run that workflow: the diagram, the docs, the code, the tests and the seed data. The repository root holds only the glue between workflows and the docs of the worker binary (build, config, deploy).
+A workflow folder holds everything needed to understand, build, test and run that workflow: the diagram, the docs, the
+code, the tests and the seed data. The repository root holds only the glue between workflows and the docs of the worker
+binary (build, config, deploy).
 
-The test for any fact: delete the workflow folder. No doc outside it may become wrong. A fact that fails the test is either glue (it moves to `docs/workflows.md` and names the workflows) or it belongs inside the folder.
+The test for any fact: delete the workflow folder. No doc outside it may become wrong. A fact that fails the test is
+either glue (it moves to `docs/workflows.md` and names the workflows) or it belongs inside the folder.
 
 ## Keep the flow only in the BPMN
 
-The `.bpmn` file is the only place the flow is written. A doc may name a node or an end event. It must not restate the order, the branches or the flows: no "yes → next node" line, no steps told again as prose, no end events copied with their order. Rename a node or add a branch, and a restated flow goes stale without any error.
+The `.bpmn` file is the only place the flow is written. A doc may name a node or an end event. It must not restate the
+order, the branches or the flows: no "yes → next node" line, no steps told again as prose, no end events copied with
+their order. Rename a node or add a branch, and a restated flow goes stale without any error.
 
 Each kind of content has one home:
 
@@ -36,12 +45,13 @@ A workflow folder is `workflows/NNN-name/`, lowercase and dash-separated. The `.
 | `README.md` | one sentence on what the workflow does; how it starts; a table of its end events with the state each leaves; the screens by widget id; links to the docs and issues | the order of the steps, a diagram, API names |
 | `NNN-name.bpmn` | the flow: steps, gateways, named flows, end events, `ID: <Widget>` annotations | prose that belongs in the docs |
 | `docs/process.md` | the business view in warehouse words: roles, rules, contract cutoffs, why | the order of the steps, API names, code |
-| `docs/design.md` | how it is built: mental model, set-up, how it starts, a node-to-API table keyed by node name, activity contracts and effect classes, requests per activity, design size and load-test result, release matrix, error kinds and recovery points, decision log, sources | which node follows which |
+| `docs/design.md` | how it is built: mental model, set-up, how it starts, a node-to-API table keyed by node name, activity contracts and effect classes, requests per activity, design size and load-test result, release matrix, derived fields, schedules, waits, error kinds and recovery (restart or reset, reset points), decision log, sources | which node follows which |
 | `seed/` | data for the tests and the load test | data that other workflows use |
 | `temporal/` | the workflow function, its activities and their tests | |
 | `web/`, `mobile/` | the screens of the office and of the device, where the workflow has them | |
 
-Use the templates in [templates/workflow/](../templates/workflow/) for the three docs. Write `docs/design.md` before the code, and keep it current: a change to an activity changes its row in the same commit.
+Use the templates in [templates/workflow/](../templates/workflow/) for the three docs. Write `docs/design.md` before the
+code, and keep it current: a change to an activity changes its row in the same commit.
 
 ## Lay out the repository root
 
@@ -61,7 +71,9 @@ Use the templates in [templates/workflow/](../templates/workflow/) for the three
 | `workflows/_backlog/` | ideas: a `notes.md` and a draft `.bpmn` per folder |
 | `setup/` | tenant-wide structure and environment only |
 
-Do not keep a copy of these guidelines in the repository: no `CONVENTIONS.md`, no `CLAUDE.md`. The rules are in the skills, and the platform's behaviour is in the platform behaviour doc in workflowsdk (planned in ADR-26W48-01 §2.10).
+Do not keep a copy of these guidelines in the repository, and remove one that an earlier setup left in `AGENTS.md`: no
+`CONVENTIONS.md`, no `CLAUDE.md`. The rules are in the skills, and the platform's behaviour is in the platform behaviour
+doc in workflowsdk (ADR-26W48-01 §2.10).
 
 ```
 <repo>/
@@ -99,6 +111,11 @@ Do not keep a copy of these guidelines in the repository: no `CONVENTIONS.md`, n
 
 ## What checks the layout
 
-`pyck layout lint` checks that the files are where this layout says. The lint is being updated to follow it. Until then it still expects the old names: `CONVENTIONS.md` at the root, and `IMPLEMENTATION.md` and `PROCESS.md` in the workflow folder. A failure on one of these is the lint lagging, not a mistake of yours. Name the case in the pull request.
+`pyck layout lint` checks that the files are where this layout says, and `pyck workflow check` will run it with the
+other checks (planned, ADR-26W48-01 §2.13). Today the lint still expects the old names: `CONVENTIONS.md` at the root,
+and `IMPLEMENTATION.md` and `PROCESS.md` in the workflow folder. A failure on one of these is the lint lagging, not a
+mistake of yours. Name the case in the pull request.
 
-A check that keeps the docs and the BPMN in step is planned tooling and does not exist yet: a node name in a doc that is not in the BPMN, a missing or extra end event row, a "next node" line. Until it exists, review the docs against the BPMN by hand.
+A check that keeps the docs and the BPMN in step is planned in the same section and does not exist yet: a node name in a
+doc that is not in the BPMN, a missing or extra end event row, a "next node" line. Until it exists, review the docs
+against the BPMN by hand.

@@ -1,24 +1,22 @@
-<!-- Generated from docs/workflow-modeling.md (sha256 c385d570a44c) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-modeling.md and run task generate. -->
+<!-- Generated from docs/workflow-modeling.md (sha256 78ac75c83e01) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-modeling.md and run task generate. -->
 # Workflow Modeling Guidelines
 
 The rules for a workflow's BPMN model: what it may contain, how it names things and how it shows every way a run can
 end. The rules for the screens of its user tasks are in
 [workflow-screens.md](~/.pyck/guidelines/docs/workflow-screens.md), the rules for the code in
-[workflows.md](~/.pyck/guidelines/docs/workflows.md).
+[workflows.md](~/.pyck/guidelines/docs/workflows.md). Read this page when a build step or a check names it, not up
+front.
 
 ## Draw the flow once, in the BPMN
 
-The `.bpmn` file is the only place the flow is written. Never draw or tell it again in a README or anywhere else: no
-Mermaid flowchart, no ASCII chain such as `A → B → C`, no table of "yes → next node", no second diagram. A doc may
-name a node or an end event and add what the diagram cannot show: the write-matrix, the release matrix, the hand-over
-contract, the screens. The home of each kind of content is in
+The `.bpmn` file is the only place the flow is written. The rule and the home of each kind of content are in
 [workflow-repos.md](~/.pyck/guidelines/docs/workflow-repos.md#keep-the-flow-only-in-the-bpmn).
 
 ## Stay inside the subset
 
-The subset is a convention. The formatter (`pyck bpmn fmt`) rejects only some elements, such as a boundary event or a
-parallel gateway, and accepts others, such as a timer or a message start event, without checking what they mean. Do not
-read a clean run of the tool as proof that the model follows the subset. A model may contain:
+The subset is a convention that the tools check only in part: `pyck bpmn fmt` rejects some elements, such as a boundary
+event or a parallel gateway, and accepts others, such as a timer or a message start event. A clean run is not proof that
+the model follows the subset. A model may contain:
 
 - one plain `startEvent`;
 - a `serviceTask`;
@@ -31,8 +29,8 @@ It contains no boundary event, timer event, message event, subprocess or paralle
 service task followed by a gateway that asks the question ("Within SLA?"), and describe how the run starts in the
 README.
 
-> **Until typed events ship:** draw a timer as that service task and gateway. Typed timer and message start events and
-> boundary events, marked with a `pyck:trigger` extension that the tool checks, are planned tooling.
+Checked by: the BPMN subset lint in `pyck bpmn lint` (planned, ADR-26W48-01 §2.13) will own this list, and this section
+shrinks to its message.
 
 ## Let every branch run to its own end
 
@@ -47,9 +45,8 @@ rule](~/.pyck/guidelines/docs/workflow-runs.md#name-what-starts-the-work-again-a
 ## Model the recovery path of every call that can fail
 
 A call to the platform or to an outside system retries a few times, with the [retry
-policy](~/.pyck/guidelines/docs/workflow-runs.md#set-the-timeouts-and-the-retry-policy-yourself) the workflow sets. When
-the retries run out, the run takes a recovery path that the BPMN shows when the failure is one the workflow expects, and
-does not just fail:
+policy](workflow-runs.md#set-the-timeouts-and-the-retry-policy-yourself) the workflow sets. When the retries run out,
+the run takes a recovery path that the BPMN shows when the failure is one the workflow expects, and does not just fail:
 
 - a screen that tells the warehouse worker what happened in their words and offers what fixes it: try again, reprint,
   choose another pallet, hand the case to the office;
@@ -59,9 +56,9 @@ does not just fail:
 
 There are two kinds of error (ADR-26W48-01 §2.4). An expected condition is one the workflow can name: a failed booking,
 a failed print, a refused call, a lost connection. A warehouse worker heals it from the device, so it takes the recovery
-path the BPMN draws, and an expected condition that fails the run is a gap in the model. A programming error is a bug:
-it fails the run, and a person recovers the run by restart or by a reset to a named step (§2.6), The code side of this
-rule is in [Classify every error](~/.pyck/guidelines/docs/workflow-runs.md#classify-every-error).
+path the BPMN draws, and an expected condition that fails the run is a gap in the model. A programming error is a bug
+that stalls or fails the run, and a person recovers it. The code side of this rule is in [Classify every
+error](workflow-runs.md#classify-every-error).
 
 ## Name nodes after what they mean
 
@@ -79,8 +76,8 @@ task in its "User tasks (screens)" table.
 
 ## Let the formatter draw the layout
 
-Author the model with an empty DI plane (`<bpmndi:BPMNPlane … />`, no shapes) and run `pyck bpmn fmt`. Since pyck
-0.15.0 it also routes the gateway corners.
+Author the model with an empty DI plane (`<bpmndi:BPMNPlane … />`, no shapes) and run `pyck bpmn fmt`, which also
+routes the gateway corners.
 
 - Never edit coordinates in `<bpmndi:BPMNDiagram>` by hand.
 - Never change the process semantics through `fmt`. Change the model, then format it.

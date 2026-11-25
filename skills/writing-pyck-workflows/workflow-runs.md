@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-runs.md (sha256 b6716dd8b661) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-runs.md and run task generate. -->
+<!-- Generated from docs/workflow-runs.md (sha256 cb82c3286255) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-runs.md and run task generate. -->
 # Workflow Run Guidelines
 
 <!-- toc
@@ -20,24 +20,27 @@
 
 The rules for a run: how it starts, what its workflow function holds, how it waits, fails and exits, and how it survives
 a deploy. The patterns for its activities are in
-[workflow-activities.md](~/.pyck/guidelines/docs/workflow-activities.md).
+[workflow-activities.md](~/.pyck/guidelines/docs/workflow-activities.md). Read this page when a build step or a check
+names a section of it, not up front.
+
+Rules that a tool will check carry a "Checked by" line (ADR-26W48-01 §2.13). When the check ships, the rule shrinks to
+the check's message.
 
 ## Keep a write-matrix for a domain-event start
 
-The platform behaviour doc in workflowsdk (planned, ADR-26W48-01 §2.10 in pyck-ai/pyck) owns the mechanics of a start:
-registration, operations, filter syntax, schedules and signals by id. Until it exists, the repository's
-`docs/tenant-facts.md` records what the platform did when you tried. Three consequences shape the design:
+The platform behaviour doc in workflowsdk (`backend/workflowsdk/docs/platform-behaviour.md`, section "Starts and the
+router") owns the mechanics of a start: registration, operations, filter syntax, schedules and signals by id. The
+repository's `docs/tenant-facts.md` records what one tenant shows beyond it. Three consequences shape the design:
 
 - A filter sees the record after the change and nothing before it. A filter on a status matches every write while the
   status holds, not only the transition.
 - A `patch…Data` emits the record's `update` event like any update, and so does a version move that carries only
   `dataTypeID`. The run's own writes can match its own filter.
-- A matching write after the run completed can start a new run, but not for every operation. The create start policy
-  starts again only after a failed run, and a cancelled create is final. An update or a custom event can start again
-  after a completed run, and a delete never does.
+- A matching write after the run ended can start a new run, but not for every operation. A create starts again only
+  after a failed or timed-out run. A cancelled or terminated create is final, and a completed one is refused and
+  recorded as a drop. An update or a custom event can start again after a completed run, and a delete never does.
 
-The router offers four trigger kinds today: start, signal-with-start, signal by id and broadcast. Pick by what the run
-must see:
+Pick the trigger kind by what the run must see:
 
 - Use signal-with-start for a start that must see every later event. A plain start absorbs an event that arrives while
   the run is open, and its data is not delivered.
@@ -46,12 +49,7 @@ must see:
 - A broadcast reaches the runs that the visibility index lists. A run that started a moment ago can be missing, so never
   rely on a broadcast right after a start. Re-read the state you wait for instead.
 
-> **Until ADR-26W48-01 §2.1 ships:** name the trigger kind of every subscription in `docs/design.md`, and dedup the
-> first event on its id. A step that follows a start does not rely on a broadcast reaching the new run.
-
-Planned in ADR-26W48-01 §2.1: two kinds only. START always signal-with-starts, with the record id as input, so the
-event arrives once. SIGNAL goes to a run by id, never starts one, and records a drop when no run is open. Broadcast
-stays for real fan-out.
+Name the trigger kind of every subscription in `docs/design.md`, and dedup the first event on its id.
 
 So the workflow's `docs/design.md` lists every write that can make the filter true, its writer, and why it does no harm.
 Include the writes that no longer match and the office's web-form save while the status holds, and name what the guard
@@ -68,7 +66,7 @@ on two topics therefore already shares one id for a record. Two different workfl
 own run.
 
 Where one run per record must hold across workflows, or across a router start and another start path, the triggered run
-starts the real job as a child under an id built from the record:
+starts the real job as a child under an id built from the record, from every start path:
 
 ```go
 childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
@@ -84,15 +82,9 @@ if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 }
 ```
 
-A Schedule needs the same care: its run gets the workflow id plus a timestamp, so a stock count that a schedule starts
-monthly and an incident starts on demand can run twice and count the same shelves twice. The child id covers it when
-both paths start the thin trigger run.
-
-> **Until ADR-26W48-01 §2.2 ships:** start the real job as a child under an id built from the record, from every start
-> path, as above.
-
-Planned in ADR-26W48-01 §2.2: the workflow declares a concurrency key (for the stock count: the warehouse), and every
-start path (router, Schedule, manual) maps to the same run id, so one run is open per key. It replaces the record group.
+A Schedule needs the same care: its run id carries a timestamp, so a stock count that a schedule starts monthly and an
+incident starts on demand can run twice and count the same shelves twice. The child id covers it when both paths start
+the thin trigger run.
 
 ## Write the hand-over down once
 
@@ -130,9 +122,9 @@ activities.
 - A `workflow.SideEffect` must not fail. Read its value from its result. A closure that assigns to an outer variable
   yields zero on replay.
 - Keep secrets and large payloads out of activity inputs and results. The run's history stores them and the UI shows
-  them.
-- Make a deadline a durable timer: `workflow.Sleep`, or a timer in a `workflow.Selector` next to the event it races. A
-  condition on time alone in `workflow.Await` may never fire.
+  them. Keep personal data out of search attributes: they are indexed and listed.
+- Make a deadline a durable timer: `workflow.AwaitWithTimeout` for a condition or an update that must come in time,
+  `workflow.Sleep` for time alone. A plain `workflow.Await` on a condition that depends on time alone may never fire.
 - Give a wait for another run a second check or a second trigger for the case that its event never comes, and a test in
   which the event is dropped.
 - Make every wait bounded or open by design. A bounded wait has a deadline that escalates: a reminder, a reassignment, a
@@ -142,11 +134,9 @@ activities.
 - Reassign a run when a wait outlives one person's turn. The assignee of a run can change at any time, so the run stays
   open. Do not end it and restart it as a new run. A workflow that must not change hands says so in `docs/design.md`.
 
-> **Until ADR-26W48-01 §2.7 ships:** wrap each user-task wait yourself: a timer in a `workflow.Selector` next to the
-> update. On the timer, escalate (bounded) or re-check and wait again (open).
-
-Planned in ADR-26W48-01 §2.7: a wait option on the user-task helper, and the search attributes `pyck_waiting_for` and
-`pyck_waiting_since` that make an open wait visible.
+Checked by: `workflowcheck` today; the workflow analyzers (`pyck vet`, planned, ADR-26W48-01 §2.13) for `time.Now` and
+`uuid.New` in workflow code, a `SideEffect` closure that assigns an outer variable, an `Await` with no timeout and
+personal data in a search attribute.
 
 ## Keep Validate pure and tie every submit to its screen
 
@@ -168,23 +158,29 @@ A user task is one screen: an update that the run awaits. Its `Validate` is a Te
   main flow act. Where a handler runs an activity, serialise with `workflow.NewMutex`, and wait for
   `workflow.AllHandlersFinished` before the run returns or continues as new.
 
+Checked by: the workflow analyzers (planned, §2.13) for a `Validate` that calls an activity or writes state, and for a
+return path without `AllHandlersFinished`.
+
 ## Set the timeouts and the retry policy yourself
 
-The SDK default is 10 minutes per attempt and unlimited attempts, so a refusal retries without end and the run looks
-idle.
+Set the timeouts and the retry policy on every activity: without them a refusal retries without end and the run looks
+idle (platform behaviour doc, "Retries and errors").
 
 - Set `StartToCloseTimeout` (one attempt; it is how a dead worker is noticed), `ScheduleToCloseTimeout` (the whole retry
-  budget, in time) and `MaximumAttempts` in every workflow. The usual values are 1 minute, 3 minutes and 5 attempts,
-  with a 1 s interval that doubles up to 30 s. The [start guard's lag
-  retry](~/.pyck/guidelines/docs/workflow-activities.md#retry-what-the-start-guard-cannot-see-yet) reads
-  `MaximumAttempts`.
+  budget, in time) and `MaximumAttempts` in every workflow. The usual values are 1 minute, 3 minutes and 5 attempts. The
+  [start guard's lag retry](~/.pyck/guidelines/docs/workflow-activities.md#retry-what-the-start-guard-cannot-see-yet)
+  reads `MaximumAttempts`.
 - Keep the client timeouts inside an activity, summed, below `StartToCloseTimeout`. Temporal retries an attempt that
   outlives it while the attempt still runs.
 - Set `ScheduleToStartTimeout` only for an activity on another worker that can be down. Temporal never retries it.
 - Give a loop or a long call a `HeartbeatTimeout`, and resume from the heartbeat details.
 - Give a write that must land despite a rate limit or a partner outage a longer `ScheduleToCloseTimeout` (minutes for a
-  rate limit, hours for a partner), a longer first interval, and a path for when the time runs out.
+  rate limit, hours for a partner), a longer first interval, and a path for when the time runs out. A retry after a 429
+  still counts an attempt, so `ScheduleToCloseTimeout`, not `MaximumAttempts`, bounds a throttled call.
 - Give a child workflow its own retry policy, as in the [example](#start-one-run-per-record-under-an-id-you-choose).
+
+Checked by: the workflow analyzers (planned, §2.13) for a missing timeout or `MaximumAttempts` on an activity or child
+workflow. A bounded default retry policy (ADR-26W48-01 §2.4, planned) will remove the rule for the usual case.
 
 ## Classify every error
 
@@ -206,39 +202,36 @@ error that an activity can meet its class:
 - A non-retryable error says that a retry cannot help. "I cannot see my write yet" never is one.
 - Return the typed application error itself. A new error built from its text is retryable.
 
-Errors come in two kinds:
+Errors come in two kinds (ADR-26W48-01 §2.4):
 
 - An expected condition is one the BPMN draws a recovery path for: an outside system is down, a print is refused, stock
   is short or damaged. The root workflow handles it on that path, after the retries ran out: a screen that lets the
   warehouse worker heal it (try again, reprint, choose another), or a named exception end that tells a person and names
   what starts the work again. A run without a person takes the exception end.
-- A programming error is a nil dereference, a wrong mapping, an unknown enum value. Nobody catches it: the run fails, so
-  that an alert fires and the run can be restarted or reset to a step.
+- A programming error is a nil dereference, a wrong mapping, an unknown enum value. Nobody catches it. In workflow code
+  a panic or a non-determinism error stalls the run: the worker sets `BlockWorkflow` explicitly, the workflow task
+  retries, and the run resumes after the fixed deploy; the repeating workflow-task failure is the alert. In an activity
+  it is retried, and the run fails when the retries run out. A run also fails when an expected kind is not caught. A
+  failed run is [recovered](#name-how-a-failed-run-is-recovered) by a person.
 
 So an activity wraps what it returns with `%w` and context, and never swallows or hides an error. Only the root workflow
 catches, and only the expected kinds. A catch-all that turns every error into a screen or an exception end hides the
-bugs that should fail the run.
+programming errors that a person should see as a stalled or failed run.
 
-> **Until ADR-26W48-01 §2.5 ships:** classify with the SDK's error helpers, and match the application error's type
-> string in the root workflow. Keep the type strings in one constant per kind. `errors.Is` and `errors.As` do not see
-> the kind after the trip through Temporal.
-
-Planned in ADR-26W48-01 §2.5: plain stdlib errors, a generated registry and a failure converter, so `errors.Is` and
-`errors.As` work across the activity boundary.
+Write an error as plain Go: `var ErrFoo = fmt.Errorf("foo: %w", wferr.ErrSomeKind)` and nothing else. A generated
+registry and a failure converter that make `errors.Is` and `errors.As` work across the activity boundary are planned
+(ADR-26W48-01 §2.5). Today the type of an application error is its message text, so the root workflow matches with
+`workflowsdk.IsError`, and only on an error built in the same worker.
 
 - The warehouse worker sees what happened and what to do, in [their
-  words](~/.pyck/guidelines/docs/workflow-screens.md#write-every-text-for-a-warehouse-worker).
-
-> **Until ADR-26W48-01 §2.9 ships:** the GraphQL error and its cause go to the log, never to the screen.
-
-Planned in ADR-26W48-01 §2.9: the details stay hidden from the warehouse worker and show behind the permission "view
-workflow error details", on the device and in Pyck Control.
+  words](workflow-screens.md#write-every-text-for-a-warehouse-worker). The technical cause goes to the log with the run
+  id, never to a user field.
 
 ## Send every exception to the office
 
 Every exception goes to the office: a damaged pallet, a missing piece, a refusal the floor cannot heal. How the office
 is told is decided per project and written in its docs. [An event alone tells
-nobody](~/.pyck/guidelines/docs/workflow-activities.md#send-an-event-last-from-its-own-activity).
+nobody](workflow-activities.md#send-an-event-last-from-its-own-activity).
 
 The floor carries on with the rest of the delivery. The exception takes the affected item out of the run's work. It does
 not end the run, and the run does not wait for the office.
@@ -274,25 +267,25 @@ func Workflow(ctx workflow.Context, in Input) (_ *Output, err error) { // the de
   before clearing a key that another run can hold by now.
 - Log a release error and do not return it. The run is ending.
 - Tell a person, with the order number and the pallet label, and say what to do ([an event alone tells
-  nobody](~/.pyck/guidelines/docs/workflow-activities.md#send-an-event-last-from-its-own-activity)). A failed run shows
-  only in the Temporal UI.
+  nobody](workflow-activities.md#send-an-event-last-from-its-own-activity)). A failed run shows only in the Temporal UI.
 - Leave what other runs own. A job does not revert the order's status while sibling jobs can still run.
 
 ## Name how a failed run is recovered
 
-A programming error fails the run on purpose. A person then restarts the run, or resets it to a named step, and the
-design doc says which:
+A failed run is recovered by a person: restart it, or reset it to a named step. A stalled run needs neither: it resumes
+after the fixed deploy. The design doc says which recovery a failed run gets:
 
 - Restart where the run is idempotent from the start: every activity is safe to run twice, and the release matrix holds.
 - Reset where a restart would repeat an effect that cannot repeat (a label bought, a job started). Name each reset point
   and what the run has done by then.
+- Allow a reset point only where every later write looks up before it writes. A reset gives a new run id, and an
+  activity after the point gets a new activity id unless it sets `ActivityOptions.ActivityID`, so an idempotency key
+  built from the activity id does not dedup it. A reset also re-applies the later signals and updates unless the run
+  control excludes them, so the event handler drops a repeat by event id.
 - Write the choice and the reset points into `docs/design.md`, next to the release matrix.
 
-> **Until ADR-26W48-01 §2.6 ships:** a Pyck engineer restarts or resets the run on request, with the Temporal tools.
-> Tenants have no run controls. Name the reset points in the design doc anyway.
-
-Planned in ADR-26W48-01 §2.6: `ResetPoint(ctx, name)` in the workflow SDK leaves a named step in the history, and run
-controls let a tenant restart or reset a failed run.
+Today a Pyck engineer restarts or resets the run on request, and tenants have no run controls: name the reset points in
+the design doc anyway.
 
 ## Name what starts the work again after an early end
 

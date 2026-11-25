@@ -71,14 +71,45 @@ Proof of the start: {date, environment, and what you saw: one open run with the 
 | --- | --- | --- | --- | --- |
 | {Resource} | {exit} | {exit} | {exit} | {exit} |
 
+## Derived fields
+
+<!-- A field that the workflow derives from other facts, such as a flag, a counter or a data key on a shared record. One row per field; "none" if there are no derived fields. -->
+
+| Field | Owner of the fact | Writer | Clearer | What a reader sees when it is absent |
+| --- | --- | --- | --- | --- |
+| {Field} | {who owns the fact it reflects} | {who writes it} | {who clears it, and when} | {meaning of absent} |
+
+## Schedules
+
+<!-- Only for a workflow that a Schedule starts. A missed run is not caught up. -->
+
+- **Cadence:** {when it runs}
+- **Time zone:** {the zone of the cadence}
+- **Pause:** {how it is paused, and what a run does that meets the pause}
+
+## Waits
+
+<!-- One row per wait of the workflow function. Bounded: a deadline that escalates. Open by design: a reason and a re-check interval. -->
+
+| Wait | Bounded or open | Deadline and escalation, or reason and re-check interval |
+| --- | --- | --- |
+| {What the run waits for} | {bounded or open} | {value, and what happens when it passes} |
+
 ## Error kinds and recovery
 
-<!-- Expected conditions: the recovery path the BPMN draws (name the node or end event). Programming errors: they fail the run; say whether a restart is safe (every activity idempotent) or from which named step to reset, and why. -->
+<!-- Expected conditions: the recovery path the BPMN draws (name the node or end event). A failed run is recovered by restart or by reset. -->
 
 | Kind | Case | Handled by |
 | --- | --- | --- |
 | Expected | {case, such as a refused booking} | {recovery node or end event of the BPMN} |
-| Programming error | {run fails} | {restart, or reset to the point named "{reset point}"} |
+| Uncaught expected kind, or an activity error that outlives its retries | {the run fails} | {restart, or reset, see below} |
+
+### Recovery: restart or reset
+
+<!-- Restart (a new run with the same input) is safe only when every activity is idempotent from the start. A reset point is allowed only where every later write looks up before it writes; name the point and give each activity after it its activity id, because a reset gives new activity ids unless ActivityOptions.ActivityID is set. Say which later signals a reset must not re-apply. -->
+
+- **Choice:** {restart | reset}, because {reason}.
+- **Reset points:** {the point name, and the activity ids after it; or "none"}
 
 ## Decision log
 

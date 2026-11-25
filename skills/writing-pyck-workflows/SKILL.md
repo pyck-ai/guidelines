@@ -7,9 +7,8 @@ metadata:
 
 # Workflow guideline
 
-The guideline is [workflows.md](workflows.md) in this directory. Read it in full and follow its steps. The step that
-needs them points into [workflow-modeling.md](workflow-modeling.md), the rules for the BPMN model,
-[workflow-screens.md](workflow-screens.md), the rules for screens and documents,
-[workflow-activities.md](workflow-activities.md), the patterns for an activity,
-[workflow-runs.md](workflow-runs.md), the rules for a run, and [workflow-repos.md](workflow-repos.md), where each file
-of a workflow lives and what it may contain.
+Read [workflows.md](workflows.md) in this directory and follow its build order: get the workflow working first, then run
+the checks and fix what each message names. The other files are reference, opened when a build step or a check names
+them: [workflow-modeling.md](workflow-modeling.md), [workflow-activities.md](workflow-activities.md),
+[workflow-runs.md](workflow-runs.md), [workflow-screens.md](workflow-screens.md) and
+[workflow-repos.md](workflow-repos.md).
