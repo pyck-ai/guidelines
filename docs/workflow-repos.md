@@ -42,7 +42,7 @@ A workflow folder is `workflows/NNN-name/`, lowercase and dash-separated. The `.
 
 | File | Contains | Must not contain |
 | --- | --- | --- |
-| `README.md` | one sentence on what the workflow does; how it starts; a table of its end events with the state each leaves; the screens by widget id; links to the docs and issues | the order of the steps, a diagram, API names |
+| `README.md` | one sentence on what the workflow does; how it starts; a table of its end events with the state each leaves; the screens by widget id; the workarounds, each with its blocking issue; links to the docs and issues | the order of the steps, a diagram, API names |
 | `NNN-name.bpmn` | the flow: steps, gateways, named flows, end events, `ID: <Widget>` annotations | prose that belongs in the docs |
 | `docs/process.md` | the business view in warehouse words: roles, rules, contract cutoffs, why | the order of the steps, API names, code |
 | `docs/design.md` | how it is built: mental model, set-up, how it starts, a node-to-API table keyed by node name, activity contracts and effect classes, requests per activity, design size and load-test result, release matrix, derived fields, schedules, waits, error kinds and recovery (restart or reset, reset points), decision log, sources | which node follows which |

@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-review.md (sha256 a97537b2438e) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-review.md and run task generate. -->
+<!-- Generated from docs/workflow-review.md (sha256 f2c15624b59d) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-review.md and run task generate. -->
 # Workflow Review Guidelines
 
 <!-- toc
@@ -156,6 +156,7 @@ more than they save. Skip a row that a required check in CI already enforces, an
 | 24 | Screens: one step per screen, warehouse-worker texts, the technical cause in the log. Shopfloor work on the device, approvals and exceptions in the web app. | the screen definitions | [workflow-screens.md](~/.pyck/guidelines/docs/workflow-screens.md#write-every-text-for-a-warehouse-worker), [workflows.md](~/.pyck/guidelines/docs/workflows.md#decide-these-in-docsdesignmd-before-the-code) |
 | 25 | Documents: attached once to their record, printed once with the worker's confirmation, a stand-in marked in large text. | the print and document activities | [workflow-screens.md](~/.pyck/guidelines/docs/workflow-screens.md#print-once-and-let-the-warehouse-worker-confirm-it) |
 | 26 | The repository layout: each workflow folder holds its BPMN, docs, code, tests and seed data. | the diff paths | [workflow-repos.md](~/.pyck/guidelines/docs/workflow-repos.md#keep-each-workflow-self-contained) |
+| 27 | Every workaround carries a `WORKAROUND(<repo>#<n>)` marker naming its blocking issue, and the README "Workarounds" table lists each marker once. A workaround whose issue is closed is removed. | `grep -rn 'WORKAROUND('`, the README | [workflows.md](~/.pyck/guidelines/docs/workflows.md#what-ships-today-and-what-comes-later) |
 
 ## Fit the org lenses
 

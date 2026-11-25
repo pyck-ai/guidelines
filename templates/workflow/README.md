@@ -30,6 +30,14 @@
 | --- | --- |
 | {User task name} | {WidgetName} |
 
+## Workarounds
+
+<!-- One row per WORKAROUND(<repo>#<n>) marker in this workflow's code, sorted by issue. A marker without a row, or a row without a marker, is a defect. Delete the section when the table is empty. See docs/workflows.md. -->
+
+| Issue | Workaround | Where |
+| --- | --- | --- |
+| {pyck-ai/pyck#n} | {What the code does instead of the missing feature or the fix.} | {package or file} |
+
 ## Docs and issues
 
 - [Process](docs/process.md): the business view, for the customer.

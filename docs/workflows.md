@@ -115,3 +115,14 @@ planned: do not build a private version of a planned rule.
 | 2.9 | Error details through a separate API | worker text on the screen | technical cause only in the log |
 | 2.11 | Alerts on failed and stalled runs | none | every end that leaves work undone tells a person |
 | 2.13 | One check command, BPMN subset and docs checks | the separate commands | run each by hand |
+
+Mark every workaround, so it can be removed when its fix ships. This covers a workaround from the table and any code
+that works around a missing platform feature or a known defect. Put the marker on the line above the code, naming the
+issue that blocks the real fix (ADR-26W48-01 §2.12 links each one), and add the same issue to the "Workarounds" table
+of the workflow's `README.md`:
+
+```go
+// WORKAROUND(pyck-ai/pyck#<n>): <what this does instead>; remove when <the fix> ships.
+```
+
+When the issue closes, `grep -rn 'WORKAROUND(<repo>#<n>)'` finds every place to remove.
