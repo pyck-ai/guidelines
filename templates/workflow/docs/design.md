@@ -89,11 +89,11 @@ Proof of the start: {date, environment, and what you saw: one open run with the 
 
 ## Waits
 
-<!-- One row per wait of the workflow function. Bounded: a deadline that escalates. Open by design: a reason and a re-check interval. -->
+<!-- One row per wait of the workflow function. Every wait has a deadline that escalates. No run lives longer than 30 days: a longer wait ends the run and the event starts a new one, or the run continues as new before the limit. -->
 
-| Wait | Bounded or open | Deadline and escalation, or reason and re-check interval |
+| Wait | Deadline | What happens when it passes |
 | --- | --- | --- |
-| {What the run waits for} | {bounded or open} | {value, and what happens when it passes} |
+| {What the run waits for} | {value, under 30 days} | {the escalation, or the end that lets the event start a new run} |
 
 ## Error kinds and recovery
 

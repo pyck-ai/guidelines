@@ -106,10 +106,10 @@ activities.
   `workflow.Sleep` for time alone. A plain `workflow.Await` on a condition that depends on time alone may never fire.
 - Give a wait for another run a second check or a second trigger for the case that its event never comes, and a test in
   which the event is dropped.
-- Make every wait bounded or open by design. A bounded wait has a deadline that escalates: a reminder, a reassignment,
-  a recovery screen or an exception end. An open wait has a declared reason and a re-check interval, and wakes to read
-  what it waits for. Waiting days for stock is legitimate. A wait with no reason, or one that relies on a signal that
-  may be lost, is not.
+- Make every wait bounded: a deadline that escalates, such as a reminder, a reassignment, a recovery screen or an
+  exception end. No run lives longer than 30 days (ADR-26W48-01 §2.7). A wait for something that comes days later,
+  such as stock for a pallet, ends the run, and the event starts a new one. A run that must live long continues as new
+  before 30 days. `WorkflowRunTimeout` of 30 days is the backstop and never the designed end.
 - Reassign a run when a wait outlives one person's turn. The assignee of a run can change at any time, so the run stays
   open. Do not end it and restart it as a new run. A workflow that must not change hands says so in `docs/design.md`.
 
@@ -294,7 +294,7 @@ a run is pinned to the build it started on, and continue-as-new inherits the pin
   run can sit idle.
 - Wait for `workflow.AllHandlersFinished` and read every buffered signal. Then continue as new with the auto-upgrade
   versioning behaviour, with the state as input.
-- Continue as new as well when `GetContinueAsNewSuggested()` reports a long history.
+- Continue as new as well when `GetContinueAsNewSuggested()` reports a long history, and before the run is 30 days old.
 - Ship a change to a standing workflow with a replay test against a captured history.
 
 Only a standing run loops with continue-as-new. A run that belongs to a person ends.

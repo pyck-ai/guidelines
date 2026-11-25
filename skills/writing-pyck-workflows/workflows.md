@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflows.md (sha256 d8cd58132572) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflows.md and run task generate. -->
+<!-- Generated from docs/workflows.md (sha256 7eec3dd57bea) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflows.md and run task generate. -->
 # Workflow Guidelines
 
 <!-- toc
@@ -125,7 +125,7 @@ planned: do not build a private version of a planned rule.
 | 2.4 | A panic stalls the run; an uncaught expected kind fails it | expected kinds caught | `MaximumAttempts` and `ScheduleToCloseTimeout` per activity |
 | 2.5 | Plain Go errors that survive Temporal | none | the root workflow matches with `IsError` only on errors built in the same worker |
 | 2.6 | Reset to a named point | restart | an engineer resets to a step the design doc names |
-| 2.7 | Bounded and open waits | bounded: `workflow.AwaitWithTimeout` | open: reason and interval in the design doc |
+| 2.7 | Bounded waits; no run lives longer than 30 days | bounded: `workflow.AwaitWithTimeout` | end the run and restart on the event, or continue as new before 30 days |
 | 2.8 | Read-your-writes, 429 delay | reads on the primary | decide from facts the run holds, or retry the read |
 | 2.9 | Error details through a separate API | worker text on the screen | technical cause only in the log |
 | 2.11 | Alerts on failed and stalled runs | none | every end that leaves work undone tells a person |

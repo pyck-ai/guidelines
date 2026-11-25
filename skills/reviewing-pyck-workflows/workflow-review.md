@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflow-review.md (sha256 f2c15624b59d) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-review.md and run task generate. -->
+<!-- Generated from docs/workflow-review.md (sha256 69ed6ab4f875) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflow-review.md and run task generate. -->
 # Workflow Review Guidelines
 
 <!-- toc
@@ -137,7 +137,7 @@ more than they save. Skip a row that a required check in CI already enforces, an
 | 5 | Status writes carry a `TEST` on the expected status. One effect that cannot repeat per activity. The request count does not grow with the data. | the write ops, the request-count test | [workflow-activities.md](~/.pyck/guidelines/docs/workflow-activities.md#guard-a-conditional-write-with-compare-and-swap), [workflows.md](~/.pyck/guidelines/docs/workflows.md#decide-these-in-docsdesignmd-before-the-code) |
 | 6 | Expected conditions go to the recovery path. An uncaught expected kind fails the run and a panic stalls it. Nothing hides an error, and only the root workflow catches. | the diff, the error-kind tests | [workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#classify-every-error), [workflow-testing.md](~/.pyck/guidelines/docs/workflow-testing.md#test-both-error-kinds) |
 | 7 | Each error is classified retryable or not, never left to the SDK default. A rate limit is not retried in a loop inside the activity. | the activity's error returns | [workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#classify-every-error) |
-| 8 | Every wait is bounded (a deadline that escalates) or open by design (reason, re-check interval). | the workflow function | [workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#keep-the-workflow-function-deterministic-and-thin) |
+| 8 | Every wait is bounded by a deadline that escalates, and no run lives longer than 30 days: a long wait ends the run, a standing run continues as new before then. | the workflow function | [workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#keep-the-workflow-function-deterministic-and-thin) |
 | 9 | The release matrix is complete: an exit on done, cancel, failure and reset. | `docs/design.md`, the abort path | [workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#give-every-resource-an-exit) |
 | 10 | No silent drop: every early end names its outcome, the state it left and what restarts the work. Exceptions go to the office and the run carries on. | BPMN end events, design doc | [workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#name-what-starts-the-work-again-after-an-early-end) |
 | 11 | Restart or reset is decided, and a reset point sits only where every later write looks up before it writes. | `docs/design.md` heading "Recovery" | [workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md#name-how-a-failed-run-is-recovered) |
