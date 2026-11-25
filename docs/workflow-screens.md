@@ -2,9 +2,13 @@
 
 The rules for the screens of a workflow's user tasks and for the documents it generates. The rules for the BPMN model are in [workflow-modeling.md](workflow-modeling.md), the rules for `Validate` in [workflow-runs.md](workflow-runs.md#keep-validate-pure-and-tie-every-submit-to-its-screen).
 
-## Write every text for a logistician
+## Write every text for a warehouse worker
 
-Every text on a screen and on a document is written for the people in the warehouse: titles, hints, choices and error messages. It names the order, the pallet, the slot and what to do next. It never shows an error code, a GraphQL message, a stack trace, an id that nobody reads or a word such as "activity", "update" or "workflow". The technical cause goes to the log.
+Every text on a screen and on a document is written for the people in the warehouse: titles, hints, choices and error messages. It names the order, the pallet, the slot and what to do next. By default it never shows an error code, a GraphQL message, a stack trace, an id that nobody reads or a word such as "activity", "update" or "workflow". The technical cause goes to the log.
+
+A person with the permission "view workflow error details" sees the technical cause on the device and in Pyck Control (ADR-26W48-01 §2.9). The worker's text stays as written.
+
+> **Until ADR-26W48-01 §2.9 ships:** show only the worker text on the screen, and write the technical cause to the log together with the run id, so a person can find it from the run.
 
 ## Show one physical step per screen
 
@@ -12,7 +16,7 @@ A screen asks for what one person does with their hands in one place: scan the p
 
 ## Ask for the minimum
 
-"Everything is OK" is one tap. Fields for details appear only after the operator flags a deviation: a missing piece, a damaged pallet, a wrong slot.
+"Everything is OK" is one tap. Fields for details appear only after the warehouse worker flags a deviation: a missing piece, a damaged pallet, a wrong slot.
 
 ## Let Pyck propose and the scan confirm
 
@@ -29,7 +33,7 @@ Send the device everything one unit of work needs, such as a whole pick list, an
 ## Avoid the Remote Flutter Widget traps
 
 - A `NumberInput` with a `max` changes a larger typed value to the maximum without a message (in UAT 120 was typed and 40 booked). Show the error with `When` and refuse the value in `Validate` instead.
-- The device sends 0 for a number the operator did not touch. Refuse it in `Validate` where 0 is not a real answer.
+- The device sends 0 for a number the warehouse worker did not touch. Refuse it in `Validate` where 0 is not a real answer.
 - Never name a context value like an input field. The two collide in the widget's data.
 - A `ScanField` copies numbers as text. Parse the scan on purpose, and compare it with the context as text where leading zeros matter.
 
@@ -37,14 +41,14 @@ Send the device everything one unit of work needs, such as a whole pick list, an
 
 A label, a delivery note or a packing list that the workflow generates is attached to the record it belongs to: the order, the pallet, the shipment. A reprint reads the attachment and never generates the document again. A second generation can buy a second carrier label or draw a second number.
 
-## Print once, and let the operator confirm it
+## Print once, and let the warehouse worker confirm it
 
 A print job has no job id, so nobody can ask the printer whether it printed.
 
 - Never retry a print after its first byte went out. Run it with one attempt, as in [Keep an outside call alone in its activity](workflow-activities.md#keep-an-outside-call-alone-in-its-activity).
-- "Printed" is the operator's confirmation on the screen after the print, not the result of the call.
+- "Printed" is the warehouse worker's confirmation on the screen after the print, not the result of the call.
 - The screen offers a reprint of the attached document, so a jammed or lost print never needs the office.
 
 ## Mark a stand-in document so nobody mistakes it
 
-When the real document cannot be generated, for example a carrier refuses the label, a stand-in may let the work go on. A stand-in carries a large bold error text, such as "NOT A VALID LABEL: carrier refused", so that nobody can confuse it with a real document. The run tells a person and offers the recovery path that replaces it with the real one.
+When the real document cannot be generated, for example a carrier refuses the label, a stand-in may let the work go on. This holds for every document the workflow generates. A stand-in carries a large bold error text, such as "NOT A VALID LABEL: carrier refused", so that nobody can confuse it with a real document. The run tells a person and offers the recovery path that replaces it with the real one.

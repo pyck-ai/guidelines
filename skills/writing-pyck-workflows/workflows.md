@@ -1,4 +1,4 @@
-<!-- Generated from docs/workflows.md (sha256 b7c1976ae7f6) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflows.md and run task generate. -->
+<!-- Generated from docs/workflows.md (sha256 84b04b541e76) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/workflows.md and run task generate. -->
 # Workflow Guidelines
 
 <!-- toc
@@ -7,12 +7,14 @@
 - [Design for the four things the happy path hides](#design-for-the-four-things-the-happy-path-hides)
 - [Put the shopfloor on the device and the office in the web app](#put-the-shopfloor-on-the-device-and-the-office-in-the-web-app)
 - [Give one run to one person](#give-one-run-to-one-person)
+- [Keep each workflow self-contained](#keep-each-workflow-self-contained)
 - [Design for the largest instance](#design-for-the-largest-instance)
 - [Build in this order](#build-in-this-order)
 - [Write the activity contract before the code](#write-the-activity-contract-before-the-code)
 - [Give each effect the pattern its class needs](#give-each-effect-the-pattern-its-class-needs)
 - [Test every edge case](#test-every-edge-case)
 - [Load-test the largest instance](#load-test-the-largest-instance)
+- [What ships today and what comes later](#what-ships-today-and-what-comes-later)
 -->
 
 Rules for writing or changing a Temporal workflow on the Pyck platform (Go, workflowsdk): its model, its screens, its
@@ -20,17 +22,24 @@ activities, its workflow function, its start, its exits and its tests. The rules
 [workflow-modeling.md](~/.pyck/guidelines/docs/workflow-modeling.md), for the screens and documents in
 [workflow-screens.md](~/.pyck/guidelines/docs/workflow-screens.md), the patterns for an activity in
 [workflow-activities.md](~/.pyck/guidelines/docs/workflow-activities.md) and the rules for a run in
-[workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md). The general rules for a repeated operation are in
+[workflow-runs.md](~/.pyck/guidelines/docs/workflow-runs.md). The folder layout and the docs of a workflow are in
+[workflow-repos.md](~/.pyck/guidelines/docs/workflow-repos.md), the tests in
+[workflow-testing.md](~/.pyck/guidelines/docs/workflow-testing.md). The general rules for a repeated operation are in
 [code-design.md](~/.pyck/guidelines/docs/code-design.md#make-operations-idempotent) and for a test in
-[testing.md](~/.pyck/guidelines/docs/testing.md); these docs apply them to a workflow. Reviewing a workflow is not
-covered.
+[testing.md](~/.pyck/guidelines/docs/testing.md); these docs apply them to a workflow. Reviewing a workflow is covered
+in [workflow-review.md](~/.pyck/guidelines/docs/workflow-review.md).
 
 These docs replace the workflow rules that a workflow repository kept in its own `AGENTS.md`. When a repository adopts
 them, remove that copy, and keep only the repository's local facts.
 
-The repository's `docs/framework-facts.md` and `TRIGGERS.md` own the platform's behaviour. Read the rows for every
-feature you touch before you design, and add a row, with its source, the first time the platform surprises you. The
-rules here hold for workflowsdk v0.25.
+The platform's behaviour is owned by the platform behaviour doc in workflowsdk
+(`backend/workflowsdk/docs/platform-behaviour.md` in pyck-ai/pyck, planned in ADR-26W48-01 §2.10), and what one tenant
+shows beyond it by the repository's `docs/tenant-facts.md`. Read the rows for every feature you touch before you design,
+and add a row to `docs/tenant-facts.md`, with its source, the first time the platform surprises you.
+
+Some rules below need a platform change that has not shipped. [What ships today and what comes
+later](#what-ships-today-and-what-comes-later) lists them. Follow the rules marked "today", and do not build a private
+version of the others.
 
 ## Design for the four things the happy path hides
 
@@ -41,7 +50,7 @@ one of four:
 | --- | --- | --- |
 | **Repeat** | Runs an activity again from its first line, also after its writes landed (the platform committed them) and only the reply was lost. | Converges: a second attempt ends in the state of one attempt. |
 | **Lag** | Answers a read with the state from before the last write, yours or anyone's, for up to a few hundred milliseconds. | Decides from facts the run holds, and treats a young "not found" as "not yet". |
-| **Twin** | Lets a second actor work on the same record at the same moment: another job of the order, another operator, another cycle. | Lets exactly one win, atomically, and tells the loser what to do. |
+| **Twin** | Lets a second actor work on the same record at the same moment: another job of the order, another warehouse worker, another cycle. | Lets exactly one win, atomically, and tells the loser what to do. |
 | **Stuck** | Ends a run early or fails it, and never starts it again. | Leaves nothing reserved, tells a person and names what starts the work again. |
 
 A person takes seconds between two steps and hides all four. Write every activity for the case where the next activity,
@@ -55,7 +64,7 @@ again](~/.pyck/guidelines/docs/workflow-runs.md#name-what-starts-the-work-again-
 ## Put the shopfloor on the device and the office in the web app
 
 A workflow serves two roles. The shopfloor works on the device (the scanner), the office in the web app. An approval or
-a clarification always goes to the office, never to an operator on the floor. Every exception [goes to the
+a clarification always goes to the office, never to a warehouse worker on the floor. Every exception [goes to the
 office](~/.pyck/guidelines/docs/workflow-runs.md#send-every-exception-to-the-office) too, and the floor carries on with
 the rest of its work.
 
@@ -64,39 +73,47 @@ the rest of its work.
 A run belongs to one person, from its start to its end, and only one person works on it at a time. Work that several
 people can do in parallel, such as several people booking one truck, becomes several workflows that coordinate by
 signals and the [hand-over](~/.pyck/guidelines/docs/workflow-runs.md#write-the-hand-over-down-once). The assignee
-belongs to the whole run and cannot change, so a wait that outlives one person's turn [ends the
+belongs to the whole run and can change at any time, unless the workflow forbids it and says so in its design doc. A
+wait that outlives one person's turn [ends the
 run](~/.pyck/guidelines/docs/workflow-runs.md#keep-the-workflow-function-deterministic-and-thin).
+
+## Keep each workflow self-contained
+
+A workflow folder holds everything needed to understand, build, test and run that workflow: its diagram, docs, code,
+tests and seed data. The repository root holds only the glue between workflows and the docs of the worker binary. The
+test for any fact: delete the workflow folder, and no doc outside it becomes wrong. The folder layout and the home of
+each kind of content are in [workflow-repos.md](~/.pyck/guidelines/docs/workflow-repos.md).
 
 ## Design for the largest instance
 
 Ask the user for the largest amounts the workflow must handle, in one run and in all runs open at the same time: items,
-orders, repositories, serial numbers. The design size is twice these amounts. Keep both in `IMPLEMENTATION.md`. Design
-for that size from the start, with as few API calls as possible:
+orders, repositories, serial numbers. The design size is twice these amounts. Keep both in the workflow's
+`docs/design.md`. Design for that size from the start, with as few API calls as possible:
 
 - Read a unit of work once, in batches by id list, and carry it through workflow state. Never read one row per item, and
   never poll.
 - Send the device a whole unit of work and sync at natural pauses
   ([workflow-screens.md](~/.pyck/guidelines/docs/workflow-screens.md#send-a-whole-unit-of-work-to-the-device)).
-- Count the calls per item and per run, and keep the count in `IMPLEMENTATION.md`. A count that grows with the items
-  times the items is a design error.
+- Count the calls per item and per run, and keep the count in `docs/design.md`. A count that grows with the items times
+  the items is a design error.
 - [Pace](~/.pyck/guidelines/docs/workflow-activities.md#pace-loops-that-write-or-start-runs) the writes that start runs.
-  The worker's rate limiter is a safety net, not the design.
+  No rate limiter protects the API yet (planned in ADR-26W48-01 §2.8), so the pace is the design.
 
 ## Build in this order
 
-1. **Read the design and the facts**: the process's `PROCESS.md`, `IMPLEMENTATION.md` and `.bpmn`, the repository's
-   `CONVENTIONS.md`, and for a hand-over the other workflow's start guard or sending activity. Done when you can name
-   the records each activity reads and writes, who starts the run, what that sender wrote just before and the [design
-   size](#design-for-the-largest-instance), and when the `.bpmn` follows
-   [workflow-modeling.md](~/.pyck/guidelines/docs/workflow-modeling.md): `pyck bpmn lint` passes, every outcome has a
-   named end event and every call that can fail has its [recovery
+1. **Read the design and the facts**: the workflow's `docs/process.md`, `docs/design.md` and `.bpmn`, the platform
+   behaviour doc and the repository's `docs/tenant-facts.md` (see the top of this page), and for a hand-over the other
+   workflow's start guard or sending activity. Done when you can name the records each activity reads and writes, who
+   starts the run, what that sender wrote just before and the [design size](#design-for-the-largest-instance), and when
+   the `.bpmn` follows [workflow-modeling.md](~/.pyck/guidelines/docs/workflow-modeling.md): `pyck bpmn lint` passes,
+   every outcome has a named end event and every call that can fail has its [recovery
    path](~/.pyck/guidelines/docs/workflow-modeling.md#model-the-recovery-path-of-every-call-that-can-fail).
 2. **Prove the start before the body exists.** Write only the registration, the start signal, the input type, one log
    line and a registration test that pins topic, operation, filter and decoded payload. Deploy it to dev and fire the
    real trigger. Done when you saw one open run with the expected input for the intended event, and none for every other
    write in the [write-matrix](~/.pyck/guidelines/docs/workflow-runs.md#keep-a-write-matrix-for-a-domain-event-start).
-   An API that answers `success: true` proves nothing. On the last project, 18 of 23 workflows could not start when
-   someone first tried, eleven days into coding.
+   An API that answers `success: true` proves nothing. On one project most workflows could not start when someone first
+   tried, days into coding.
 3. **Write the [activity contract](#write-the-activity-contract-before-the-code)** of every activity that writes. Done
    when no line says "cannot happen" without naming what prevents it: a workflow id, a uniqueness rule the platform
    enforces, a `TEST` in the same patch.
@@ -112,11 +129,11 @@ for that size from the start, with as few API calls as possible:
    the run creates has an exit on done, cancel, failure and reset, every end that leaves work undone tells a person, and
    every early end names what starts the work again.
 7. **Write the [screens](~/.pyck/guidelines/docs/workflow-screens.md).** Done when each screen shows one physical step,
-   every text speaks to a logistician, and every document the run generates is attached to its record.
+   every text speaks to a warehouse worker, and every document the run generates is attached to its record.
 8. **[Test every edge case](#test-every-edge-case).** Done when every line of every activity contract and every end
    event of the BPMN has at least one unit test that fails without the code that handles it.
 9. **[Load-test the largest instance](#load-test-the-largest-instance).** Done when every run at the design size reached
-   its expected end event on the user's environment, and the result is in `IMPLEMENTATION.md`.
+   its expected end event on the user's environment, and the result is in `docs/design.md`.
 10. **Check and report.** Run the repository's verification commands. Report the rung you reached on its evidence ladder
     and what you observed yourself, never "verified".
 
@@ -179,38 +196,42 @@ hold for every class:
 ## Test every edge case
 
 Every edge case is tested, at least by a unit test. An edge case without a test is not handled: the next change breaks
-it without a sign. The general rules are in [testing.md](~/.pyck/guidelines/docs/testing.md). For a workflow, the edge
-cases come from the design, so the list is never guessed:
-
-- **Every line of every activity contract.** Repeat: the effect landed, the reply was lost, the body runs again and
-  reaches the state of one attempt. Lag: the read returns the state from before the last write. Twin: the platform
-  refuses, the loser reads again. Stuck: the retries run out.
-- **Every error class** in [Classify every error](~/.pyck/guidelines/docs/workflow-runs.md#classify-every-error) that
-  the activity can meet, with the result or error it returns, retryable or not.
-- **Every end event and every recovery path of the BPMN**, unhappy ends included, through the workflow with the Temporal
-  test suite (`testsuite.WorkflowTestSuite`) and mocked activities.
-- **Every screen's refusals in `Validate`:** a bad scan, a scan as text with leading zeros, an untouched number (0), a
-  number above the maximum, a double submit, a late duplicate after the screen was awaited again.
-- **Every document path:** reprint from the attachment, a stand-in with its error text, a print that fails after its
-  first byte.
-- **Order and repetition:** a trigger again on a record halfway through, a signal before its wait or after the run moved
-  on, a step reached again from the middle.
-- **Parallel runs** on the same stock, repository, order or slot: exactly one wins, and the loser gets its answer.
-- **The largest instance:** a run at the design size, with the number of API calls asserted, not only the result.
-
-A test fakes the platform with the behaviour that matters: a fake that ignores a filter, never refuses a second movement
-or never lags passes code that fails live. Where the fake cannot show a platform rule, name the rule and the dev run
-that showed it.
+it without a sign. The edge cases come from the design, so the list is never guessed: every line of every activity
+contract, every error class, every end event and recovery path of the BPMN, every screen refusal, every document path,
+the order and repetition of events, parallel runs and the largest instance. The test levels, the list of cases and the
+fakes are in [workflow-testing.md](~/.pyck/guidelines/docs/workflow-testing.md).
 
 ## Load-test the largest instance
 
 A unit test counts calls on fakes. Only a deployed run shows what the platform does at the design size: the rate limit,
 the read lag, the time a screen takes. Every workflow gets a load test:
 
-- **Size.** The [design size](#design-for-the-largest-instance) from `IMPLEMENTATION.md`.
+- **Size.** The [design size](#design-for-the-largest-instance) from `docs/design.md`.
 - **Where.** The user's environment, usually dev. Never prod.
 - **Data.** A seed script creates the data at that size: the repositories, the items, the serial numbers.
 - **What.** Every step that loads or checks many records, above all loading and checking serial numbers and loading many
   repositories and items.
-- **Done when** every run reached its expected end event and its API calls match the count in `IMPLEMENTATION.md`.
-  Record the size, the environment, the date and the result there.
+- **Done when** every run reached its expected end event and its API calls match the count in `docs/design.md`. Record
+  the size, the environment, the date and the result there.
+
+## What ships today and what comes later
+
+Each rule is one of three: it holds **today**, it holds today **with a workaround** until a platform change ships, or it
+needs the change first and is **planned**. Follow the first two. For the third, do not build a private version.
+
+| Rule | Today | With a workaround until | Planned in ADR-26W48-01 |
+| --- | --- | --- | --- |
+| Authors choose a START or a SIGNAL trigger | no | no | §2.1 |
+| A cancelled create run is final | no | cap the first activity's attempts and guard against a stale respawn | §2.1 |
+| One run at a time per concurrency key, the same run id for every start path | no | a thin trigger run that starts the real job as a child under a record-derived id | §2.2 |
+| Duplicate defence in three layers | request ids and event-id helper: no; lookup before write: yes | lookup before write in every activity | §2.3 |
+| Expected conditions take the recovery path, programming errors fail the run | yes | | §2.4 |
+| Errors are plain Go and survive Temporal with `errors.Is` and `errors.As` | no | classify by hand at the activity edge | §2.5 |
+| Restart a failed run, or reset it to a named step | restart: yes; named reset point: no | reset in the Temporal UI to a step you describe in the design doc | §2.6 |
+| A wait is bounded or open by design, with a reason and a re-check interval | no | state the reason and the interval in the design doc | §2.7 |
+| Read-your-writes, 429 handled by the activity retry with the server's delay | no | decide from facts the run holds, and pace the writes | §2.8 |
+| Error details behind the permission "view workflow error details" | no | worker text on screen, the technical cause in the log with the run id | §2.9 |
+| Platform facts in one doc in workflowsdk | no | a row with its source in `docs/tenant-facts.md` | §2.10 |
+| Alerts on failed and stuck runs | no | the exit rule: every end that leaves work undone tells a person | §2.11 |
+| Typed timer and message start events and boundary events in the BPMN | no | a service task followed by a gateway, and the start described in the README | tooling, planned |
+| A docs-versus-BPMN check in CI | no | review the docs against the BPMN by hand | tooling, planned |

@@ -78,7 +78,10 @@ Working on this repository needs [Task](https://taskfile.dev), [zizmor](https://
 - [Deprecation](./docs/deprecation.md): how a public API, a contract, an SDK or a client that outside consumers use is deprecated, changed and removed, and how clients identify themselves.
 - [Dependencies](./docs/dependencies.md): how a dependency is added, updated, removed and vetted, how Renovate and security advisories are handled, and how external providers are wrapped.
 - [SQL](./docs/sql.md): the rules for SQL text, bind parameters, identifiers and stored functions.
-- [Workflows](./docs/workflows.md): how to write a Temporal workflow on the Pyck platform whose steps survive a retry, a lagging read and a concurrent run, with the [BPMN model](./docs/workflow-modeling.md), the [screens and documents](./docs/workflow-screens.md), the [activity patterns](./docs/workflow-activities.md) and the [rules for a run](./docs/workflow-runs.md).
+- [Workflows](./docs/workflows.md): how to write a Temporal workflow on the Pyck platform whose steps survive a retry, a lagging read and a concurrent run, with the [BPMN model](./docs/workflow-modeling.md), the [screens and documents](./docs/workflow-screens.md), the [activity patterns](./docs/workflow-activities.md), the [rules for a run](./docs/workflow-runs.md) and the [workflow folder and repository layout](./docs/workflow-repos.md).
+- [Workflow testing](./docs/workflow-testing.md): which test catches which workflow risk, from unit and replay tests to the load test at the design size.
+- [Workflow review](./docs/workflow-review.md): what a reviewer of a workflow change checks that no tool can, as a checklist ordered by impact.
+- [Workflow templates](./templates/workflow/): the start of a workflow's `README.md`, `docs/process.md` and `docs/design.md`.
 - [Incidents](https://github.com/pyck-ai/incidents): the `handling-incidents` and `writing-postmortems` skills, severities and postmortems, in the private repo pyck-ai/incidents.
 - [Accessibility](https://github.com/pyck-ai/.github/blob/main/.github/ACCESSIBILITY.md): the organization's accessibility policy.
 - [AGENTS.md template](./templates/AGENTS.md): the start of a repository's own AGENTS.md.

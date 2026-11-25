@@ -4,11 +4,11 @@ The rules for a workflow's BPMN model: what it may contain, how it names things 
 
 ## Draw the flow once, in the BPMN
 
-The `.bpmn` file is the only drawing of the process. Never draw it again in a README or anywhere else: no Mermaid flowchart, no ASCII chain such as `A → B → C`, no second diagram. The docs cover what the diagram cannot show: the write-matrix, the release matrix, the hand-over contract, the screens.
+The `.bpmn` file is the only place the flow is written. Never draw or tell it again in a README or anywhere else: no Mermaid flowchart, no ASCII chain such as `A → B → C`, no table of "yes → next node", no second diagram. A doc may name a node or an end event and add what the diagram cannot show: the write-matrix, the release matrix, the hand-over contract, the screens. The home of each kind of content is in [workflow-repos.md](workflow-repos.md#keep-the-flow-only-in-the-bpmn).
 
-## Stay inside the linted subset
+## Stay inside the subset
 
-`pyck bpmn lint` enforces the subset. A model may contain:
+The subset is a convention. The formatter (`pyck bpmn fmt`) rejects only some elements, such as a boundary event or a parallel gateway, and accepts others, such as a timer or a message start event, without checking what they mean. Do not read a clean run of the tool as proof that the model follows the subset. A model may contain:
 
 - one plain `startEvent`;
 - a `serviceTask`;
@@ -17,7 +17,9 @@ The `.bpmn` file is the only drawing of the process. Never draw it again in a RE
 - several named `endEvent`s;
 - a `textAnnotation` with an `association`.
 
-It contains no boundary event, timer event, message event, subprocess or parallel gateway. Model a timer or an SLA as a service task followed by a gateway that asks the question ("Within SLA?").
+It contains no boundary event, timer event, message event, subprocess or parallel gateway. Model a timer or an SLA as a service task followed by a gateway that asks the question ("Within SLA?"), and describe how the run starts in the README.
+
+> **Until typed events ship:** draw a timer as that service task and gateway. Typed timer and message start events and boundary events, marked with a `pyck:trigger` extension that the tool checks, are planned tooling.
 
 ## Let every branch run to its own end
 
@@ -27,14 +29,14 @@ Every outcome is a named end event, the unhappy ones included. An exception end 
 
 ## Model the recovery path of every call that can fail
 
-A call to the platform or to an outside system retries a few times, with the [retry policy](workflow-runs.md#set-the-timeouts-and-the-retry-policy-yourself) the workflow sets. When the retries run out, the run takes a recovery path that the BPMN shows, and never just fails:
+A call to the platform or to an outside system retries a few times, with the [retry policy](workflow-runs.md#set-the-timeouts-and-the-retry-policy-yourself) the workflow sets. When the retries run out, the run takes a recovery path that the BPMN shows when the failure is one the workflow expects, and does not just fail:
 
-- a screen that tells the operator what happened in their words and offers what fixes it: try again, reprint, choose another pallet, hand the case to the office;
+- a screen that tells the warehouse worker what happened in their words and offers what fixes it: try again, reprint, choose another pallet, hand the case to the office;
 - a gateway on the result of that screen, with a named flow for each choice;
 - a named end event for each way the recovery ends, with the state it leaves;
 - or a separate workflow that a person starts to finish the work, named in the end event.
 
-An operator heals every error from the device: a failed booking, a failed print, a refused call, a lost connection. A run that fails in the Temporal UI is a gap in the model. The code side of this rule is in [Classify every error](workflow-runs.md#classify-every-error).
+There are two kinds of error (ADR-26W48-01 §2.4). An expected condition is one the workflow can name: a failed booking, a failed print, a refused call, a lost connection. A warehouse worker heals it from the device, so it takes the recovery path the BPMN draws, and an expected condition that fails the run is a gap in the model. A programming error is a bug: it fails the run, and a person recovers the run by restart or by a reset to a named step (§2.6), The code side of this rule is in [Classify every error](workflow-runs.md#classify-every-error).
 
 ## Name nodes after what they mean
 
