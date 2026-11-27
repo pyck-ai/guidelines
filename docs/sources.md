@@ -181,3 +181,24 @@ What each project supplies:
 | --- | --- | --- | --- |
 | Guard reasons | [storytold/craft-contrib, house rules](https://github.com/storytold/craft-contrib/blob/main/standards/house-rules-core.md) | "A check that looks removable says what it prevents. Read that before changing it." | 2026-11-16 |
 | Keep a glossary | [Matt Pocock, Watch me ship a 21,000-line feature with mattpocock/skills](https://www.youtube.com/watch?v=jVBlkOF8sHk) (YouTube auto-generated captions) | "Scenario testing is a really great way of kind of testing your domain language" | 2026-11-19 |
+
+### [docs/workflows.md](./workflows.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Repeat | [Temporal docs, Activity Definition](https://docs.temporal.io/activity-definition) | "However, the Activity may be executed multiple times and may even partially complete more than once during this process." | 2026-11-19 |
+| Repeat | [Temporal docs, Activity Definition](https://docs.temporal.io/activity-definition) | "The Activity function completes successfully, but the Worker crashes just before it notifies the Temporal Service." | 2026-11-19 |
+| One effect per activity | [Temporal docs, Activity Definition](https://docs.temporal.io/activity-definition) | "To maintain idempotency, design your Activities to be more granular." | 2026-11-19 |
+| Values from the workflow | [Temporal docs, Activity Definition](https://docs.temporal.io/activity-definition) | "You can use a combination of the Workflow Run ID and the Activity ID as an idempotency key since this is guaranteed to be consistent across retry attempts but unique among Workflow Executions." | 2026-11-19 |
+
+### [docs/workflow-activities.md](./workflow-activities.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| Trailing list of runs | [Temporal docs, Visibility](https://docs.temporal.io/visibility) | "Treat Visibility as eventually consistent and avoid depending on a fixed or guaranteed delay." | 2026-11-19 |
+
+### [docs/workflow-runs.md](./workflow-runs.md)
+
+| Rule | Source | Quote | Read on |
+| --- | --- | --- | --- |
+| One run per record | [Temporal docs, Visibility](https://docs.temporal.io/visibility) | "To check whether a specific workflow exists, start it and handle the already-started result, or look it up by ID with `DescribeWorkflowExecution`." | 2026-11-19 |
