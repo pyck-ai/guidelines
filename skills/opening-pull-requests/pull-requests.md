@@ -1,4 +1,4 @@
-<!-- Generated from docs/pull-requests.md (sha256 831ba2d38677) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/pull-requests.md and run task generate. -->
+<!-- Generated from docs/pull-requests.md (sha256 6c89fd1b8b54) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/pull-requests.md and run task generate. -->
 # Pull Request Guidelines
 
 <!-- toc
