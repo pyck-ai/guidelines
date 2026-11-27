@@ -1,4 +1,4 @@
-<!-- Generated from docs/ci.md (sha256 d490540b9373) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/ci.md and run task generate. -->
+<!-- Generated from docs/ci.md (sha256 68071322ca71) by scripts/generate-skills.sh. DO NOT EDIT: edit docs/ci.md and run task generate. -->
 # CI Guidelines
 
 <!-- toc
@@ -11,6 +11,7 @@
 - [Cost of a push](#cost-of-a-push)
 - [Required checks](#required-checks)
 - [Thresholds](#thresholds)
+- [Job timeouts](#job-timeouts)
 - [Adding a gated workflow](#adding-a-gated-workflow)
 - [Examples](#examples)
 -->
@@ -100,10 +101,33 @@ Applies when a check enforces a number, such as a coverage minimum, a bundle siz
   value improves, the author of the change updates the recorded value in the same PR. A target of 80% on a codebase at
   62% gives a build that stays red until people learn to ignore it.
 
+## Job timeouts
+
+Every job sets `timeout-minutes`. Without it GitHub waits 360 minutes, and a hung job holds its runner, and with it a
+slot of the runner pool, that long; on 2026-11-27 a pyck `check-drift` job hung for 56 minutes until it was cancelled by
+hand.
+
+- Set it to twice the job's slowest successful run of the last two weeks, rounded up to a multiple of 5, at least 10 and
+  at most 60. A single slow run is often several times the job's p95 (a baseimages arm64 build: p95 4.2 minutes, slowest
+  19.9), so a value from the p95 kills runs that would have passed.
+- A new job without runs starts at 30 and gets its value from its own runs later.
+- A job that needs more than 60 says why in a comment next to the value.
+- A job that calls a reusable workflow (`uses:` on the job) sets no timeout; the jobs of the reusable workflow set their
+  own.
+- ghalint enforces that every job has a value, together with its other policies (permissions, pinned actions,
+  `persist-credentials: false`, no `secrets: inherit`). Run it as a `ghalint` task in `task ci` and as a job of the `ci`
+  group that runs `task ghalint`. The runner image has it on PATH (pyck-ai/baseimages all-in-one), so the job downloads
+  nothing.
+
+To find a job's slowest successful run:
+`gh run list -R <owner>/<repo> -w <workflow> -L 50 --json databaseId -q '.[].databaseId'`, then for each run
+`gh api repos/<owner>/<repo>/actions/runs/<id>/jobs --jq '.jobs[] | select(.conclusion == "success") | [.name, ((.completed_at | fromdate) - (.started_at | fromdate)) / 60] | @tsv'`.
+
 ## Adding a gated workflow
 
 1. Put the workflow in the repository's own workflow file, one per group.
-2. Add the gate job as described in [Gate jobs](#gate-jobs), named `<group>-success`.
+2. Add the gate job as described in [Gate jobs](#gate-jobs), named `<group>-success`. Give every job a `timeout-minutes`
+   (see [Job timeouts](#job-timeouts)).
 3. Leave filters off the `pull_request` trigger (see [Filters](#filters)).
 4. Add the check to the ruleset (see [Required checks](#required-checks)).
 5. Open a pull request and confirm the check reports under exactly that name (`gh pr checks <n>`) before relying on the
@@ -123,6 +147,7 @@ on:
 jobs:
   ci:
     runs-on: [pyck-ai, firecracker, standard]
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@<sha>
       - run: task ci
@@ -130,6 +155,7 @@ jobs:
     needs: [ci]
     if: always()
     runs-on: [pyck-ai, firecracker, light]
+    timeout-minutes: 10
     steps:
       - uses: pyck-ai/github-actions/gate@<sha>
         with:
@@ -148,11 +174,13 @@ every step in sequence locally.
 jobs:
   lint:
     runs-on: [pyck-ai, firecracker, standard]
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@<sha>
       - run: task lint
   test:
     runs-on: [pyck-ai, firecracker, standard]
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@<sha>
       - run: task test
@@ -160,6 +188,7 @@ jobs:
     needs: [lint, test]
     if: always()
     runs-on: [pyck-ai, firecracker, light]
+    timeout-minutes: 10
     steps:
       - uses: pyck-ai/github-actions/gate@<sha>
         with:
@@ -176,6 +205,7 @@ jobs:
     needs: [build]
     if: always()
     runs-on: [pyck-ai, firecracker, light]
+    timeout-minutes: 10
     steps:
       - uses: pyck-ai/github-actions/gate@<sha>
         with:
